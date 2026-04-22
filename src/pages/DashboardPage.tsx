@@ -10,10 +10,6 @@ export default function DashboardPage() {
     <div className="max-w-6xl mx-auto">
       <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-8 relative overflow-hidden">
         <div className="relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-green-50 text-green-700 font-bold text-xs rounded-full mb-4 border border-green-200">
-            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-            System Online & Ready
-          </div>
           <h1 className="text-3xl font-extrabold text-slate-900 mb-3">Welcome to VyLab</h1>
           <p className="text-slate-600 max-w-xl text-lg leading-relaxed mb-6">
             Access CAPS-aligned STEM simulators. Select a module below to start running interactive experiments directly in your browser.
