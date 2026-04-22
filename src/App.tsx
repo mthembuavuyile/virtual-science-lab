@@ -16,6 +16,7 @@ import ReactionRateLab from './components/simulations/ReactionRateLab';
 import EquilibriumLab from './components/simulations/EquilibriumLab';
 import ChlorAlkaliLab from './components/simulations/ChlorAlkaliLab';
 import FertiliserLab from './components/simulations/FertiliserLab';
+import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
   return (
@@ -42,7 +43,7 @@ function App() {
           <Route path="notebook" element={<NotebookPage />} />
         </Route>
 
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );
