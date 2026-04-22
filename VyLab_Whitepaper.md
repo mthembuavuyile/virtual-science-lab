@@ -1,55 +1,74 @@
-# VyLab by Vylex: The Next Generation of Virtual Environments
+# VyLab – Full Platform Overview Document
 
-## Executive Summary
-In an increasingly distributed and digital world, the need for robust, accessible, and secure environments for testing, development, and training has never been greater. Physical hardware constraints, complex provisioning processes, and restrictive geographic boundaries stifle innovation. **VyLab by Vylex** is a comprehensive solution designed to eliminate these barriers. VyLab provides scalable, on-demand virtual laboratory environments that empower teams to simulate, develop, and experiment without limits.
+> **Brand Hierarchy**
+> * **Vylex:** The parent technology company focused on public and enterprise SaaS products.
+> * **Vylex Nexys:** A dedicated sub-brand and division of Vylex focused entirely on the education, research, development, and innovation sectors.
+> * **VyLab:** The flagship digital science laboratory platform built by Vylex Nexys.
 
-## 1. Introduction: The Innovation Bottleneck
-Modern enterprises, educational institutions, and research teams face a common set of challenges when building and managing lab environments:
-*   **High Capital Expenditure (CapEx):** Procurement and maintenance of high-performance hardware are costly.
-*   **Slow Provisioning Time:** Setting up environments for new projects, students, or developers often takes weeks, relying heavily on IT intervention.
-*   **Security & Compliance Risks:** Localized sandboxes are difficult to monitor, patch, and secure uniformly.
-*   **Lack of Portability:** Work isolated on physical machines cannot be easily shared, scaled, or replicated.
+## 1. Overview & Vision
 
-The reliance on static infrastructure is acting as a bottleneck to rapid prototyping and agile learning.
+**VyLab** is a modern, South African edtech platform designed to give high school learners access to a virtual science laboratory directly from their browser. Built specifically around the **CAPS (Curriculum and Assessment Policy Statement)** Physical Sciences syllabus (Grades 10–12), VyLab ensures that all simulations directly support classroom learning outcomes and exam preparation.
 
-## 2. Introducing VyLab 
-Developed by **Vylex**, VyLab represents a paradigm shift in how organizations handle simulation, development, and testing. VyLab is a cloud-native platform that delivers high-fidelity, isolated, and rapidly configurable virtual environments directly to the browser or local client.
-
-Whether you are configuring a complex multi-node Kubernetes cluster for software testing, setting up a data science sandbox heavily reliant on GPU acceleration, or creating standard IT training environments, VyLab provisions precisely what is needed, exactly when it is needed.
-
-## 3. Core Capabilities & Architecture
-VyLab is built upon the foundational principles of seamlessly bridging power with accessibility. 
-
-### 3.1. Instantaneous Environment Provisioning
-Through intelligent infrastructure-as-code (IaC) templates, VyLab reduces deployment times from days to seconds. Administrators can define "Lab Blueprints" that contain entire tech stacks—OS, dependencies, networking rules, and data sets. Users instantiate these blueprints with a single click.
-
-### 3.2. Boundaryless Collaboration
-VyLab breaks down silos. Environments can be paused, shared, or cloned instantly. A developer encountering a bug can share a direct link to their live VyLab state with a peer, guaranteeing an identical environment and eliminating "it works on my machine" syndromes.
-
-### 3.3. Enterprise-Grade Security & Isolation
-Security is built into the Vylex DNA. Every VyLab instance is logically isolated within a secure vault.
-*   **Ephemeral By Default:** Labs can be programmed to self-destruct after use, preventing rogue instances and security vulnerabilities.
-*   **Granular Access Control (RBAC):** Strict permissions dictate who can create, access, or modify specific blueprints.
-*   **Network Guardrails:** Environments can be air-gapped or given restricted internet access based on compliance needs.
-
-### 3.4. Cost Optimization & Resource Tracking
-With hardware provisioning moved to the cloud, VyLab introduces elastic scaling. Environments auto-hibernate when inactive, ensuring that organizations only pay for the compute they actually consume. Comprehensive dashboards provide insights into resource utilization across teams.
-
-## 4. Target Use Cases
-VyLab serves as a versatile foundation for a multitude of industries:
-
-*   **Software Engineering & DevOps:** Provide developers with exact replicas of production environments. Run integration tests in sandboxed VyLabs before deployment.
-*   **Data Science & AI:** Spin up GPU-accelerated environments pre-configured with TensorFlow, PyTorch, and large datasets without waiting for local hardware upgrades.
-*   **Cybersecurity Training:** Create safe, isolated attack-and-defense networks (Blue Team/Red Team simulations) that can be easily reset.
-*   **EdTech & Corporate Training:** Standardize the learning experience. Ensure every student or employee has the exact same software environment on day one, regardless of their personal device.
-
-## 5. The Vylex Advantage
-Vylex has built its reputation on delivering enterprise solutions that do not compromise on user experience. VyLab inherits this philosophy. While competing platforms require heavy technical overhead just to maintain the virtualization infrastructure, VyLab abstracts the complexity. 
-
-With Vylex's commitment to reliability, our global server distribution, and our localized support ecosystem, organizations are not just purchasing a virtualization tool; they are partnering with a technology enabler.
-
-## 6. Conclusion
-The future of work, research, and learning is unbound by physical hardware. VyLab by Vylex delivers the critical infrastructure required to accelerate development, reduce overhead, and unify teams. By providing secure, limitless, and instant access to complex environments, VyLab empowers organizations to focus entirely on what matters most: innovation.
+The platform is built with a clear mission: **to democratize access to high-quality STEM education in South Africa.** It eliminates the need for expensive laboratory equipment, provides safe and repeatable experiment environments, and supports underserved schools with limited physical resources.
 
 ---
-*For more information or to request a demo, visit Vylex.com/VyLab.*
+
+## 2. Platform Architecture & Technical Reality
+
+VyLab is designed for maximum accessibility and simplicity. Despite what traditional "virtual lab" marketing might suggest, VyLab does not rely on complex cloud-native infrastructure provisioning or isolated compute environments.
+
+* **Browser-Based Static App:** VyLab is a static frontend application built with **React** and **TypeScript**. It requires no installation and runs entirely in the user's browser tab.
+* **Local Processing:** Every simulation is a JavaScript calculation running locally on the user's device. When a learner adjusts a variable (e.g., voltage in a circuit), the app recalculates the data and rerenders the UI instantly. No backend server is involved in the experiments, allowing it to perform well even on low-resource devices.
+* **External Dependencies:** The only external network call the application makes is to the language model endpoint powering the AI Syllabus Tutor. The simulators, notebook, and unit navigation are fully local once loaded.
+
+---
+
+## 3. Core Platform Features
+
+* **Interactive Science Simulators:** Dynamic environments where learners manipulate variables and observe outcomes in real-time. These simulations generate live scientific data, allowing students to analyze graphs, understand cause-and-effect, and perform virtual data collection.
+* **AI Syllabus Tutor:** An integrated AI assistant trained specifically on CAPS Physical Sciences guidelines. It can answer questions in plain language, explain complex concepts (like Newton's Second Law or stoichiometry) step-by-step, and assist with exam preparation.
+* **Session Notebook:** A built-in digital notebook where learners can record observations, save notes automatically to their device, and document findings exactly as they would in a physical lab book.
+
+---
+
+## 4. Chemistry Laboratory Capabilities
+
+The Chemistry section contains seven CAPS-aligned units. All units are tagged by difficulty (Standard, High, or Critical) to guide learners.
+
+| Unit | Topic | Key Concepts & Interactive Features |
+| :--- | :--- | :--- |
+| **1** | **Organic Compounds & Macromolecules** | Explores physical/chemical properties based on molecular size and intermolecular forces. Includes solubility testing, boiling point comparisons, viscosity, and reaction behaviors (combustion, esterification, bromine water test). |
+| **2** | **Rate & Extent of Reactions** | Demonstrates collision theory. Learners adjust temperature, concentration, surface area, and catalysts to observe effects on reaction progress via animated particle collisions and real-time kinetic energy tracking. |
+| **3** | **Chemical Equilibrium** | Demonstrates Le Châtelier's principle. Dynamic equilibrium shifting using real examples like the cobalt chloride color change (pink/blue), iron thiocyanate, and nitrogen dioxide systems. |
+| **4** | **Acids & Bases** *(Critical Difficulty)* | Features a full titration simulator. Learners control flow rates from a burette, watch live pH titration curves, detect equivalence points, and test indicators (phenolphthalein, methyl orange, litmus). |
+| **5** | **Electrochemistry** | Covers galvanic and electrolytic cells. Learners build cells by selecting electrodes (lithium to gold), measure live voltage outputs (EMF), and observe oxidation/reduction processes and electron flow. |
+| **6** | **Chlor-Alkali Industry** | Models the industrial membrane cell process for brine electrolysis. Tracks the production of chlorine gas, hydrogen gas, and sodium hydroxide, connecting chemistry to real-world industrial applications. |
+| **7** | **Fertilisers & Soil Science** | Covers NPK macronutrient analysis and plant growth modeling. Learners analyze soil types (sandy, loam, clay) and study the industrial production of fertilizers (Haber and Ostwald processes). |
+
+---
+
+## 5. Physics Laboratory Capabilities
+
+The Physics section currently features two flagship simulators tailored for Grades 10–12, with room for future expansion.
+
+### Ohm’s Law Circuit
+Learners build a simple circuit and adjust parameters to visualize electrical relationships dynamically.
+* **Configurable Variables:** Voltage (V), Resistance (Ω).
+* **Live Outputs:** The system automatically calculates Current (I = V / R) and Power (P = V × I), updating a visual circuit diagram in real time.
+
+### Projectile Motion Simulation
+Makes abstract 2D kinematics visually intuitive by allowing learners to model trajectories.
+* **Configurable Variables:** Initial velocity, launch angle, and gravity (Earth's 9.8 m/s² or custom environments).
+* **Live Outputs:** Calculates maximum height, range, and flight time, plotting the full parabolic trajectory on a 2D graph.
+
+---
+
+## 6. Target Audience & Value Proposition
+
+**Who it is for:**
+* High school learners (Grades 10–12) studying Physical Sciences.
+* Teachers and STEM educators.
+* Schools and STEM-focused institutions with limited physical lab infrastructure.
+
+**Value for Schools:**
+VyLab provides a highly cost-effective, scalable alternative to physical labs. By offering a safe experimentation environment that requires no chemical consumables or physical hardware upkeep, it ensures that every student gets a complete, curriculum-aligned practical science workflow from a single browser tab.
