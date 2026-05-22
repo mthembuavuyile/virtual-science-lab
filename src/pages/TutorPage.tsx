@@ -387,58 +387,67 @@ export default function TutorPage() {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row h-full gap-4 lg:gap-6">
+    <div className="flex flex-col lg:flex-row h-[calc(100dvh-9rem)] lg:h-full gap-3 lg:gap-6">
       
       {/* Sidebar/Left panel: Mode switcher & quick action details */}
-      <div className="w-full lg:w-80 shrink-0 flex flex-col gap-4">
+      <div className="w-full lg:w-80 shrink-0 flex flex-col gap-3 lg:gap-4">
         
         {/* Navigation Switcher */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm space-y-2">
-          <h2 className="font-extrabold text-slate-800 text-sm tracking-wide uppercase mb-1">Study Dashboard</h2>
-          <div className="flex flex-col gap-2">
+        <div className="bg-white border border-slate-200 rounded-2xl p-3 lg:p-4 shadow-sm space-y-1 lg:space-y-2">
+          <h2 className="font-extrabold text-slate-800 text-xs lg:text-sm tracking-wide uppercase mb-1 hidden lg:block">Study Dashboard</h2>
+          <div className="grid grid-cols-3 lg:flex lg:flex-col gap-2">
             <button
               onClick={() => setActiveTab('chat')}
-              className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold transition ${
+              className={`w-full flex items-center justify-center lg:justify-between px-2 lg:px-4 py-2.5 lg:py-3 rounded-xl text-xs font-bold transition ${
                 activeTab === 'chat'
                   ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-md'
                   : 'bg-slate-50 text-slate-700 hover:bg-slate-100'
               }`}
             >
-              <div className="flex items-center gap-2">
-                <Brain className="w-4 h-4" />
-                <span>Conversational AI Tutor</span>
+              <div className="flex flex-col lg:flex-row items-center gap-1 lg:gap-2 text-center lg:text-left w-full lg:w-auto">
+                <Brain className="w-4 h-4 shrink-0" />
+                <span className="text-[10px] sm:text-xs">
+                  <span className="lg:hidden">AI Tutor</span>
+                  <span className="hidden lg:inline">Conversational AI Tutor</span>
+                </span>
               </div>
-              <ChevronRight className="w-3.5 h-3.5 opacity-60" />
+              <ChevronRight className="w-3.5 h-3.5 opacity-60 hidden lg:block" />
             </button>
 
             <button
               onClick={() => setActiveTab('exam')}
-              className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold transition ${
+              className={`w-full flex items-center justify-center lg:justify-between px-2 lg:px-4 py-2.5 lg:py-3 rounded-xl text-xs font-bold transition ${
                 activeTab === 'exam'
                   ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-md'
                   : 'bg-slate-50 text-slate-700 hover:bg-slate-100'
               }`}
             >
-              <div className="flex items-center gap-2">
-                <Award className="w-4 h-4" />
-                <span>Matric Exam Prep Grader</span>
+              <div className="flex flex-col lg:flex-row items-center gap-1 lg:gap-2 text-center lg:text-left w-full lg:w-auto">
+                <Award className="w-4 h-4 shrink-0" />
+                <span className="text-[10px] sm:text-xs">
+                  <span className="lg:hidden">Exam Prep</span>
+                  <span className="hidden lg:inline">Matric Exam Prep Grader</span>
+                </span>
               </div>
-              <ChevronRight className="w-3.5 h-3.5 opacity-60" />
+              <ChevronRight className="w-3.5 h-3.5 opacity-60 hidden lg:block" />
             </button>
 
             <button
               onClick={() => setActiveTab('formula')}
-              className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold transition ${
+              className={`w-full flex items-center justify-center lg:justify-between px-2 lg:px-4 py-2.5 lg:py-3 rounded-xl text-xs font-bold transition ${
                 activeTab === 'formula'
                   ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-md'
                   : 'bg-slate-50 text-slate-700 hover:bg-slate-100'
               }`}
             >
-              <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4" />
-                <span>Interactive CAPS Sheet</span>
+              <div className="flex flex-col lg:flex-row items-center gap-1 lg:gap-2 text-center lg:text-left w-full lg:w-auto">
+                <FileText className="w-4 h-4 shrink-0" />
+                <span className="text-[10px] sm:text-xs">
+                  <span className="lg:hidden">CAPS Sheet</span>
+                  <span className="hidden lg:inline">Interactive CAPS Sheet</span>
+                </span>
               </div>
-              <ChevronRight className="w-3.5 h-3.5 opacity-60" />
+              <ChevronRight className="w-3.5 h-3.5 opacity-60 hidden lg:block" />
             </button>
           </div>
         </div>
@@ -477,7 +486,7 @@ export default function TutorPage() {
       </div>
 
       {/* Main Panel Content: Tab Panels */}
-      <div className="flex-1 bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col min-h-[500px]">
+      <div className="flex-1 bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col min-h-0 lg:min-h-[500px]">
         <AnimatePresence mode="wait">
           
           {/* TAB 1: CONVERSATIONAL TUTOR CHAT */}

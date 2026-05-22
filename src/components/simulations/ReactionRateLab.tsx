@@ -132,7 +132,7 @@ export default function ReactionRateLab() {
 
         <div className="flex-1 relative bg-[#1E293B] overflow-hidden simulation-grid">
           {/* Particle Container */}
-          <div className="absolute inset-0 m-8 border-2 border-white/10 rounded-2xl overflow-hidden bg-black/20">
+          <div className="absolute inset-0 m-3 sm:m-8 border-2 border-white/10 rounded-2xl overflow-hidden bg-black/20">
             {particles.map(p => (
               <motion.div
                 key={p.id}
@@ -161,14 +161,14 @@ export default function ReactionRateLab() {
           </div>
 
           {/* Stats Overlay */}
-          <div className="absolute top-12 left-12 grid grid-cols-2 gap-4">
-            <div className="bg-black/40 backdrop-blur-md p-3 rounded-lg border border-white/10">
-              <p className="text-[8px] font-bold text-white/40 uppercase mb-1">Avg. Kinetic Energy</p>
-              <p className="text-sm font-mono font-bold text-white">{(temperature * 0.01).toFixed(2)} eV</p>
+          <div className="absolute top-6 left-6 sm:top-12 sm:left-12 grid grid-cols-2 gap-2 sm:gap-4 pointer-events-none z-10">
+            <div className="bg-black/60 backdrop-blur-md p-1.5 sm:p-3 rounded-lg border border-white/10">
+              <p className="text-[6px] sm:text-[8px] font-bold text-white/40 uppercase mb-0.5 sm:mb-1">Avg. Kinetic Energy</p>
+              <p className="text-[10px] sm:text-sm font-mono font-bold text-white">{(temperature * 0.01).toFixed(2)} eV</p>
             </div>
-            <div className="bg-black/40 backdrop-blur-md p-3 rounded-lg border border-white/10">
-              <p className="text-[8px] font-bold text-white/40 uppercase mb-1">Collision Frequency</p>
-              <p className="text-sm font-mono font-bold text-white">{(concentration * temperature * 0.005).toFixed(1)} Hz</p>
+            <div className="bg-black/60 backdrop-blur-md p-1.5 sm:p-3 rounded-lg border border-white/10">
+              <p className="text-[6px] sm:text-[8px] font-bold text-white/40 uppercase mb-0.5 sm:mb-1">Collision Freq.</p>
+              <p className="text-[10px] sm:text-sm font-mono font-bold text-white">{(concentration * temperature * 0.005).toFixed(1)} Hz</p>
             </div>
           </div>
         </div>

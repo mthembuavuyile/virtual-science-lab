@@ -76,7 +76,7 @@ export default function GalvanicCellLab() {
 
         <div className="flex-1 relative bg-[#F8FAFC] flex items-center justify-center overflow-hidden simulation-grid min-h-[320px] lg:min-h-[400px]">
           {/* Voltmeter */}
-          <div className="absolute top-8 lg:top-12 left-1/2 -translate-x-1/2 flex flex-col items-center scale-75 lg:scale-100 origin-top">
+          <div className="absolute top-8 lg:top-12 left-1/2 -translate-x-1/2 flex flex-col items-center scale-[0.65] sm:scale-75 lg:scale-100 origin-top">
             <div className="w-24 h-24 bg-[#1E293B] rounded-2xl border-4 border-[#475569] flex flex-col items-center justify-center shadow-xl relative">
               <div className="text-emerald-400 font-mono text-xl font-bold">
                 {isConnected ? cellPotential.toFixed(2) : '0.00'}
@@ -89,7 +89,7 @@ export default function GalvanicCellLab() {
           </div>
 
           {/* Left Beaker */}
-          <div className="absolute bottom-8 lg:bottom-12 left-1/4 -translate-x-1/2 flex flex-col items-center scale-75 lg:scale-100 origin-bottom z-10">
+          <div className="absolute bottom-8 lg:bottom-12 left-[20%] sm:left-1/4 -translate-x-1/2 flex flex-col items-center scale-[0.65] sm:scale-75 lg:scale-100 origin-bottom z-10">
             <div className="relative w-40 h-48 bg-white/40 border-2 border-white/60 rounded-b-3xl overflow-hidden shadow-inner">
               {/* Solution */}
               <div 
@@ -110,7 +110,7 @@ export default function GalvanicCellLab() {
           </div>
 
           {/* Right Beaker */}
-          <div className="absolute bottom-8 lg:bottom-12 right-1/4 translate-x-1/2 flex flex-col items-center scale-75 lg:scale-100 origin-bottom z-10">
+          <div className="absolute bottom-8 lg:bottom-12 right-[20%] sm:right-1/4 translate-x-1/2 flex flex-col items-center scale-[0.65] sm:scale-75 lg:scale-100 origin-bottom z-10">
             <div className="relative w-40 h-48 bg-white/40 border-2 border-white/60 rounded-b-3xl overflow-hidden shadow-inner">
               {/* Solution */}
               <div 
@@ -131,7 +131,7 @@ export default function GalvanicCellLab() {
           </div>
 
           {/* Salt Bridge */}
-          <div className="absolute bottom-28 lg:bottom-32 left-1/2 -translate-x-1/2 w-[60%] lg:w-[40%] h-12 border-x-8 border-t-8 border-white/80 rounded-t-full scale-75 lg:scale-100 origin-bottom z-0" />
+          <div className="absolute bottom-28 lg:bottom-32 left-1/2 -translate-x-1/2 w-[68%] sm:w-[60%] lg:w-[40%] h-12 border-x-8 border-t-8 border-white/80 rounded-t-full scale-[0.65] sm:scale-75 lg:scale-100 origin-bottom z-0" />
 
           {/* Electron Flow Animation */}
           <AnimatePresence>

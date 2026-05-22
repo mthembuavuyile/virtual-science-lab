@@ -647,7 +647,7 @@ export default function SbaGuidePage() {
 
             {/* Results display */}
             {!loading && report && (
-              <div className="space-y-5 overflow-y-auto flex-1 text-xs pr-1">
+              <div className="space-y-5 xl:overflow-y-auto flex-1 text-xs pr-1">
                 
                 {/* consistency & math */}
                 <div className="bg-slate-800/80 border border-slate-700/50 p-4 rounded-xl space-y-2">

@@ -23,6 +23,7 @@ import { motion, AnimatePresence } from 'motion/react';
 export default function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [chemExpanded, setChemExpanded] = useState(true);
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -182,8 +183,16 @@ export default function AppLayout() {
         {/* Top header */}
         <header className="h-12 lg:h-14 bg-white border-b border-slate-200 flex items-center px-4 lg:px-6 shrink-0 justify-between shadow-sm z-10">
           <div className="flex items-center gap-3">
-            {/* Mobile logo / back */}
-            <div className="lg:hidden w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center cursor-pointer" onClick={() => navigate('/')}>
+            {/* Hamburger button on mobile */}
+            <button 
+              onClick={() => setIsMobileDrawerOpen(true)}
+              className="lg:hidden p-1 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-800 transition-colors"
+              aria-label="Open mobile menu"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+            {/* Mobile logo */}
+            <div className="lg:hidden w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center cursor-pointer" onClick={() => navigate('/app')}>
               <Beaker className="text-white w-4 h-4" />
             </div>
             <h2 className="font-semibold text-sm lg:text-lg text-slate-800 truncate">
@@ -229,6 +238,122 @@ export default function AppLayout() {
           })}
         </div>
       </nav>
+
+      {/* ─── MOBILE SLIDE-OVER DRAWER (AnimatePresence) ─── */}
+      <AnimatePresence>
+        {isMobileDrawerOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.5 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileDrawerOpen(false)}
+              className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 lg:hidden"
+            />
+
+            {/* Drawer */}
+            <motion.aside
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed left-0 top-0 bottom-0 w-72 bg-white border-r border-slate-200 flex flex-col z-50 lg:hidden shadow-2xl overflow-hidden"
+            >
+              <div className="h-14 flex items-center justify-between px-4 border-b border-slate-200">
+                <div className="flex items-center cursor-pointer" onClick={() => { navigate('/app'); setIsMobileDrawerOpen(false); }}>
+                  <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center shrink-0">
+                    <Beaker className="text-white w-5 h-5" />
+                  </div>
+                  <span className="ml-3 font-bold text-lg tracking-tight whitespace-nowrap">VyLab</span>
+                </div>
+                <button
+                  onClick={() => setIsMobileDrawerOpen(false)}
+                  className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-500 hover:text-slate-700 transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <nav className="flex-1 py-4 px-3 flex flex-col gap-1 overflow-y-auto">
+                {/* Dashboard */}
+                <NavLink
+                  to="/app"
+                  onClick={() => setIsMobileDrawerOpen(false)}
+                  className={({ isActive }) => `
+                    flex items-center px-3 py-2.5 rounded-lg transition-all text-sm
+                    ${isActive ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}
+                  `}
+                  end
+                >
+                  <LayoutDashboard className="w-5 h-5 shrink-0 mr-3" />
+                  <span className="text-sm">Dashboard</span>
+                </NavLink>
+
+                {/* Chemistry Unit Dropdown */}
+                <div className="space-y-0.5">
+                  <button
+                    onClick={() => setChemExpanded(!chemExpanded)}
+                    className={`flex items-center px-3 py-2.5 rounded-lg transition-all w-full text-left text-sm mt-2 ${
+                      isChemRoute ? 'bg-pink-50 text-pink-700 font-semibold' : 'text-slate-600 hover:bg-slate-100'
+                    }`}
+                  >
+                    <Beaker className="w-5 h-5 shrink-0 mr-3" />
+                    <span className="flex-1 text-sm">Chemistry</span>
+                    {chemExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                  </button>
+
+                  <AnimatePresence>
+                    {chemExpanded && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="ml-4 border-l-2 border-slate-100 pl-2 space-y-0.5">
+                          {chemUnits.map((item) => (
+                            <NavLink
+                              key={item.path}
+                              to={item.path}
+                              onClick={() => setIsMobileDrawerOpen(false)}
+                              className={({ isActive }) => `
+                                flex items-center px-3 py-2 rounded-lg transition-all text-sm
+                                ${isActive ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'}
+                              `}
+                              end
+                            >
+                              <item.icon className="w-4 h-4 shrink-0 mr-2.5" />
+                              <span className="text-[13px]">{item.name}</span>
+                            </NavLink>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                <div className="h-px bg-slate-100 my-2" />
+
+                {otherNav.map((item) => (
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
+                    onClick={() => setIsMobileDrawerOpen(false)}
+                    className={({ isActive }) => `
+                      flex items-center px-3 py-2.5 rounded-lg transition-all text-sm
+                      ${isActive ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}
+                    `}
+                  >
+                    <item.icon className="w-5 h-5 shrink-0 mr-3" />
+                    <span className="text-sm">{item.name}</span>
+                  </NavLink>
+                ))}
+              </nav>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

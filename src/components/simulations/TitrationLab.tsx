@@ -194,17 +194,17 @@ export default function TitrationLab() {
           </div>
 
           {/* Labels */}
-          <div className="absolute top-20 left-12 space-y-4">
-            <div className="bg-white p-3 rounded-lg border border-[#E2E8F0] shadow-sm max-w-[180px]">
-              <p className="text-[10px] font-bold text-[#64748B] uppercase mb-1">Burette Content</p>
-              <p className="text-xs font-semibold text-[#0F172A]">NaOH (Base)</p>
-              <p className="text-[10px] text-[#94A3B8]">Concentration: 0.1 mol/dm³</p>
+          <div className="absolute top-14 left-2 sm:left-12 space-y-2 max-w-[120px] sm:max-w-[180px] z-10 pointer-events-none sm:pointer-events-auto">
+            <div className="bg-white/95 backdrop-blur-xs p-2 sm:p-3 rounded-lg border border-[#E2E8F0] shadow-xs">
+              <p className="text-[8px] sm:text-[10px] font-bold text-[#64748B] uppercase mb-0.5 sm:mb-1">Burette Content</p>
+              <p className="text-[10px] sm:text-xs font-semibold text-[#0F172A]">NaOH (Base)</p>
+              <p className="text-[8px] sm:text-[10px] text-[#94A3B8]">0.1 mol/dm³</p>
             </div>
-            <div className="bg-white p-3 rounded-lg border border-[#E2E8F0] shadow-sm max-w-[180px]">
-              <p className="text-[10px] font-bold text-[#64748B] uppercase mb-1">Flask Content</p>
-              <p className="text-xs font-semibold text-[#0F172A]">HCl (Acid)</p>
-              <p className="text-[10px] text-[#94A3B8]">Volume: 25.00 mL</p>
-              <p className="text-[10px] text-[#94A3B8]">Concentration: 0.1 mol/dm³</p>
+            <div className="bg-white/95 backdrop-blur-xs p-2 sm:p-3 rounded-lg border border-[#E2E8F0] shadow-xs">
+              <p className="text-[8px] sm:text-[10px] font-bold text-[#64748B] uppercase mb-0.5 sm:mb-1">Flask Content</p>
+              <p className="text-[10px] sm:text-xs font-semibold text-[#0F172A]">HCl (Acid)</p>
+              <p className="text-[8px] sm:text-[10px] text-[#94A3B8]">Volume: 25.00 mL</p>
+              <p className="text-[8px] sm:text-[10px] text-[#94A3B8]">0.1 mol/dm³</p>
             </div>
           </div>
         </div>

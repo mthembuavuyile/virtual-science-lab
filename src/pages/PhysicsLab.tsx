@@ -10,7 +10,7 @@ export default function PhysicsLab() {
   const [activeTab, setActiveTab] = useState<'circuit' | 'kinematics' | 'electrodynamics'>('circuit');
 
   return (
-    <div className="max-w-6xl mx-auto flex flex-col h-full">
+    <div className="max-w-6xl mx-auto flex flex-col lg:h-full">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <h1 className="text-xl lg:text-2xl font-bold text-slate-900 flex items-center gap-3">
           <div className="bg-blue-100 p-2 rounded-lg">
@@ -40,7 +40,7 @@ export default function PhysicsLab() {
         </div>
       </div>
 
-      <div className="flex-grow bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col min-h-[500px]">
+      <div className="flex-grow bg-white border border-slate-200 rounded-2xl shadow-sm lg:overflow-hidden flex flex-col min-h-[400px] lg:min-h-[500px]">
         {activeTab === 'circuit' && <CircuitSimulator />}
         {activeTab === 'kinematics' && <ProjectileSimulator />}
         {activeTab === 'electrodynamics' && <Electrodynamics3D />}
@@ -94,10 +94,10 @@ function CircuitSimulator() {
   const bulbShadow = power / 2;
 
   return (
-    <div className="flex flex-col lg:flex-row h-full">
+    <div className="flex flex-col lg:flex-row lg:h-full">
       {/* Visualizer */}
-      <div className="lg:w-1/2 p-4 lg:p-8 bg-slate-50 border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col items-center justify-center">
-         <div className="circuit-board scale-90 md:scale-100">
+      <div className="lg:w-1/2 p-4 lg:p-6 bg-slate-50 border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col items-center justify-center shrink-0 min-h-[300px] lg:min-h-0">
+         <div className="circuit-board scale-90 sm:scale-100">
            <div className="wire-path"></div>
            
            {/* Battery */}
@@ -126,8 +126,8 @@ function CircuitSimulator() {
       </div>
 
       {/* Controls */}
-      <div className="lg:w-1/2 flex flex-col justify-between">
-        <div className="p-4 lg:p-8">
+      <div className="lg:w-1/2 flex flex-col justify-between lg:overflow-y-auto">
+        <div className="p-4 lg:p-6">
           <h3 className="text-sm lg:text-base font-bold text-slate-900 mb-6">Circuit Parameters</h3>
           
           <div className="space-y-6">
@@ -167,7 +167,7 @@ function CircuitSimulator() {
           </div>
         </div>
 
-        <div className="bg-slate-900 text-slate-100 p-6 flex flex-col justify-center border-t lg:border-t-0 border-slate-800">
+        <div className="bg-slate-900 text-slate-100 p-6 flex flex-col justify-center border-t border-slate-800">
            <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-2">
              <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div> Live Telemetry
            </div>
@@ -327,9 +327,9 @@ function ProjectileSimulator() {
   }, [points]);
 
   return (
-    <div className="flex flex-col lg:flex-row h-full">
+    <div className="flex flex-col lg:flex-row lg:h-full">
       {/* Controls panel */}
-      <div className="lg:w-4/12 p-4 lg:p-6 bg-slate-50 border-b lg:border-b-0 lg:border-r border-slate-200 overflow-y-auto">
+      <div className="lg:w-4/12 p-4 lg:p-6 bg-slate-50 border-t lg:border-t-0 lg:border-r border-slate-200 lg:overflow-y-auto order-2 lg:order-1">
         <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">Launch Parameters</h3>
         
         <div className="space-y-5">
@@ -413,8 +413,8 @@ function ProjectileSimulator() {
       </div>
 
       {/* Trajectory Canvas & Graphical Analysis */}
-      <div className="lg:w-8/12 p-4 lg:p-6 flex flex-col gap-4">
-        <div className="bg-white border border-slate-200 rounded-2xl p-2 relative h-[280px] shadow-sm">
+      <div className="lg:w-8/12 p-4 lg:p-6 flex flex-col gap-4 order-1 lg:order-2">
+        <div className="bg-white border border-slate-200 rounded-2xl p-2 relative h-[200px] sm:h-[240px] md:h-[280px] shadow-sm shrink-0">
           <div className="absolute top-4 left-4 z-10 bg-slate-900/80 backdrop-blur-md text-white text-[9px] font-bold px-2 py-0.5 rounded-full border border-slate-700 flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
             Visual Trajectory Path
@@ -422,11 +422,11 @@ function ProjectileSimulator() {
           <canvas ref={canvasRef} className="w-full h-full block bg-slate-50/50 rounded-xl" />
         </div>
 
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex-1 flex flex-col min-h-[220px]">
+        <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex-1 flex flex-col min-h-[200px] sm:min-h-[220px]">
           <h4 className="font-bold text-slate-700 text-xs flex items-center gap-2 mb-3">
              <Activity className="w-4 h-4 text-blue-500" /> Height vs Distance Analysis (CAPS Graphing)
           </h4>
-          <div className="flex-1 w-full h-[180px]">
+          <div className="flex-1 w-full h-[140px] sm:h-[180px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
                 data={points}

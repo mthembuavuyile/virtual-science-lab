@@ -185,8 +185,19 @@ export default function Electrodynamics3D() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const width = canvas.width;
-    const height = canvas.height;
+    // Get actual layout size of the canvas
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    
+    // Set internal canvas resolution to match layout size * pixel ratio
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    
+    // Scale drawings so they match CSS size
+    ctx.scale(dpr, dpr);
+    
+    const width = rect.width;
+    const height = rect.height;
     ctx.clearRect(0, 0, width, height);
 
     // Draw Grid Lines
@@ -269,11 +280,11 @@ export default function Electrodynamics3D() {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row h-full">
+    <div className="flex flex-col lg:flex-row lg:h-full">
       {/* 3D Visualizer & Oscilloscope */}
-      <div className="lg:w-7/12 p-4 lg:p-6 bg-slate-50 border-r border-slate-200 flex flex-col gap-4">
+      <div className="lg:w-7/12 p-4 lg:p-6 bg-slate-50 border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col gap-4 shrink-0">
         {/* Three.js Container */}
-        <div className="bg-slate-900 rounded-2xl relative h-[360px] overflow-hidden border border-slate-800 shadow-inner flex flex-col p-2">
+        <div className="bg-slate-900 rounded-2xl relative h-[220px] sm:h-[280px] md:h-[360px] overflow-hidden border border-slate-800 shadow-inner flex flex-col p-2 shrink-0">
           <div className="absolute top-4 left-4 z-10 bg-black/40 backdrop-blur-md px-3 py-1 rounded-full text-white text-[10px] font-bold tracking-wider flex items-center gap-1.5 border border-white/10">
             <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
             3D Physics Engine (Three.js)
@@ -292,7 +303,7 @@ export default function Electrodynamics3D() {
             <span className="font-mono text-slate-500">Live Telemetry</span>
           </div>
           <div className="h-28 bg-slate-900 border border-slate-800/80 rounded-xl overflow-hidden relative">
-            <canvas ref={oscRef} width="400" height="112" className="w-full h-full block" />
+            <canvas ref={oscRef} className="w-full h-full block" />
             <div className="absolute bottom-2 right-2 text-[9px] font-mono text-slate-500 bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800">
               {mode === 'dc_motor' 
                 ? `Steady state: ~${voltage.toFixed(1)}V (DC)`
@@ -304,7 +315,7 @@ export default function Electrodynamics3D() {
       </div>
 
       {/* Simulator Controls & Lesson */}
-      <div className="lg:w-5/12 p-4 lg:p-6 flex flex-col justify-between overflow-y-auto">
+      <div className="lg:w-5/12 p-4 lg:p-6 flex flex-col justify-between lg:overflow-y-auto">
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <h3 className="font-bold text-slate-900 text-base">Electrodynamics Setup</h3>
