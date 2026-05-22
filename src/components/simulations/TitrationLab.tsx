@@ -25,6 +25,7 @@ import {
   ResponsiveContainer,
   ReferenceLine
 } from 'recharts';
+import AnalyzeExperimentPanel from '../AnalyzeExperimentPanel';
 
 interface DataPoint {
   volume: number;
@@ -316,6 +317,20 @@ export default function TitrationLab() {
           </p>
         </Card>
       </div>
+
+      <AnalyzeExperimentPanel 
+        simName="Acid-Base Titration (HCl + NaOH)" 
+        state={{
+          acidName: 'HCl',
+          acidVolumeMl: acidVolume,
+          acidConcentrationMolar: acidConcentration,
+          baseName: 'NaOH',
+          baseConcentrationMolar: baseConcentration,
+          addedVolumeMl: Number(addedVolume.toFixed(2)),
+          currentPH: Number(currentPH.toFixed(2)),
+          indicator: indicator
+        }}
+      />
     </div>
   );
 }

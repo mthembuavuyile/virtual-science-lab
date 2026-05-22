@@ -7,6 +7,8 @@ import ChemistryHub from './pages/ChemistryHub';
 import PhysicsLab from './pages/PhysicsLab';
 import TutorPage from './pages/TutorPage';
 import NotebookPage from './pages/NotebookPage';
+import SbaGuidePage from './pages/SbaGuidePage';
+import SandboxPage from './pages/SandboxPage';
 
 // Unit-specific lab pages
 import AcidsBasesPage from './pages/AcidsBasesPage';
@@ -40,6 +42,8 @@ function App() {
           {/* Other Sections */}
           <Route path="physics" element={<PhysicsLab />} />
           <Route path="tutor" element={<TutorPage />} />
+          <Route path="sandbox" element={<SandboxPage />} />
+          <Route path="sba-guide" element={<SbaGuidePage />} />
           <Route path="notebook" element={<NotebookPage />} />
         </Route>
 

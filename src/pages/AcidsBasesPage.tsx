@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FlaskConical, Beaker, Droplets } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import TitrationLab from '../components/simulations/TitrationLab';
+import AnalyzeExperimentPanel from '../components/AnalyzeExperimentPanel';
 
 export default function AcidsBasesPage() {
   const [activeTab, setActiveTab] = useState<'titration' | 'ph' | 'mix'>('titration');
@@ -138,6 +139,17 @@ function PhSimulatorInline() {
           </div>
         </div>
       </div>
+
+      <AnalyzeExperimentPanel 
+        simName="pH and Indicators Simulator" 
+        state={{
+          acidConcentrationMolar: conc,
+          indicatorSelected: indicator,
+          baseAddedMl: baseAdded,
+          currentPH: Number(pH.toFixed(2)),
+          observationText: pH < 3 ? 'STRONGLY ACIDIC' : pH < 7 ? 'Weakly acidic' : (pH >= 7 && pH <= 7.1) ? 'NEUTRALISATION POINT' : pH <= 11 ? 'ALKALINE. Excess NaOH' : 'STRONGLY ALKALINE.'
+        }}
+      />
     </div>
   );
 }
@@ -228,6 +240,15 @@ function MixSimulatorInline() {
           </div>
         )}
       </div>
+
+      <AnalyzeExperimentPanel 
+        simName="Reagent Mixing and Precipitation Lab" 
+        state={{
+          beakerIngredients: beaker.map(b => `${b.name} (${b.sub})`),
+          isMixed: mixedInfo !== null,
+          reactionDescription: mixedInfo ? mixedInfo.text : 'Not mixed yet'
+        }}
+      />
     </div>
   );
 }

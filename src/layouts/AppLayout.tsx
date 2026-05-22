@@ -15,6 +15,8 @@ import {
   Sprout,
   ChevronDown,
   ChevronRight,
+  FileText,
+  Terminal,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -40,14 +42,15 @@ export default function AppLayout() {
   const otherNav = [
     { name: 'Physics Lab', path: '/app/physics', icon: Zap },
     { name: 'AI Tutor', path: '/app/tutor', icon: MessageSquare },
+    { name: 'AI Sandbox', path: '/app/sandbox', icon: Terminal },
+    { name: 'SBA Lab Guide', path: '/app/sba-guide', icon: FileText },
     { name: 'My Notebook', path: '/app/notebook', icon: BookOpen },
   ];
 
   // Bottom bar items (mobile)
-  const bottomNavItems = [
+  const bottomNavItems: Array<{ name: string; path: string; icon: any; matchPrefix?: string }> = [
     { name: 'Home', path: '/app', icon: LayoutDashboard },
-    { name: 'Chemistry', path: '/app/chemistry', icon: Beaker, matchPrefix: '/app/chemistry' },
-    { name: 'Physics', path: '/app/physics', icon: Zap },
+    { name: 'SBA Guide', path: '/app/sba-guide', icon: FileText },
     { name: 'Tutor', path: '/app/tutor', icon: MessageSquare },
     { name: 'Notebook', path: '/app/notebook', icon: BookOpen },
   ];
