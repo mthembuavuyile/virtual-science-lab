@@ -7,6 +7,9 @@ export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
     plugins: [react(), tailwindcss()],
+    build: {
+      sourcemap: false, // Prevent source code inspection in production DevTools
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),

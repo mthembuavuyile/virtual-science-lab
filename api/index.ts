@@ -6,7 +6,103 @@ import { GoogleGenAI } from '@google/genai';
 dotenv.config();
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: '100kb' }));
+
+// ── Security: Allowed origins ──
+const ALLOWED_ORIGINS = [
+  'https://vylab.vylexnexys.co.za',
+  'https://www.vylab.vylexnexys.co.za',
+];
+
+// Allow localhost in development
+if (!process.env.VERCEL) {
+  ALLOWED_ORIGINS.push('http://localhost:3000', 'http://localhost:5173');
+}
+
+// Origin validation middleware - blocks direct API calls from Postman/scripts
+const originGuard = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  const origin = req.headers['origin'] as string | undefined;
+  const referer = req.headers['referer'] as string | undefined;
+
+  // In production, require a valid origin or referer from our domain
+  if (process.env.VERCEL) {
+    const isAllowedOrigin = origin && ALLOWED_ORIGINS.some(o => origin.startsWith(o));
+    const isAllowedReferer = referer && ALLOWED_ORIGINS.some(o => referer.startsWith(o));
+
+    if (!isAllowedOrigin && !isAllowedReferer) {
+      return res.status(403).json({ error: 'Forbidden: Invalid request origin.' });
+    }
+  }
+
+  next();
+};
+
+// ── Security: Payload validation ──
+const MAX_MESSAGE_LENGTH = 5000;
+const MAX_CODE_HISTORY_LENGTH = 50000;
+const MAX_HISTORY_ENTRIES = 50;
+
+const VALID_ACTIONS = [
+  'askTutor',
+  'analyzeExperiment',
+  'evaluateQuizAnswer',
+  'generateMatricExamChallenge',
+  'evaluateExamAnswer',
+  'moderateSbaReport',
+  'generateDynamicSandboxLab',
+];
+
+function validatePayload(action: string, payload: any): string | null {
+  if (!VALID_ACTIONS.includes(action)) {
+    return 'Unknown action.';
+  }
+  if (!payload || typeof payload !== 'object') {
+    return 'Payload is required and must be an object.';
+  }
+
+  switch (action) {
+    case 'askTutor': {
+      if (typeof payload.message !== 'string' || payload.message.length > MAX_MESSAGE_LENGTH) {
+        return `Message must be a string under ${MAX_MESSAGE_LENGTH} characters.`;
+      }
+      if (payload.history && (!Array.isArray(payload.history) || payload.history.length > MAX_HISTORY_ENTRIES)) {
+        return `History must be an array with at most ${MAX_HISTORY_ENTRIES} entries.`;
+      }
+      break;
+    }
+    case 'analyzeExperiment': {
+      if (typeof payload.simName !== 'string' || payload.simName.length > 200) {
+        return 'Invalid simulation name.';
+      }
+      break;
+    }
+    case 'evaluateQuizAnswer': {
+      if (typeof payload.question !== 'string' || payload.question.length > MAX_MESSAGE_LENGTH) {
+        return 'Invalid question field.';
+      }
+      break;
+    }
+    case 'generateMatricExamChallenge': {
+      if (typeof payload.topic !== 'string' || payload.topic.length > 500) {
+        return 'Topic must be a string under 500 characters.';
+      }
+      break;
+    }
+    case 'generateDynamicSandboxLab': {
+      if (typeof payload.prompt !== 'string' || payload.prompt.length > MAX_MESSAGE_LENGTH) {
+        return `Prompt must be a string under ${MAX_MESSAGE_LENGTH} characters.`;
+      }
+      if (payload.codeHistory && Array.isArray(payload.codeHistory)) {
+        const totalSize = payload.codeHistory.reduce((sum: number, c: string) => sum + (c?.length || 0), 0);
+        if (totalSize > MAX_CODE_HISTORY_LENGTH) {
+          return `Code history total size exceeds ${MAX_CODE_HISTORY_LENGTH} characters.`;
+        }
+      }
+      break;
+    }
+  }
+  return null; // valid
+}
 
 // Initialize GoogleGenAI
 const apiKey = process.env.GEMINI_API_KEY || '';
@@ -22,7 +118,8 @@ const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute window
 const MAX_REQUESTS_PER_WINDOW = 20;
 
 const rateLimiter = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-  const ip = (req.headers['x-forwarded-for'] as string) || req.socket.remoteAddress || '127.0.0.1';
+  // Use x-real-ip (set by Vercel, cannot be spoofed by client) instead of x-forwarded-for
+  const ip = (req.headers['x-real-ip'] as string) || req.socket.remoteAddress || '127.0.0.1';
   const now = Date.now();
 
   let log = ipRequestMap.get(ip);
@@ -59,11 +156,17 @@ setInterval(() => {
 }, 60 * 60 * 1000);
 
 // Proxy endpoint for Gemini requests
-app.post('/api/gemini', rateLimiter, async (req, res) => {
+app.post('/api/gemini', originGuard, rateLimiter, async (req, res) => {
   const { action, payload } = req.body;
 
   if (!action) {
     return res.status(400).json({ error: 'Action is required' });
+  }
+
+  // Validate payload before processing
+  const validationError = validatePayload(action, payload);
+  if (validationError) {
+    return res.status(400).json({ error: validationError });
   }
 
   if (!apiKey) {

@@ -65,26 +65,41 @@ function cleanJsonString(str: string): string {
 }
 
 // General helper to perform the proxy fetch
+const API_TIMEOUT_MS = 30000; // 30 second timeout
+
 async function callProxy(action: string, payload: any): Promise<string> {
-  const response = await fetch('/api/gemini', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ action, payload }),
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
 
-  if (!response.ok) {
-    let errorMsg = 'An error occurred while communicating with the server.';
-    try {
-      const data = await response.json();
-      errorMsg = data.error || errorMsg;
-    } catch (_) {}
-    throw new Error(errorMsg);
+  try {
+    const response = await fetch('/api/gemini', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ action, payload }),
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      let errorMsg = 'An error occurred while communicating with the server.';
+      try {
+        const data = await response.json();
+        errorMsg = data.error || errorMsg;
+      } catch (_) {}
+      throw new Error(errorMsg);
+    }
+
+    const data = await response.json();
+    return data.text;
+  } catch (error: any) {
+    if (error.name === 'AbortError') {
+      throw new Error('Request timed out. Please try again.');
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
   }
-
-  const data = await response.json();
-  return data.text;
 }
 
 /**
