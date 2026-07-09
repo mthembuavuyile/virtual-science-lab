@@ -114,7 +114,7 @@ export default function AppLayout() {
           {expanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
         </button>
 
-        <AnimatePresence>
+        <AnimatePresence initial={false}>
           {expanded && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
