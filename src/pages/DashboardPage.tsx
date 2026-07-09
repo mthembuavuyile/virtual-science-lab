@@ -9,9 +9,9 @@ export default function DashboardPage() {
 
   // Pick 3 featured labs to showcase
   const featured = [
-    labRegistry.find(l => l.id === 'acids-bases')!,
+    labRegistry.find(l => l.id === 'electrodynamics')!,
     labRegistry.find(l => l.id === 'ohms-law')!,
-    labRegistry.find(l => l.id === 'equilibrium')!,
+    labRegistry.find(l => l.id === 'electrochemistry')!,
   ].filter(Boolean);
 
   const chemCount = labRegistry.filter(l => l.discipline === 'Chemistry').length;
@@ -57,7 +57,7 @@ export default function DashboardPage() {
 
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-bold text-slate-800">Featured Simulators</h2>
-        <button 
+        <button
           onClick={() => navigate('/app/labs')}
           className="text-sm font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1 transition-colors"
         >
@@ -69,10 +69,10 @@ export default function DashboardPage() {
         {featured.map((lab) => {
           const DIcon = lab.icon;
           return (
-            <motion.div 
+            <motion.div
               key={lab.id}
-              whileHover={{ y: -4 }} 
-              className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-all cursor-pointer group flex flex-col" 
+              whileHover={{ y: -4 }}
+              className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-all cursor-pointer group flex flex-col"
               onClick={() => navigate(`/app/labs/${lab.id}`)}
             >
               <div className={`h-32 bg-gradient-to-br ${lab.gradient} flex items-center justify-center relative overflow-hidden`}>

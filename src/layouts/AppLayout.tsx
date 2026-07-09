@@ -72,6 +72,7 @@ export default function AppLayout() {
     accentClass,
     isSidebarExpanded,
     onLinkClick,
+    onCollapsedClick,
   }: {
     label: string;
     icon: React.ComponentType<{ className?: string }>;
@@ -81,20 +82,22 @@ export default function AppLayout() {
     accentClass: string;
     isSidebarExpanded: boolean;
     onLinkClick?: () => void;
+    onCollapsedClick?: () => void;
   }) {
     const isActive = labs.some(l => location.pathname === `/app/labs/${l.id}`);
 
     if (!isSidebarExpanded) {
       return (
-        <NavLink
-          to="/app/labs"
-          className={() => `
-            flex items-center px-3 py-2.5 rounded-lg transition-all mt-1
+        <button
+          onClick={onCollapsedClick}
+          title={label}
+          className={`
+            w-full flex items-center px-3 py-2.5 rounded-lg transition-all mt-1 cursor-pointer
             ${isActive ? accentClass : 'text-slate-600 hover:bg-slate-100'}
           `}
         >
           <SectionIcon className="w-5 h-5 mx-auto" />
-        </NavLink>
+        </button>
       );
     }
 
@@ -126,13 +129,13 @@ export default function AppLayout() {
                     to={`/app/labs/${lab.id}`}
                     onClick={onLinkClick}
                     className={({ isActive: linkActive }) => `
-                      flex items-center px-3 py-2 rounded-lg transition-all text-sm
+                      flex items-start px-3 py-2 rounded-lg transition-all text-sm
                       ${linkActive ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'}
                     `}
                     end
                   >
-                    <lab.icon className="w-4 h-4 shrink-0 mr-2.5" />
-                    <span className="whitespace-nowrap text-[13px]">{lab.title}</span>
+                    <lab.icon className="w-4 h-4 shrink-0 mr-2.5 mt-0.5" />
+                    <span className="text-[13px] leading-tight break-words">{lab.title}</span>
                   </NavLink>
                 ))}
               </div>
@@ -164,6 +167,7 @@ export default function AppLayout() {
           {/* Dashboard */}
           <NavLink
             to="/app"
+            title={sidebarOpen ? undefined : "Dashboard"}
             className={({ isActive }) => `
               flex items-center px-3 py-2.5 rounded-lg transition-all
               ${isActive ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}
@@ -177,6 +181,7 @@ export default function AppLayout() {
           {/* Syllabus Hub */}
           <NavLink
             to="/app/labs"
+            title={sidebarOpen ? undefined : "Syllabus Hub"}
             className={({ isActive }) => `
               flex items-center px-3 py-2.5 rounded-lg transition-all
               ${isActive && location.pathname === '/app/labs' ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}
@@ -196,6 +201,10 @@ export default function AppLayout() {
             onToggle={() => setChemExpanded(!chemExpanded)}
             accentClass="bg-pink-50 text-pink-700 font-semibold"
             isSidebarExpanded={sidebarOpen}
+            onCollapsedClick={() => {
+              setSidebarOpen(true);
+              setChemExpanded(true);
+            }}
           />
 
           {/* Physics Section */}
@@ -207,6 +216,10 @@ export default function AppLayout() {
             onToggle={() => setPhysicsExpanded(!physicsExpanded)}
             accentClass="bg-blue-50 text-blue-700 font-semibold"
             isSidebarExpanded={sidebarOpen}
+            onCollapsedClick={() => {
+              setSidebarOpen(true);
+              setPhysicsExpanded(true);
+            }}
           />
 
           <div className="h-px bg-slate-100 my-2" />
@@ -215,6 +228,7 @@ export default function AppLayout() {
             <NavLink
               key={item.path}
               to={item.path}
+              title={sidebarOpen ? undefined : item.name}
               className={({ isActive }) => `
                 flex items-center px-3 py-2.5 rounded-lg transition-all
                 ${isActive ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}
@@ -229,7 +243,8 @@ export default function AppLayout() {
         <div className="p-4 border-t border-slate-200">
           <button 
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="w-full flex items-center justify-center p-2 rounded-lg hover:bg-slate-100 text-slate-500 transition-colors"
+            title={sidebarOpen ? "Collapse Sidebar" : "Expand Sidebar"}
+            className="w-full flex items-center justify-center p-2 rounded-lg hover:bg-slate-100 text-slate-500 transition-colors cursor-pointer"
           >
             {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
