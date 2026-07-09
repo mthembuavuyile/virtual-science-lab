@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Outlet, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Beaker, 
@@ -8,40 +8,31 @@ import {
   BookOpen,
   Menu,
   X,
-  Activity,
-  Scale,
-  FlaskConical,
-  Factory,
-  Sprout,
   ChevronDown,
   ChevronRight,
   FileText,
   Terminal,
+  GraduationCap,
+  FlaskConical,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { labRegistry } from '../data/experiments';
 
 export default function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [chemExpanded, setChemExpanded] = useState(true);
+  const [physicsExpanded, setPhysicsExpanded] = useState(true);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
-  const isChemRoute = location.pathname.startsWith('/app/chemistry');
+  const isLabRoute = location.pathname.startsWith('/app/labs');
 
-  const chemUnits = [
-    { name: 'All Units', path: '/app/chemistry', icon: Beaker },
-    { name: 'Organic Compounds', path: '/app/chemistry/organic', icon: Beaker },
-    { name: 'Reaction Rates', path: '/app/chemistry/rates', icon: Activity },
-    { name: 'Equilibrium', path: '/app/chemistry/equilibrium', icon: Scale },
-    { name: 'Acids & Bases', path: '/app/chemistry/acids-bases', icon: FlaskConical },
-    { name: 'Electrochemistry', path: '/app/chemistry/electrochemistry', icon: Zap },
-    { name: 'Chlor-Alkali', path: '/app/chemistry/chlor-alkali', icon: Factory },
-    { name: 'Fertilisers', path: '/app/chemistry/fertilisers', icon: Sprout },
-  ];
+  // Derive sidebar nav items from the lab registry
+  const chemLabs = useMemo(() => labRegistry.filter(l => l.discipline === 'Chemistry'), []);
+  const physicsLabs = useMemo(() => labRegistry.filter(l => l.discipline === 'Physics'), []);
 
   const otherNav = [
-    { name: 'Physics Lab', path: '/app/physics', icon: Zap },
     { name: 'AI Tutor', path: '/app/tutor', icon: MessageSquare },
     { name: 'AI Sandbox', path: '/app/sandbox', icon: Terminal },
     { name: 'SBA Lab Guide', path: '/app/sba-guide', icon: FileText },
@@ -51,7 +42,7 @@ export default function AppLayout() {
   // Bottom bar items (mobile)
   const bottomNavItems: Array<{ name: string; path: string; icon: any; matchPrefix?: string }> = [
     { name: 'Home', path: '/app', icon: LayoutDashboard },
-    { name: 'SBA Guide', path: '/app/sba-guide', icon: FileText },
+    { name: 'Labs', path: '/app/labs', icon: GraduationCap, matchPrefix: '/app/labs' },
     { name: 'Tutor', path: '/app/tutor', icon: MessageSquare },
     { name: 'Notebook', path: '/app/notebook', icon: BookOpen },
   ];
@@ -59,12 +50,98 @@ export default function AppLayout() {
   // Get page title from path
   const getPageTitle = () => {
     if (location.pathname === '/app') return 'Dashboard';
-    const chemUnit = chemUnits.find(u => u.path === location.pathname);
-    if (chemUnit) return chemUnit.name;
+    if (location.pathname === '/app/labs') return 'Syllabus Hub';
+    // Check if it's a specific lab
+    const labMatch = location.pathname.match(/^\/app\/labs\/(.+)$/);
+    if (labMatch) {
+      const lab = labRegistry.find(l => l.id === labMatch[1]);
+      if (lab) return lab.title;
+    }
     const other = otherNav.find(u => u.path === location.pathname);
     if (other) return other.name;
     return location.pathname.split('/').pop() || 'Dashboard';
   };
+
+  /** Renders a collapsible discipline section for the sidebar */
+  function DisciplineSection({
+    label,
+    icon: SectionIcon,
+    labs,
+    expanded,
+    onToggle,
+    accentClass,
+    isSidebarExpanded,
+    onLinkClick,
+  }: {
+    label: string;
+    icon: React.ComponentType<{ className?: string }>;
+    labs: typeof chemLabs;
+    expanded: boolean;
+    onToggle: () => void;
+    accentClass: string;
+    isSidebarExpanded: boolean;
+    onLinkClick?: () => void;
+  }) {
+    const isActive = labs.some(l => location.pathname === `/app/labs/${l.id}`);
+
+    if (!isSidebarExpanded) {
+      return (
+        <NavLink
+          to="/app/labs"
+          className={() => `
+            flex items-center px-3 py-2.5 rounded-lg transition-all mt-1
+            ${isActive ? accentClass : 'text-slate-600 hover:bg-slate-100'}
+          `}
+        >
+          <SectionIcon className="w-5 h-5 mx-auto" />
+        </NavLink>
+      );
+    }
+
+    return (
+      <>
+        <button
+          onClick={onToggle}
+          className={`flex items-center px-3 py-2.5 rounded-lg transition-all w-full text-left mt-1 ${
+            isActive ? accentClass : 'text-slate-600 hover:bg-slate-100'
+          }`}
+        >
+          <SectionIcon className="w-5 h-5 shrink-0 mr-3" />
+          <span className="whitespace-nowrap text-sm flex-1">{label}</span>
+          {expanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+        </button>
+
+        <AnimatePresence>
+          {expanded && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="overflow-hidden"
+            >
+              <div className="ml-4 border-l-2 border-slate-100 pl-2 space-y-0.5">
+                {labs.map((lab) => (
+                  <NavLink
+                    key={lab.id}
+                    to={`/app/labs/${lab.id}`}
+                    onClick={onLinkClick}
+                    className={({ isActive: linkActive }) => `
+                      flex items-center px-3 py-2 rounded-lg transition-all text-sm
+                      ${linkActive ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'}
+                    `}
+                    end
+                  >
+                    <lab.icon className="w-4 h-4 shrink-0 mr-2.5" />
+                    <span className="whitespace-nowrap text-[13px]">{lab.title}</span>
+                  </NavLink>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </>
+    );
+  }
 
   return (
     <div className="flex h-[100dvh] bg-slate-50 text-slate-900 font-sans overflow-hidden">
@@ -97,59 +174,40 @@ export default function AppLayout() {
             {sidebarOpen && <span className="whitespace-nowrap text-sm">Dashboard</span>}
           </NavLink>
 
-          {/* Chemistry Section */}
-          {sidebarOpen ? (
-            <>
-              <button
-                onClick={() => setChemExpanded(!chemExpanded)}
-                className={`flex items-center px-3 py-2.5 rounded-lg transition-all w-full text-left mt-2 ${
-                  isChemRoute ? 'bg-pink-50 text-pink-700 font-semibold' : 'text-slate-600 hover:bg-slate-100'
-                }`}
-              >
-                <Beaker className="w-5 h-5 shrink-0 mr-3" />
-                <span className="whitespace-nowrap text-sm flex-1">Chemistry</span>
-                {chemExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-              </button>
+          {/* Syllabus Hub */}
+          <NavLink
+            to="/app/labs"
+            className={({ isActive }) => `
+              flex items-center px-3 py-2.5 rounded-lg transition-all
+              ${isActive && location.pathname === '/app/labs' ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}
+            `}
+            end
+          >
+            <GraduationCap className={`w-5 h-5 shrink-0 ${sidebarOpen ? 'mr-3' : 'mx-auto'}`} />
+            {sidebarOpen && <span className="whitespace-nowrap text-sm">Syllabus Hub</span>}
+          </NavLink>
 
-              <AnimatePresence>
-                {chemExpanded && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="ml-4 border-l-2 border-slate-100 pl-2 space-y-0.5">
-                      {chemUnits.map((item) => (
-                        <NavLink
-                          key={item.path}
-                          to={item.path}
-                          className={({ isActive }) => `
-                            flex items-center px-3 py-2 rounded-lg transition-all text-sm
-                            ${isActive ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'}
-                          `}
-                          end
-                        >
-                          <item.icon className="w-4 h-4 shrink-0 mr-2.5" />
-                          <span className="whitespace-nowrap text-[13px]">{item.name}</span>
-                        </NavLink>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </>
-          ) : (
-            <NavLink
-              to="/app/chemistry"
-              className={({ isActive }) => `
-                flex items-center px-3 py-2.5 rounded-lg transition-all mt-2
-                ${isActive || isChemRoute ? 'bg-pink-50 text-pink-700 font-semibold' : 'text-slate-600 hover:bg-slate-100'} 
-              `}
-            >
-              <Beaker className="w-5 h-5 mx-auto" />
-            </NavLink>
-          )}
+          {/* Chemistry Section */}
+          <DisciplineSection
+            label="Chemistry"
+            icon={FlaskConical}
+            labs={chemLabs}
+            expanded={chemExpanded}
+            onToggle={() => setChemExpanded(!chemExpanded)}
+            accentClass="bg-pink-50 text-pink-700 font-semibold"
+            isSidebarExpanded={sidebarOpen}
+          />
+
+          {/* Physics Section */}
+          <DisciplineSection
+            label="Physics"
+            icon={Zap}
+            labs={physicsLabs}
+            expanded={physicsExpanded}
+            onToggle={() => setPhysicsExpanded(!physicsExpanded)}
+            accentClass="bg-blue-50 text-blue-700 font-semibold"
+            isSidebarExpanded={sidebarOpen}
+          />
 
           <div className="h-px bg-slate-100 my-2" />
 
@@ -290,48 +348,43 @@ export default function AppLayout() {
                   <span className="text-sm">Dashboard</span>
                 </NavLink>
 
-                {/* Chemistry Unit Dropdown */}
-                <div className="space-y-0.5">
-                  <button
-                    onClick={() => setChemExpanded(!chemExpanded)}
-                    className={`flex items-center px-3 py-2.5 rounded-lg transition-all w-full text-left text-sm mt-2 ${
-                      isChemRoute ? 'bg-pink-50 text-pink-700 font-semibold' : 'text-slate-600 hover:bg-slate-100'
-                    }`}
-                  >
-                    <Beaker className="w-5 h-5 shrink-0 mr-3" />
-                    <span className="flex-1 text-sm">Chemistry</span>
-                    {chemExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-                  </button>
+                {/* Syllabus Hub */}
+                <NavLink
+                  to="/app/labs"
+                  onClick={() => setIsMobileDrawerOpen(false)}
+                  className={({ isActive }) => `
+                    flex items-center px-3 py-2.5 rounded-lg transition-all text-sm
+                    ${isActive && location.pathname === '/app/labs' ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}
+                  `}
+                  end
+                >
+                  <GraduationCap className="w-5 h-5 shrink-0 mr-3" />
+                  <span className="text-sm">Syllabus Hub</span>
+                </NavLink>
 
-                  <AnimatePresence>
-                    {chemExpanded && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        className="overflow-hidden"
-                      >
-                        <div className="ml-4 border-l-2 border-slate-100 pl-2 space-y-0.5">
-                          {chemUnits.map((item) => (
-                            <NavLink
-                              key={item.path}
-                              to={item.path}
-                              onClick={() => setIsMobileDrawerOpen(false)}
-                              className={({ isActive }) => `
-                                flex items-center px-3 py-2 rounded-lg transition-all text-sm
-                                ${isActive ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'}
-                              `}
-                              end
-                            >
-                              <item.icon className="w-4 h-4 shrink-0 mr-2.5" />
-                              <span className="text-[13px]">{item.name}</span>
-                            </NavLink>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
+                {/* Chemistry Section */}
+                <DisciplineSection
+                  label="Chemistry"
+                  icon={FlaskConical}
+                  labs={chemLabs}
+                  expanded={chemExpanded}
+                  onToggle={() => setChemExpanded(!chemExpanded)}
+                  accentClass="bg-pink-50 text-pink-700 font-semibold"
+                  isSidebarExpanded={true}
+                  onLinkClick={() => setIsMobileDrawerOpen(false)}
+                />
+
+                {/* Physics Section */}
+                <DisciplineSection
+                  label="Physics"
+                  icon={Zap}
+                  labs={physicsLabs}
+                  expanded={physicsExpanded}
+                  onToggle={() => setPhysicsExpanded(!physicsExpanded)}
+                  accentClass="bg-blue-50 text-blue-700 font-semibold"
+                  isSidebarExpanded={true}
+                  onLinkClick={() => setIsMobileDrawerOpen(false)}
+                />
 
                 <div className="h-px bg-slate-100 my-2" />
 
