@@ -272,12 +272,13 @@ export default function AppLayout() {
               {getPageTitle()}
             </h2>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
              <div className="text-[10px] lg:text-xs font-bold bg-green-100 text-green-700 px-2 py-0.5 lg:py-1 rounded-full border border-green-200">
                 CAPS
              </div>
-             <div className="w-7 h-7 lg:w-8 lg:h-8 rounded-full bg-blue-100 border border-blue-200 text-blue-700 flex items-center justify-center font-bold text-[10px] lg:text-xs">
-                U
+             <div className="flex items-center gap-1.5 bg-slate-100 border border-slate-200 rounded-full py-1 px-2.5 text-slate-700 text-[10px] lg:text-xs font-medium">
+               <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+               Guest Mode
              </div>
           </div>
         </header>

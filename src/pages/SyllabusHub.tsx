@@ -158,6 +158,16 @@ export default function SyllabusHub() {
                     <div className="inline-flex ml-2 text-[9px] font-bold px-2 py-0.5 rounded bg-white/20 text-white backdrop-blur-sm">
                       {lab.priority}
                     </div>
+                    <div className={`inline-flex ml-2 text-[9px] font-bold px-2 py-0.5 rounded backdrop-blur-sm ${
+                      !lab.id.startsWith('g10-') && !lab.id.startsWith('g11-') && !lab.id.startsWith('g12-')
+                        ? 'bg-emerald-500/25 text-emerald-100 border border-emerald-400/20'
+                        : 'bg-indigo-500/25 text-indigo-100 border border-indigo-400/20'
+                    }`}>
+                      {!lab.id.startsWith('g10-') && !lab.id.startsWith('g11-') && !lab.id.startsWith('g12-')
+                        ? 'Full Sim'
+                        : 'Guide + Sim'
+                      }
+                    </div>
                     <div className="block mt-1">
                       <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-white/15 text-white/80 backdrop-blur-sm">
                         Grade {lab.grade} · {lab.discipline}
