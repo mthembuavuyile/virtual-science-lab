@@ -38,13 +38,12 @@ export default function LandingPage() {
               <p className="text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
                 Run real experiments from home using interactive simulators. Explore <span className="text-pink-600 font-semibold">Chemistry</span> and <span className="text-blue-600 font-semibold">Physics</span> without the need for expensive equipment. Perfectly aligned to the South African CAPS curriculum.
               </p>
-              <div className="flex flex-col items-center gap-3 justify-center">
+              <div className="flex flex-col items-center justify-center">
                 <Link to="/app" className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg text-lg font-semibold shadow-xl shadow-blue-600/20 transition-all flex items-center justify-center gap-2">
                   Launch Simulators <ChevronRight className="w-5 h-5" />
                 </Link>
-                <p className="text-sm text-slate-500 flex items-center gap-1.5 mt-2">
-                  <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-                  Instant Guest Access &bull; No Sign-up Required
+                <p className="text-xs text-slate-500 mt-3 font-medium">
+                  No account registration required &mdash; start experimenting instantly as a guest.
                 </p>
               </div>
             </motion.div>
@@ -92,19 +91,17 @@ export default function LandingPage() {
               <p className="text-slate-600 max-w-3xl mx-auto text-base">
                 A structured three-year Physical Sciences journey. From fundamental Grade 10 measurements to complex Grade 12 systems, we map every topic and provide guided instructions on turning your desk into a lab using smart tech.
               </p>
-              
+
               {/* Tech Integrations Banner */}
-              <div className="mt-6 inline-flex flex-wrap items-center justify-center gap-3 bg-white px-4 py-2 rounded-full border border-slate-200/80 shadow-xs max-w-2xl mx-auto">
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tech Integrations:</span>
-                <span className="text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-full flex items-center gap-1.5 border border-blue-100">
-                  <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span> Phyphox Phone App
-                </span>
-                <span className="text-xs font-semibold text-pink-700 bg-pink-50 px-2.5 py-1 rounded-full flex items-center gap-1.5 border border-pink-100">
-                  <span className="w-1.5 h-1.5 bg-pink-500 rounded-full"></span> Tracker Video Analysis
-                </span>
-                <span className="text-xs font-semibold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-full flex items-center gap-1.5 border border-purple-100">
-                  <span className="w-1.5 h-1.5 bg-purple-500 rounded-full"></span> PhET Interactive Simulators
-                </span>
+              <div className="mt-8 pt-6 border-t border-slate-200/60 max-w-2xl mx-auto w-full">
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Compatible with leading scientific tools</p>
+                <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm font-semibold text-slate-600">
+                  <span className="hover:text-slate-900 transition-colors">Phyphox Phone App</span>
+                  <span className="text-slate-300 font-normal">/</span>
+                  <span className="hover:text-slate-900 transition-colors">Tracker Video Analysis</span>
+                  <span className="text-slate-300 font-normal">/</span>
+                  <span className="hover:text-slate-900 transition-colors">PhET Interactive Simulators</span>
+                </div>
               </div>
             </div>
 
@@ -115,7 +112,7 @@ export default function LandingPage() {
                   <div className="text-xs font-bold text-blue-600 uppercase tracking-wider mb-2">Grade 10</div>
                   <h3 className="text-xl font-bold text-slate-900 mb-1">The Foundation</h3>
                   <p className="text-xs text-slate-400 mb-4 font-semibold">Transitioning to formal rules of Science</p>
-                  
+
                   {/* Physics & Chemistry splits */}
                   <div className="space-y-4 text-xs">
                     <div>
@@ -172,7 +169,7 @@ export default function LandingPage() {
                   <div className="text-xs font-bold text-pink-600 uppercase tracking-wider mb-2">Grade 11</div>
                   <h3 className="text-xl font-bold text-slate-900 mb-1">Deepening Concepts</h3>
                   <p className="text-xs text-slate-400 mb-4 font-semibold">Invisible forces, fields, and 2D mechanics</p>
-                  
+
                   <div className="space-y-4 text-xs">
                     <div>
                       <h4 className="font-extrabold text-pink-900 mb-1.5 flex items-center gap-1">
@@ -231,7 +228,7 @@ export default function LandingPage() {
                   <div className="text-xs font-bold text-purple-600 uppercase tracking-wider mb-2">Grade 12</div>
                   <h3 className="text-xl font-bold text-slate-900 mb-1">Application & Synthesis</h3>
                   <p className="text-xs text-slate-400 mb-4 font-semibold">Dynamic systems, organic molecules, and exam prep</p>
-                  
+
                   <div className="space-y-4 text-xs">
                     <div>
                       <h4 className="font-extrabold text-purple-950 mb-1.5 flex items-center gap-1">
@@ -346,10 +343,10 @@ export default function LandingPage() {
                     </li>
                   </ul>
                 </div>
-                <a 
-                  href="https://vylexnexys.co.za" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
+                <a
+                  href="https://vylexnexys.co.za"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-3 rounded-lg font-semibold transition-colors"
                 >
                   Contact Vylex Nexys
@@ -381,17 +378,17 @@ export default function LandingPage() {
               <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">EdTech Workspace</h4>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <a 
-                    href="https://vylexnexys.co.za" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
+                  <a
+                    href="https://vylexnexys.co.za"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-slate-300 hover:text-white transition-colors font-medium"
                   >
                     Vylex Nexys
                   </a>
                 </li>
                 <li className="text-xs text-slate-500 leading-snug">
-                  A unified digital workspace designed for high school and university students to collaborate and learn.
+                  A unified digital environment engineered to streamline independent study, optimize academic research, and structure daily learning workflows.
                 </li>
               </ul>
             </div>
@@ -401,10 +398,10 @@ export default function LandingPage() {
               <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Technology Partner</h4>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <a 
-                    href="https://vylex.co.za" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
+                  <a
+                    href="https://vylex.co.za"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-slate-300 hover:text-white transition-colors font-medium"
                   >
                     Vylex
