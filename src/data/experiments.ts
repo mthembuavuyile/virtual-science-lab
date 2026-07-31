@@ -48,6 +48,7 @@ export interface LabEntry {
 
 const HeatingCoolingCurveLab = React.lazy(() => import('../components/simulations/HeatingCoolingCurveLab'));
 const AtomPeriodicLab = React.lazy(() => import('../components/simulations/AtomPeriodicLab'));
+const ChemicalBondingLab = React.lazy(() => import('../components/simulations/ChemicalBondingLab'));
 const OrganicCompoundsLab = React.lazy(() => import('../components/simulations/OrganicCompoundsLab'));
 const ReactionRateLab = React.lazy(() => import('../components/simulations/ReactionRateLab'));
 const EquilibriumLab = React.lazy(() => import('../components/simulations/EquilibriumLab'));
@@ -115,7 +116,7 @@ export const labRegistry: LabEntry[] = [
     priority: 'High',
     difficulty: 'Medium',
     simulations: ['Covalent Dot structures', 'Ionic Lattice Builder', 'Metallic Electron Sea'],
-    component: SyllabusIntegrationLab,
+    component: ChemicalBondingLab,
   },
   {
     id: 'g10-aqueous-reactions',
