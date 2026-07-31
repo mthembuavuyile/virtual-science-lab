@@ -19,40 +19,50 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-6xl mx-auto">
-      <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-8 relative overflow-hidden">
-        <div className="relative z-10">
-          <h1 className="text-3xl font-extrabold text-slate-900 mb-3">Welcome to VyLab</h1>
-          <p className="text-slate-600 max-w-xl text-lg leading-relaxed mb-6">
+      <div className="bg-gradient-to-br from-slate-900 via-blue-950 to-blue-900 p-8 md:p-10 rounded-[2rem] shadow-2xl shadow-blue-900/20 mb-8 relative overflow-hidden border border-blue-800/50">
+        <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)]" style={{ backgroundSize: '24px 24px' }}></div>
+        <div className="absolute right-0 top-0 w-96 h-96 bg-blue-500 rounded-full translate-x-1/3 -translate-y-1/4 blur-[100px] opacity-20 pointer-events-none"></div>
+        <div className="absolute left-0 bottom-0 w-64 h-64 bg-purple-500 rounded-full -translate-x-1/4 translate-y-1/3 blur-[80px] opacity-10 pointer-events-none"></div>
+        
+        <div className="relative z-10 text-white">
+          <h1 className="text-3xl md:text-4xl font-extrabold mb-3 tracking-tight text-white">Welcome to VyLab</h1>
+          <p className="text-blue-100/80 max-w-xl text-lg leading-relaxed mb-8 font-medium">
             Access CAPS-aligned STEM simulators. Browse all {labRegistry.length} experiments or jump into a featured lab below.
           </p>
-          <div className="flex gap-4">
-            <button onClick={() => navigate('/app/labs')} className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-6 rounded-lg transition-colors shadow-sm flex items-center gap-2">
-              <GraduationCap className="w-4 h-4" />
+          <div className="flex flex-wrap gap-4">
+            <button onClick={() => navigate('/app/labs')} className="bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-6 rounded-xl transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] flex items-center gap-2 hover:-translate-y-0.5">
+              <GraduationCap className="w-5 h-5" />
               Browse All Labs
             </button>
-            <button onClick={() => navigate('/app/tutor')} className="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold py-2.5 px-6 rounded-lg transition-colors">
+            <button onClick={() => navigate('/app/tutor')} className="bg-white/10 hover:bg-white/20 border border-white/10 backdrop-blur-md text-white font-semibold py-3 px-6 rounded-xl transition-all hover:-translate-y-0.5">
               Ask AI Tutor
             </button>
           </div>
         </div>
-        {/* Decorative Background Element */}
-        <div className="absolute right-0 top-0 w-64 h-64 bg-blue-50 rounded-full translate-x-1/4 -translate-y-1/4 blur-3xl opacity-50 pointer-events-none"></div>
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-3 gap-4 mb-8">
-        <div className="bg-white rounded-xl border border-slate-200 p-4 text-center shadow-sm">
-          <div className="text-2xl font-extrabold text-blue-600">{labRegistry.length}</div>
-          <div className="text-xs font-semibold text-slate-500 mt-1">Total Labs</div>
-        </div>
-        <div className="bg-white rounded-xl border border-slate-200 p-4 text-center shadow-sm">
-          <div className="text-2xl font-extrabold text-pink-600">{chemCount}</div>
-          <div className="text-xs font-semibold text-slate-500 mt-1">Chemistry</div>
-        </div>
-        <div className="bg-white rounded-xl border border-slate-200 p-4 text-center shadow-sm">
-          <div className="text-2xl font-extrabold text-indigo-600">{physicsCount}</div>
-          <div className="text-xs font-semibold text-slate-500 mt-1">Physics</div>
-        </div>
+      <div className="grid grid-cols-3 gap-4 mb-10">
+        <motion.div whileHover={{ y: -4 }} className="bg-white rounded-lg p-5 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative overflow-hidden group">
+          <div className="absolute top-0 left-0 w-full h-1 bg-blue-500"></div>
+          <div className="absolute -right-4 -top-4 w-16 h-16 bg-blue-50 rounded-full group-hover:scale-150 transition-transform duration-500 ease-out pointer-events-none"></div>
+          <div className="relative z-10 text-3xl font-black text-slate-900 tracking-tight">{labRegistry.length}</div>
+          <div className="relative z-10 text-xs font-bold text-slate-400 uppercase tracking-wider mt-1.5">Total Labs</div>
+        </motion.div>
+        
+        <motion.div whileHover={{ y: -4 }} className="bg-white rounded-lg p-5 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative overflow-hidden group">
+          <div className="absolute top-0 left-0 w-full h-1 bg-pink-500"></div>
+          <div className="absolute -right-4 -top-4 w-16 h-16 bg-pink-50 rounded-full group-hover:scale-150 transition-transform duration-500 ease-out pointer-events-none"></div>
+          <div className="relative z-10 text-3xl font-black text-slate-900 tracking-tight">{chemCount}</div>
+          <div className="relative z-10 text-xs font-bold text-slate-400 uppercase tracking-wider mt-1.5">Chemistry</div>
+        </motion.div>
+
+        <motion.div whileHover={{ y: -4 }} className="bg-white rounded-lg p-5 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative overflow-hidden group">
+          <div className="absolute top-0 left-0 w-full h-1 bg-purple-500"></div>
+          <div className="absolute -right-4 -top-4 w-16 h-16 bg-purple-50 rounded-full group-hover:scale-150 transition-transform duration-500 ease-out pointer-events-none"></div>
+          <div className="relative z-10 text-3xl font-black text-slate-900 tracking-tight">{physicsCount}</div>
+          <div className="relative z-10 text-xs font-bold text-slate-400 uppercase tracking-wider mt-1.5">Physics</div>
+        </motion.div>
       </div>
 
       <div className="flex items-center justify-between mb-6">
@@ -65,28 +75,35 @@ export default function DashboardPage() {
         </button>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-3 gap-6 mb-8">
         {featured.map((lab) => {
           const DIcon = lab.icon;
           return (
             <motion.div
               key={lab.id}
-              whileHover={{ y: -4 }}
-              className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-all cursor-pointer group flex flex-col"
+              whileHover={{ y: -6, scale: 1.01 }}
+              className="bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all cursor-pointer group flex flex-col"
               onClick={() => navigate(`/app/labs/${lab.id}`)}
             >
-              <div className={`h-32 bg-gradient-to-br ${lab.gradient} flex items-center justify-center relative overflow-hidden`}>
-                <div className="absolute top-3 left-3 bg-white/20 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">
+              <div className={`h-40 bg-gradient-to-br ${lab.gradient} flex items-center justify-center relative overflow-hidden`}>
+                <div className="absolute inset-0 opacity-[0.15] bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)]" style={{ backgroundSize: '16px 16px' }}></div>
+                <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-md text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm border border-white/20">
                   {lab.priority}
                 </div>
-                <DIcon className="text-white w-12 h-12 opacity-90 group-hover:scale-110 transition-transform duration-300" />
-                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+                <DIcon className="text-white w-14 h-14 opacity-95 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 ease-out drop-shadow-md relative z-10" />
+                <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500"></div>
               </div>
-              <div className="p-6 flex-1 flex flex-col">
-                <div className="text-xs font-bold text-blue-600 mb-2 uppercase tracking-wide">{lab.discipline} · Grade {lab.grade}</div>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">{lab.title}</h3>
-                <p className="text-slate-600 text-sm flex-1">{lab.description}</p>
-                <div className="mt-6 text-sm font-semibold text-blue-600 group-hover:text-blue-700 flex items-center gap-1">Open Lab &rarr;</div>
+              <div className="p-6 flex-1 flex flex-col bg-white">
+                <div className="text-xs font-black text-blue-600 mb-2.5 uppercase tracking-wider flex items-center gap-2">
+                   <span>{lab.discipline}</span>
+                   <span className="w-1 h-1 rounded-full bg-slate-300"></span>
+                   <span>Grade {lab.grade}</span>
+                </div>
+                <h3 className="text-xl font-extrabold text-slate-900 mb-2.5 tracking-tight group-hover:text-blue-600 transition-colors">{lab.title}</h3>
+                <p className="text-slate-500 text-sm flex-1 leading-relaxed">{lab.description}</p>
+                <div className="mt-6 text-sm font-extrabold text-blue-600 flex items-center gap-1.5 opacity-80 group-hover:opacity-100 transition-opacity">
+                  Open Simulator <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </div>
               </div>
             </motion.div>
           );
