@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Sparkles, Brain, Check, X, RefreshCw, BookOpen, ChevronRight, Globe, AlertCircle } from 'lucide-react';
 import { analyzeExperiment, evaluateQuizAnswer } from '../lib/gemini';
 import { motion, AnimatePresence } from 'motion/react';
+import RichText from './ui/RichText';
 
 interface AnalyzeExperimentPanelProps {
   simName: string;
@@ -226,8 +227,8 @@ export default function AnalyzeExperimentPanel({ simName, state }: AnalyzeExperi
                         <Brain className="w-5 h-5 text-purple-600" />
                         <h4 className="font-extrabold text-slate-900 text-sm md:text-base">Scientific Concept</h4>
                       </div>
-                      <div className="text-slate-700 text-sm leading-relaxed whitespace-pre-line prose max-w-none">
-                        {analysis.conceptBreakdown}
+                      <div className="text-slate-700 text-sm leading-relaxed whitespace-pre-line max-w-none">
+                        <RichText content={analysis.conceptBreakdown} />
                       </div>
 
                       {/* Save to Notebook Button */}
@@ -257,8 +258,8 @@ export default function AnalyzeExperimentPanel({ simName, state }: AnalyzeExperi
                         <span className="text-lg">🇿🇦</span>
                         <h4 className="font-extrabold text-blue-900 text-sm">South African Context</h4>
                       </div>
-                      <div className="text-blue-900 text-xs md:text-sm leading-relaxed whitespace-pre-line">
-                        {analysis.saContext}
+                      <div className="text-blue-900 text-xs md:text-sm leading-relaxed whitespace-pre-line max-w-none">
+                        <RichText content={analysis.saContext} />
                       </div>
                     </div>
 
@@ -268,7 +269,9 @@ export default function AnalyzeExperimentPanel({ simName, state }: AnalyzeExperi
                         <h4 className="font-extrabold text-amber-400 text-xs uppercase tracking-wider">Test Your Understanding</h4>
                         <span className="text-[10px] bg-slate-800 px-2 py-0.5 rounded font-mono text-slate-400">Exam Prep</span>
                       </div>
-                      <div className="text-sm font-bold leading-relaxed">{analysis.quiz.question}</div>
+                      <div className="text-sm font-bold leading-relaxed max-w-none">
+                        <RichText content={analysis.quiz.question} />
+                      </div>
                       
                       <div className="space-y-2.5">
                         {analysis.quiz.options.map((opt, index) => (
@@ -288,7 +291,9 @@ export default function AnalyzeExperimentPanel({ simName, state }: AnalyzeExperi
                                 : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-800/80'
                             }`}
                           >
-                            <span>{opt}</span>
+                            <div className="flex-1">
+                              <RichText content={opt} />
+                            </div>
                             {selectedOption === index && (
                               quizSubmitted ? (
                                 index === analysis.quiz.correctIndex ? (

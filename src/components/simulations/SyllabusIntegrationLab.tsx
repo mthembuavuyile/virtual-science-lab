@@ -40,6 +40,7 @@ import {
 } from 'recharts';
 import { getLabById, LabEntry } from '../../data/experiments';
 import AnalyzeExperimentPanel from '../AnalyzeExperimentPanel';
+import RichText from '../ui/RichText';
 
 export default function SyllabusIntegrationLab() {
   const { labId } = useParams<{ labId: string }>();
@@ -103,11 +104,83 @@ export default function SyllabusIntegrationLab() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameId = useRef<number | null>(null);
 
+  // Audio refs for real sound
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const oscillatorRef = useRef<OscillatorNode | null>(null);
+  const gainNodeRef = useRef<GainNode | null>(null);
+
   // Mini quiz states for general/non-sim topics
   const [quizScore, setQuizScore] = useState(0);
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(null);
   const [quizDone, setQuizDone] = useState(false);
+
+  // Doppler Audio Synthesis
+  useEffect(() => {
+    if (labId !== 'g12-doppler') {
+      if (audioCtxRef.current) {
+        audioCtxRef.current.close().catch(() => {});
+        audioCtxRef.current = null;
+        oscillatorRef.current = null;
+        gainNodeRef.current = null;
+      }
+      return;
+    }
+
+    if (isPlaying) {
+      if (!audioCtxRef.current) {
+        const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+        if (AudioContextClass) {
+          audioCtxRef.current = new AudioContextClass();
+        }
+      }
+
+      if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
+        audioCtxRef.current.resume();
+      }
+
+      if (audioCtxRef.current && !oscillatorRef.current) {
+        oscillatorRef.current = audioCtxRef.current.createOscillator();
+        gainNodeRef.current = audioCtxRef.current.createGain();
+        
+        oscillatorRef.current.type = 'sine'; // A clear tone
+        gainNodeRef.current.gain.value = 0.2; // Volume control
+        
+        oscillatorRef.current.connect(gainNodeRef.current);
+        gainNodeRef.current.connect(audioCtxRef.current.destination);
+        
+        oscillatorRef.current.start();
+      }
+
+      if (oscillatorRef.current && liveTelemetry.measured_frequency_hz) {
+        // Smooth transition to new frequency
+        oscillatorRef.current.frequency.setTargetAtTime(
+          liveTelemetry.measured_frequency_hz, 
+          audioCtxRef.current!.currentTime, 
+          0.05
+        );
+      }
+    } else {
+      if (oscillatorRef.current) {
+        try { oscillatorRef.current.stop(); } catch(e) {}
+        oscillatorRef.current.disconnect();
+        oscillatorRef.current = null;
+      }
+      if (gainNodeRef.current) {
+        gainNodeRef.current.disconnect();
+        gainNodeRef.current = null;
+      }
+    }
+  }, [isPlaying, labId, liveTelemetry.measured_frequency_hz]);
+
+  // Audio cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (audioCtxRef.current) {
+        audioCtxRef.current.close().catch(() => {});
+      }
+    };
+  }, []);
 
   // Reset simulation when labId changes
   useEffect(() => {
@@ -1646,9 +1719,9 @@ export default function SyllabusIntegrationLab() {
               <FileText className="w-4 h-4 text-slate-500" />
               CAPS Scientific Theory
             </h3>
-            <p className="text-xs text-slate-600 leading-relaxed bg-slate-50/50 p-4 rounded-xl border border-slate-200/60 font-medium">
-              {activeGuide.theory}
-            </p>
+            <div className="text-slate-600 leading-relaxed bg-slate-50/50 p-4 rounded-xl border border-slate-200/60 font-medium">
+              <RichText content={activeGuide.theory} />
+            </div>
           </div>
 
           {/* Section 2: Laboratory Formula Sheet */}
@@ -1660,7 +1733,7 @@ export default function SyllabusIntegrationLab() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono">
               {activeGuide.formulas.map((formula, idx) => (
                 <div key={idx} className="bg-slate-50/80 border border-slate-200 p-2.5 rounded-lg text-slate-700 font-bold flex justify-between items-center">
-                  <span>{formula}</span>
+                  <RichText content={formula} className="text-center w-full" />
                 </div>
               ))}
             </div>
