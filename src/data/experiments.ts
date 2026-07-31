@@ -62,6 +62,7 @@ const FertiliserLab = React.lazy(() => import('../components/simulations/Fertili
 const OhmsLawLab = React.lazy(() => import('../components/simulations/OhmsLawLab'));
 const ProjectileMotionLab = React.lazy(() => import('../components/simulations/ProjectileMotionLab'));
 const Electrodynamics3D = React.lazy(() => import('../components/simulations/Electrodynamics3D'));
+const MomentumLab = React.lazy(() => import('../components/simulations/MomentumLab'));
 
 // ─── Unified Curriculum Integration Guide Component ─────────────────
 
@@ -541,7 +542,7 @@ export const labRegistry: LabEntry[] = [
     priority: 'High',
     difficulty: 'Medium',
     simulations: ['Trolley Collision Lab', 'Elastic vs Inelastic', 'Momentum Conservation Table'],
-    component: SyllabusIntegrationLab,
+    component: MomentumLab,
   },
   {
     id: 'projectile-motion',
