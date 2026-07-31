@@ -396,31 +396,31 @@ export default function AppLayout() {
       {/* ─── MAIN CONTENT ─── */}
       <main className="flex-1 flex flex-col min-w-0">
         {/* Top header */}
-        <header className="h-12 lg:h-14 bg-white border-b border-slate-200 flex items-center px-4 lg:px-6 shrink-0 justify-between shadow-sm z-10">
-          <div className="flex items-center gap-3">
+        <header className="h-12 lg:h-14 bg-white border-b border-slate-200 flex items-center px-3 lg:px-6 shrink-0 justify-between shadow-sm z-10 gap-2">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
             {/* Hamburger button on mobile */}
             <button 
               onClick={() => setIsMobileDrawerOpen(true)}
-              className="lg:hidden p-1.5 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors cursor-pointer"
+              className="lg:hidden p-1.5 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors cursor-pointer shrink-0"
               aria-label="Open mobile menu"
             >
               <Menu className="w-5 h-5" />
             </button>
             {/* Mobile logo */}
-            <div className="lg:hidden w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center cursor-pointer shadow-xs" onClick={() => navigate('/app')}>
+            <div className="lg:hidden w-7 h-7 sm:w-8 sm:h-8 bg-blue-600 rounded-lg flex items-center justify-center cursor-pointer shadow-xs shrink-0" onClick={() => navigate('/app')}>
               <Beaker className="text-white w-4 h-4" />
             </div>
-            <h2 className="font-semibold text-sm lg:text-lg text-slate-800 truncate">
+            <h2 className="font-semibold text-xs sm:text-sm lg:text-lg text-slate-800 truncate min-w-0">
               {getPageTitle()}
             </h2>
           </div>
-          <div className="flex items-center gap-2.5">
-             <div className="text-[10px] lg:text-xs font-bold bg-green-100 text-green-700 px-2 py-0.5 lg:py-1 rounded-full border border-green-200">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+             <div className="text-[9px] sm:text-[10px] lg:text-xs font-bold bg-green-100 text-green-700 px-1.5 sm:px-2 py-0.5 rounded-full border border-green-200 shrink-0 whitespace-nowrap">
                 CAPS
              </div>
-             <div className="flex items-center gap-1.5 bg-slate-100 border border-slate-200 rounded-full py-1 px-2.5 text-slate-700 text-[10px] lg:text-xs font-medium">
-               <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
-               Guest Mode
+             <div className="flex items-center gap-1 sm:gap-1.5 bg-slate-100 border border-slate-200 rounded-full py-0.5 sm:py-1 px-2 sm:px-2.5 text-slate-700 text-[10px] sm:text-xs font-medium shrink-0 whitespace-nowrap">
+               <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shrink-0"></span>
+               <span>Guest Mode</span>
              </div>
           </div>
         </header>
