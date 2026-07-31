@@ -437,9 +437,15 @@ export default function LandingPage() {
                     href="https://vylex.co.za"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-slate-300 hover:text-white transition-colors font-medium"
+                    className="inline-flex items-center gap-2 hover:opacity-80 transition-opacity"
                   >
-                    Vylex
+                    <svg width="24" height="24" viewBox="0 0 100 100" className="flex-shrink-0">
+                      <path fill="#FBA919" d="M20 10 L50 70 L80 10 L100 10 L50 100 L0 10 Z"/>
+                      <rect fill="#FBA919" x="42" y="10" width="16" height="30"/>
+                    </svg>
+                    <span className="text-[20px] font-[800] tracking-[-1px] text-white">
+                      vylex<span className="text-[#FBA919]">.</span>
+                    </span>
                   </a>
                 </li>
                 <li className="text-xs text-slate-500 leading-snug">
