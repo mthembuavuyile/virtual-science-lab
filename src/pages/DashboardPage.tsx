@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
-import { Beaker, Zap, MessageSquare, GraduationCap, ArrowRight, FlaskConical } from 'lucide-react';
+import { Beaker, Zap, MessageSquare, GraduationCap, ArrowRight, FlaskConical, Atom, TestTubes } from 'lucide-react';
 import { labRegistry } from '../data/experiments';
 
 export default function DashboardPage() {
@@ -43,21 +43,33 @@ export default function DashboardPage() {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-3 gap-4 mb-10">
-        <motion.div whileHover={{ y: -4 }} className="bg-white rounded-lg p-5 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative overflow-hidden group">
+        <motion.div whileHover={{ y: -4 }} className="bg-white rounded-lg p-5 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative overflow-hidden group flex flex-col items-center justify-center min-h-[120px]">
           <div className="absolute top-0 left-0 w-full h-1 bg-blue-500"></div>
-          <div className="relative z-10 text-3xl font-black text-slate-900 tracking-tight">{labRegistry.length}</div>
+          <TestTubes className="absolute -right-4 -bottom-4 w-24 h-24 text-blue-500/5 group-hover:text-blue-500/10 group-hover:scale-110 transition-all duration-500 -rotate-12" />
+          <div className="relative z-10 flex items-center gap-3 mb-1">
+            <TestTubes className="w-8 h-8 text-blue-500" />
+            <span className="text-4xl font-black text-slate-900 tracking-tight">{labRegistry.length}</span>
+          </div>
           <div className="relative z-10 text-xs font-bold text-slate-400 uppercase tracking-wider mt-1.5">Total Labs</div>
         </motion.div>
         
-        <motion.div whileHover={{ y: -4 }} className="bg-white rounded-lg p-5 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative overflow-hidden group">
+        <motion.div whileHover={{ y: -4 }} className="bg-white rounded-lg p-5 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative overflow-hidden group flex flex-col items-center justify-center min-h-[120px]">
           <div className="absolute top-0 left-0 w-full h-1 bg-pink-500"></div>
-          <div className="relative z-10 text-3xl font-black text-slate-900 tracking-tight">{chemCount}</div>
+          <FlaskConical className="absolute -right-4 -bottom-4 w-24 h-24 text-pink-500/5 group-hover:text-pink-500/10 group-hover:scale-110 transition-all duration-500 rotate-12" />
+          <div className="relative z-10 flex items-center gap-3 mb-1">
+            <FlaskConical className="w-8 h-8 text-pink-500" />
+            <span className="text-4xl font-black text-slate-900 tracking-tight">{chemCount}</span>
+          </div>
           <div className="relative z-10 text-xs font-bold text-slate-400 uppercase tracking-wider mt-1.5">Chemistry</div>
         </motion.div>
 
-        <motion.div whileHover={{ y: -4 }} className="bg-white rounded-lg p-5 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative overflow-hidden group">
+        <motion.div whileHover={{ y: -4 }} className="bg-white rounded-lg p-5 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative overflow-hidden group flex flex-col items-center justify-center min-h-[120px]">
           <div className="absolute top-0 left-0 w-full h-1 bg-purple-500"></div>
-          <div className="relative z-10 text-3xl font-black text-slate-900 tracking-tight">{physicsCount}</div>
+          <Atom className="absolute -right-4 -bottom-4 w-24 h-24 text-purple-500/5 group-hover:text-purple-500/10 group-hover:scale-110 transition-all duration-500 animate-spin-slow" />
+          <div className="relative z-10 flex items-center gap-3 mb-1">
+            <Atom className="w-8 h-8 text-purple-500" />
+            <span className="text-4xl font-black text-slate-900 tracking-tight">{physicsCount}</span>
+          </div>
           <div className="relative z-10 text-xs font-bold text-slate-400 uppercase tracking-wider mt-1.5">Physics</div>
         </motion.div>
       </div>
