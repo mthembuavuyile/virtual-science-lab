@@ -46,6 +46,8 @@ export interface LabEntry {
 
 // ─── Chemistry Labs (Full Simulations) ─────────────────────────────
 
+const HeatingCoolingCurveLab = React.lazy(() => import('../components/simulations/HeatingCoolingCurveLab'));
+const AtomPeriodicLab = React.lazy(() => import('../components/simulations/AtomPeriodicLab'));
 const OrganicCompoundsLab = React.lazy(() => import('../components/simulations/OrganicCompoundsLab'));
 const ReactionRateLab = React.lazy(() => import('../components/simulations/ReactionRateLab'));
 const EquilibriumLab = React.lazy(() => import('../components/simulations/EquilibriumLab'));
@@ -83,7 +85,7 @@ export const labRegistry: LabEntry[] = [
     priority: 'Critical',
     difficulty: 'Easy',
     simulations: ['Heating Stearic Acid', 'Melting Ice', 'Cooling Curve', 'Latent Heat Analysis'],
-    component: SyllabusIntegrationLab,
+    component: HeatingCoolingCurveLab,
   },
   {
     id: 'g10-atom-periodic',
@@ -98,7 +100,7 @@ export const labRegistry: LabEntry[] = [
     priority: 'High',
     difficulty: 'Easy',
     simulations: ['Isotope Builder', 'Electron Configuration', 'Periodic Trends Tracker'],
-    component: SyllabusIntegrationLab,
+    component: AtomPeriodicLab,
   },
   {
     id: 'g10-chemical-bonding',

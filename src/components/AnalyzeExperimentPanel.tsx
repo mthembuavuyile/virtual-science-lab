@@ -109,10 +109,10 @@ export default function AnalyzeExperimentPanel({ simName, state }: AnalyzeExperi
       {/* Floating Sparkle Toggle Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-20 lg:bottom-6 right-6 z-40 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-full p-4 shadow-xl hover:shadow-2xl hover:scale-105 transition-all flex items-center gap-2 group font-semibold text-sm border border-purple-500/20"
+        className="fixed bottom-16 sm:bottom-20 lg:bottom-6 right-3 sm:right-6 z-40 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-full py-2.5 px-3.5 sm:py-3.5 sm:px-4 shadow-xl hover:shadow-2xl hover:scale-105 transition-all flex items-center gap-1.5 group font-semibold text-xs sm:text-sm border border-purple-500/20 cursor-pointer"
       >
-        <Sparkles className="w-5 h-5 animate-pulse" />
-        <span>Ask AI to Analyze</span>
+        <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 animate-pulse shrink-0" />
+        <span>Ask AI <span className="hidden xs:inline sm:inline">to Analyze</span></span>
       </button>
 
       {/* Slide-out Panel Overlay */}
