@@ -254,8 +254,7 @@ const LANGUAGES = [
   { code: 'Zulu', name: 'isiZulu' },
   { code: 'Xhosa', name: 'isiXhosa' },
   { code: 'Sepedi', name: 'Sepedi' },
-  { code: 'Afrikaans', name: 'Afrikaans' },
-  { code: 'Slang', name: 'Kasi Slang / Tsotsitaal' }
+  { code: 'Afrikaans', name: 'Afrikaans' }
 ];
 
 const MATRIC_TOPICS = [
@@ -275,7 +274,7 @@ export default function TutorPage() {
 
   // CHAT STATE
   const [messages, setMessages] = useState<DisplayMessage[]>([
-    { id: '1', role: 'model', text: 'Hello! I am Vylex AI, your CAPS High School physical science tutor. 🇿🇦\n\nI can explain physics or chemistry laws in standard English, Afrikaans, isiZulu, isiXhosa, Sepedi, or using **Kasi Slang (Tsotsitaal/Mix)** with fun local analogies (like comparing electric current to taxi ranks).\n\nWhat are you struggling with today? Select your language below!' }
+    { id: '1', role: 'model', text: 'Hello! I am Vylex AI, your CAPS High School physical science tutor. 🇿🇦\n\nHow can I help you today?' }
   ]);
   const [chatInput, setChatInput] = useState('');
   const [chatLang, setChatLang] = useState('English');
@@ -474,14 +473,6 @@ export default function TutorPage() {
             </div>
           </div>
 
-          <div className="mt-auto bg-slate-800 p-3 rounded-xl border border-slate-700">
-            <h4 className="font-bold text-[10px] text-slate-200 mb-1 flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-purple-400" /> Metaphor Mode
-            </h4>
-            <p className="text-[9px] text-slate-400 leading-relaxed">
-              Use "Kasi Slang" translation in the chatbot. It translates physical equations into everyday township observations.
-            </p>
-          </div>
         </div>
       </div>
 
@@ -498,25 +489,14 @@ export default function TutorPage() {
               exit={{ opacity: 0, y: -10 }}
               className="flex-1 flex flex-col h-full"
             >
-              {/* Chat Header */}
-              <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-slate-50 to-white shrink-0">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-xl bg-purple-100 flex items-center justify-center">
-                    <Brain className="text-purple-600 w-5 h-5 animate-pulse" />
-                  </div>
-                  <div>
-                    <h3 className="font-extrabold text-slate-800 text-sm md:text-base">Vylex AI CAPS Tutor</h3>
-                    <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">South African Curriculum Expert</p>
-                  </div>
-                </div>
-                
-                {/* Language Select Dropdown */}
-                <div className="flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200">
-                  <Languages className="w-4 h-4 text-slate-500" />
+              {/* Minimal Chat Header for Language */}
+              <div className="p-3 border-b border-slate-100 flex items-center justify-end bg-white shrink-0">
+                <div className="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
+                  <Languages className="w-3.5 h-3.5 text-slate-400" />
                   <select
                     value={chatLang}
                     onChange={(e) => setChatLang(e.target.value)}
-                    className="bg-transparent text-xs font-bold text-slate-700 outline-none border-none cursor-pointer pr-1"
+                    className="bg-transparent text-[11px] font-bold text-slate-600 outline-none border-none cursor-pointer pr-1"
                   >
                     {LANGUAGES.map((l) => (
                       <option key={l.code} value={l.code}>{l.name}</option>

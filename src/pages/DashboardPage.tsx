@@ -45,21 +45,18 @@ export default function DashboardPage() {
       <div className="grid grid-cols-3 gap-4 mb-10">
         <motion.div whileHover={{ y: -4 }} className="bg-white rounded-lg p-5 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative overflow-hidden group">
           <div className="absolute top-0 left-0 w-full h-1 bg-blue-500"></div>
-          <div className="absolute -right-4 -top-4 w-16 h-16 bg-blue-50 rounded-full group-hover:scale-150 transition-transform duration-500 ease-out pointer-events-none"></div>
           <div className="relative z-10 text-3xl font-black text-slate-900 tracking-tight">{labRegistry.length}</div>
           <div className="relative z-10 text-xs font-bold text-slate-400 uppercase tracking-wider mt-1.5">Total Labs</div>
         </motion.div>
         
         <motion.div whileHover={{ y: -4 }} className="bg-white rounded-lg p-5 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative overflow-hidden group">
           <div className="absolute top-0 left-0 w-full h-1 bg-pink-500"></div>
-          <div className="absolute -right-4 -top-4 w-16 h-16 bg-pink-50 rounded-full group-hover:scale-150 transition-transform duration-500 ease-out pointer-events-none"></div>
           <div className="relative z-10 text-3xl font-black text-slate-900 tracking-tight">{chemCount}</div>
           <div className="relative z-10 text-xs font-bold text-slate-400 uppercase tracking-wider mt-1.5">Chemistry</div>
         </motion.div>
 
         <motion.div whileHover={{ y: -4 }} className="bg-white rounded-lg p-5 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative overflow-hidden group">
           <div className="absolute top-0 left-0 w-full h-1 bg-purple-500"></div>
-          <div className="absolute -right-4 -top-4 w-16 h-16 bg-purple-50 rounded-full group-hover:scale-150 transition-transform duration-500 ease-out pointer-events-none"></div>
           <div className="relative z-10 text-3xl font-black text-slate-900 tracking-tight">{physicsCount}</div>
           <div className="relative z-10 text-xs font-bold text-slate-400 uppercase tracking-wider mt-1.5">Physics</div>
         </motion.div>

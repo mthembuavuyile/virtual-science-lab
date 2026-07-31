@@ -13,8 +13,7 @@ const LANGUAGES = [
   { code: 'Zulu', name: 'isiZulu' },
   { code: 'Xhosa', name: 'isiXhosa' },
   { code: 'Sepedi', name: 'Sepedi (Northern Sotho)' },
-  { code: 'Afrikaans', name: 'Afrikaans' },
-  { code: 'Slang', name: 'Kasi Slang / Tsotsitaal' }
+  { code: 'Afrikaans', name: 'Afrikaans' }
 ];
 
 export default function AnalyzeExperimentPanel({ simName, state }: AnalyzeExperimentPanelProps) {
