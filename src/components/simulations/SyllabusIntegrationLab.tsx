@@ -23,8 +23,12 @@ import {
   Zap, 
   Info,
   ChevronRight,
-  RefreshCw
+  RefreshCw,
+  Maximize2,
+  Minimize2,
+  Share2
 } from 'lucide-react';
+import { useHardwareCapabilities } from '../../hooks/useHardwareCapabilities';
 import { 
   ResponsiveContainer, 
   LineChart, 
@@ -46,11 +50,21 @@ export default function SyllabusIntegrationLab() {
   const { labId } = useParams<{ labId: string }>();
   const navigate = useNavigate();
   const lab = labId ? getLabById(labId) : undefined;
+  const { vibrate, isFullscreen, toggleFullscreen, requestWakeLock, releaseWakeLock, shareContent } = useHardwareCapabilities();
 
   // Generic control states
   const [isPlaying, setIsPlaying] = useState(false);
   const [simStep, setSimStep] = useState(0);
   const [dataLog, setDataLog] = useState<any[]>([]);
+
+  // Screen Wake Lock during active lab experiment
+  useEffect(() => {
+    if (isPlaying) {
+      requestWakeLock();
+    } else {
+      releaseWakeLock();
+    }
+  }, [isPlaying, requestWakeLock, releaseWakeLock]);
 
   // Simulation-specific parameters
   // Heating curves
@@ -822,9 +836,36 @@ export default function SyllabusIntegrationLab() {
         
         {/* WIDGET CONTAINER */}
         <div className="flex-1 flex flex-col items-center justify-center bg-white border border-slate-200 rounded-2xl p-4 shadow-inner relative overflow-hidden min-h-[250px]">
-          <span className="absolute top-2.5 right-3 text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded border">
-            Simulation Sandbox
-          </span>
+          <div className="absolute top-2.5 right-3 flex items-center gap-1.5 z-10">
+            <button
+              onClick={() => {
+                vibrate(15);
+                shareContent({
+                  title: `${lab.title} | VyLab Science Simulator`,
+                  text: `Try out the ${lab.title} simulation on VyLab!`,
+                });
+              }}
+              title="Share Lab Link"
+              className="p-1 hover:bg-slate-100 text-slate-400 hover:text-slate-700 rounded-md transition-colors cursor-pointer"
+            >
+              <Share2 className="w-3.5 h-3.5" />
+            </button>
+
+            <button
+              onClick={() => {
+                vibrate(20);
+                toggleFullscreen();
+              }}
+              title={isFullscreen ? 'Exit Fullscreen (Esc)' : 'Fullscreen View (F)'}
+              className="p-1 hover:bg-slate-100 text-slate-400 hover:text-slate-700 rounded-md transition-colors cursor-pointer"
+            >
+              {isFullscreen ? <Minimize2 className="w-3.5 h-3.5 text-blue-600" /> : <Maximize2 className="w-3.5 h-3.5" />}
+            </button>
+
+            <span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+              Interactive Lab
+            </span>
+          </div>
 
           {/* Render Active Simulation Widget */}
           

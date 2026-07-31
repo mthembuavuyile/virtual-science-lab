@@ -18,8 +18,15 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { labRegistry, LabEntry } from '../data/experiments';
+import OfflineIndicator from '../components/pwa/OfflineIndicator';
+import PWAInstallBanner from '../components/pwa/PWAInstallBanner';
+import PWAUpdateToast from '../components/pwa/PWAUpdateToast';
+import KeyboardShortcutsModal from '../components/pwa/KeyboardShortcutsModal';
+import PWAStatsModal from '../components/pwa/PWAStatsModal';
+import { useRouteMeta } from '../hooks/useRouteMeta';
 
 export default function AppLayout() {
+  useRouteMeta();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [chemExpanded, setChemExpanded] = useState(true);
   const [physicsExpanded, setPhysicsExpanded] = useState(true);
@@ -415,15 +422,17 @@ export default function AppLayout() {
             </h2>
           </div>
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-             <div className="text-[9px] sm:text-[10px] lg:text-xs font-bold bg-green-100 text-green-700 px-1.5 sm:px-2 py-0.5 rounded-full border border-green-200 shrink-0 whitespace-nowrap">
-                CAPS
-             </div>
-             <div className="flex items-center gap-1 sm:gap-1.5 bg-slate-100 border border-slate-200 rounded-full py-0.5 sm:py-1 px-2 sm:px-2.5 text-slate-700 text-[10px] sm:text-xs font-medium shrink-0 whitespace-nowrap">
-               <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shrink-0"></span>
-               <span>Guest Mode</span>
-             </div>
+            <OfflineIndicator />
+            <KeyboardShortcutsModal />
+            <PWAStatsModal />
+            <div className="hidden sm:block text-[9px] sm:text-[10px] lg:text-xs font-bold bg-green-100 text-green-700 px-1.5 sm:px-2 py-0.5 rounded-full border border-green-200 shrink-0 whitespace-nowrap">
+              CAPS
+            </div>
           </div>
         </header>
+
+        <PWAUpdateToast />
+        <PWAInstallBanner />
 
         {/* Content area — bottom padding for mobile nav */}
         <div className="flex-1 overflow-auto bg-slate-50/50 p-3 lg:p-6 pb-20 lg:pb-6">

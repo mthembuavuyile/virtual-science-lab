@@ -3,20 +3,28 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1" />
-  <meta name="theme-color" content="#ffffff" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0f172a" />
+  
+  <!-- PWA & Apple Meta Tags -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="VyLab" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="application-name" content="VyLab" />
 
   <title>VyLab | CAPS-Aligned Virtual Science Lab for High Schools</title>
 
-  <!-- Canonical URL (FIXED) -->
+  <!-- Canonical URL -->
   <link rel="canonical" href="https://vylab.vylexnexys.co.za/" />
 
   <meta name="title" content="VyLab | CAPS-Aligned Virtual Science Lab for High Schools" />
   <meta name="description"
-    content="VyLab is a browser-based, CAPS-aligned virtual science laboratory for South African high schools. Run interactive Chemistry and Physics experiments with zero equipment." />
+    content="VyLab is a browser-based, CAPS-aligned virtual science laboratory for South African high schools. Run interactive Chemistry and Physics experiments 100% offline." />
   <meta name="keywords"
-    content="virtual science lab, CAPS aligned, South Africa education, online chemistry experiments, physics simulator, STEM edtech, high school science, VyLab, Vylex Nexys" />
+    content="virtual science lab, PWA, offline science lab, CAPS aligned, South Africa education, online chemistry experiments, physics simulator, STEM edtech, high school science, VyLab, Vylex Nexys" />
   <meta name="author" content="Vylex Nexys" />
   <meta name="robots" content="index, follow" />
 
@@ -26,20 +34,20 @@
   <meta property="og:site_name" content="VyLab" />
   <meta property="og:title" content="VyLab | Virtual Science Lab for South African High Schools" />
   <meta property="og:description"
-    content="Access fully interactive, CAPS-aligned Chemistry and Physics simulators directly from your browser. No physical lab required." />
+    content="Access fully interactive, CAPS-aligned Chemistry and Physics simulators directly from your browser or install as an offline desktop/mobile app." />
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:url" content="https://vylab.vylexnexys.co.za/" />
   <meta property="twitter:title" content="VyLab | Virtual Science Lab" />
   <meta property="twitter:description"
-    content="Access fully interactive, CAPS-aligned Chemistry and Physics simulators directly from your browser. No physical lab required." />
+    content="Access fully interactive, CAPS-aligned Chemistry and Physics simulators directly from your browser or native PWA app." />
   
   <!-- Three.js CDN for 3D Electrodynamics -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 
-<body>
+<body class="bg-slate-900 selection:bg-blue-600 selection:text-white overscroll-none">
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
 </body>

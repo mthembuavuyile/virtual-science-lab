@@ -550,9 +550,10 @@ function AtomBuilderPanel({
               min={1}
               max={36}
               step={1}
-              onValueChange={([val]) => {
-                setProtons(val);
-                onSelect(getElementByNumber(val));
+              onValueChange={(val) => {
+                const v = (val as number[])[0];
+                setProtons(v);
+                onSelect(getElementByNumber(v));
               }}
             />
           </div>
@@ -570,7 +571,7 @@ function AtomBuilderPanel({
               min={0}
               max={45}
               step={1}
-              onValueChange={([val]) => setNeutrons(val)}
+              onValueChange={(val) => setNeutrons((val as number[])[0])}
             />
           </div>
 
@@ -587,7 +588,7 @@ function AtomBuilderPanel({
               min={0}
               max={36}
               step={1}
-              onValueChange={([val]) => setElectrons(val)}
+              onValueChange={(val) => setElectrons((val as number[])[0])}
             />
           </div>
 

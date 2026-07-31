@@ -120,7 +120,7 @@ export default function MomentumLab() {
   const [isSimRunning, setIsSimRunning] = useState(false);
   const [simTime, setSimTime] = useState(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | null>(null);
 
   // Derived initial physics
   const p1i = m1 * v1;
