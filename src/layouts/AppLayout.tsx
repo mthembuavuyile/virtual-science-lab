@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Outlet, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Beaker, 
@@ -14,23 +14,77 @@ import {
   Terminal,
   GraduationCap,
   FlaskConical,
+  Search,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { labRegistry } from '../data/experiments';
+import { labRegistry, LabEntry } from '../data/experiments';
 
 export default function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [chemExpanded, setChemExpanded] = useState(true);
   const [physicsExpanded, setPhysicsExpanded] = useState(true);
+  const [expandedGrades, setExpandedGrades] = useState<Record<string, boolean>>({
+    'Chemistry-10': true,
+    'Chemistry-11': true,
+    'Chemistry-12': true,
+    'Physics-10': true,
+    'Physics-11': true,
+    'Physics-12': true,
+  });
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
 
-  const isLabRoute = location.pathname.startsWith('/app/labs');
+  // Auto-expand discipline & grade based on active route
+  useEffect(() => {
+    const labMatch = location.pathname.match(/^\/app\/labs\/(.+)$/);
+    if (labMatch) {
+      const activeLab = labRegistry.find(l => l.id === labMatch[1]);
+      if (activeLab) {
+        if (activeLab.discipline === 'Chemistry') setChemExpanded(true);
+        if (activeLab.discipline === 'Physics') setPhysicsExpanded(true);
+        const gradeKey = `${activeLab.discipline}-${activeLab.grade}`;
+        setExpandedGrades(prev => ({ ...prev, [gradeKey]: true }));
+      }
+    }
+  }, [location.pathname]);
 
-  // Derive sidebar nav items from the lab registry
-  const chemLabs = useMemo(() => labRegistry.filter(l => l.discipline === 'Chemistry'), []);
-  const physicsLabs = useMemo(() => labRegistry.filter(l => l.discipline === 'Physics'), []);
+  const toggleGrade = (discipline: string, grade: number) => {
+    const key = `${discipline}-${grade}`;
+    setExpandedGrades(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  // Filtered labs by search query
+  const filteredLabs = useMemo(() => {
+    if (!searchQuery.trim()) return labRegistry;
+    const q = searchQuery.toLowerCase();
+    return labRegistry.filter(l => 
+      l.title.toLowerCase().includes(q) || 
+      l.discipline.toLowerCase().includes(q) ||
+      l.unitTitle.toLowerCase().includes(q) ||
+      `grade ${l.grade}`.includes(q)
+    );
+  }, [searchQuery]);
+
+  const chemLabs = useMemo(() => filteredLabs.filter(l => l.discipline === 'Chemistry'), [filteredLabs]);
+  const physicsLabs = useMemo(() => filteredLabs.filter(l => l.discipline === 'Physics'), [filteredLabs]);
+
+  const chemLabsByGrade = useMemo(() => {
+    return {
+      10: chemLabs.filter(l => l.grade === 10),
+      11: chemLabs.filter(l => l.grade === 11),
+      12: chemLabs.filter(l => l.grade === 12),
+    };
+  }, [chemLabs]);
+
+  const physicsLabsByGrade = useMemo(() => {
+    return {
+      10: physicsLabs.filter(l => l.grade === 10),
+      11: physicsLabs.filter(l => l.grade === 11),
+      12: physicsLabs.filter(l => l.grade === 12),
+    };
+  }, [physicsLabs]);
 
   const otherNav = [
     { name: 'AI Tutor', path: '/app/tutor', icon: MessageSquare },
@@ -51,7 +105,6 @@ export default function AppLayout() {
   const getPageTitle = () => {
     if (location.pathname === '/app') return 'Dashboard';
     if (location.pathname === '/app/labs') return 'Syllabus Hub';
-    // Check if it's a specific lab
     const labMatch = location.pathname.match(/^\/app\/labs\/(.+)$/);
     if (labMatch) {
       const lab = labRegistry.find(l => l.id === labMatch[1]);
@@ -62,11 +115,12 @@ export default function AppLayout() {
     return location.pathname.split('/').pop() || 'Dashboard';
   };
 
-  /** Renders a collapsible discipline section for the sidebar */
+  /** Renders a collapsible discipline section with collapsible grade sub-links */
   function DisciplineSection({
     label,
     icon: SectionIcon,
-    labs,
+    labsByGrade,
+    totalLabsCount,
     expanded,
     onToggle,
     accentClass,
@@ -76,7 +130,8 @@ export default function AppLayout() {
   }: {
     label: string;
     icon: React.ComponentType<{ className?: string }>;
-    labs: typeof chemLabs;
+    labsByGrade: Record<number, LabEntry[]>;
+    totalLabsCount: number;
     expanded: boolean;
     onToggle: () => void;
     accentClass: string;
@@ -84,13 +139,14 @@ export default function AppLayout() {
     onLinkClick?: () => void;
     onCollapsedClick?: () => void;
   }) {
-    const isActive = labs.some(l => location.pathname === `/app/labs/${l.id}`);
+    const allLabsInDiscipline = Object.values(labsByGrade).flat();
+    const isActive = allLabsInDiscipline.some(l => location.pathname === `/app/labs/${l.id}`);
 
     if (!isSidebarExpanded) {
       return (
         <button
           onClick={onCollapsedClick}
-          title={label}
+          title={`${label} (${totalLabsCount} labs)`}
           className={`
             w-full flex items-center px-3 py-2.5 rounded-lg transition-all mt-1 cursor-pointer
             ${isActive ? accentClass : 'text-slate-600 hover:bg-slate-100'}
@@ -101,48 +157,109 @@ export default function AppLayout() {
       );
     }
 
+    const grades: Array<10 | 11 | 12> = [10, 11, 12];
+
     return (
-      <>
+      <div className="mt-1">
+        {/* Main Discipline Header */}
         <button
           onClick={onToggle}
-          className={`flex items-center px-3 py-2.5 rounded-lg transition-all w-full text-left mt-1 ${
-            isActive ? accentClass : 'text-slate-600 hover:bg-slate-100'
+          className={`flex items-center px-3 py-2.5 rounded-lg transition-all w-full text-left font-medium cursor-pointer ${
+            isActive ? accentClass : 'text-slate-700 hover:bg-slate-100'
           }`}
         >
           <SectionIcon className="w-5 h-5 shrink-0 mr-3" />
-          <span className="whitespace-nowrap text-sm flex-1">{label}</span>
-          {expanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+          <span className="whitespace-nowrap text-sm flex-1 font-semibold">{label}</span>
+          <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-slate-200/80 text-slate-700 mr-2">
+            {totalLabsCount}
+          </span>
+          {expanded ? <ChevronDown className="w-4 h-4 text-slate-500" /> : <ChevronRight className="w-4 h-4 text-slate-500" />}
         </button>
 
+        {/* Collapsible Discipline Content (Grade Sub-links) */}
         <AnimatePresence initial={false}>
-          {expanded && (
+          {(expanded || searchQuery.trim() !== '') && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2 }}
               className="overflow-hidden"
             >
-              <div className="ml-4 border-l-2 border-slate-100 pl-2 space-y-0.5">
-                {labs.map((lab) => (
-                  <NavLink
-                    key={lab.id}
-                    to={`/app/labs/${lab.id}`}
-                    onClick={onLinkClick}
-                    className={({ isActive: linkActive }) => `
-                      flex items-start px-3 py-2 rounded-lg transition-all text-sm
-                      ${linkActive ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'}
-                    `}
-                    end
-                  >
-                    <lab.icon className="w-4 h-4 shrink-0 mr-2.5 mt-0.5" />
-                    <span className="text-[13px] leading-tight break-words">{lab.title}</span>
-                  </NavLink>
-                ))}
+              <div className="ml-3 pl-2.5 border-l-2 border-slate-200/80 space-y-1 mt-1">
+                {grades.map((grade) => {
+                  const labs = labsByGrade[grade] || [];
+                  if (labs.length === 0 && searchQuery.trim()) return null;
+
+                  const gradeKey = `${label}-${grade}`;
+                  const isGradeExpanded = searchQuery.trim() !== '' || !!expandedGrades[gradeKey];
+                  const isGradeActive = labs.some(l => location.pathname === `/app/labs/${l.id}`);
+
+                  return (
+                    <div key={grade} className="rounded-lg">
+                      {/* Sub-link Grade Accordion Toggle */}
+                      <button
+                        onClick={() => toggleGrade(label, grade)}
+                        className={`flex items-center w-full px-2.5 py-1.5 rounded-md text-xs font-semibold transition-colors cursor-pointer ${
+                          isGradeActive
+                            ? 'text-blue-700 bg-blue-50/70'
+                            : 'text-slate-600 hover:bg-slate-100/80 hover:text-slate-900'
+                        }`}
+                      >
+                        <span className="flex-1 text-left">Grade {grade}</span>
+                        <span className="text-[10px] px-1.5 py-0.2 rounded bg-slate-100 text-slate-500 mr-1.5">
+                          {labs.length}
+                        </span>
+                        {isGradeExpanded ? (
+                          <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+                        ) : (
+                          <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                        )}
+                      </button>
+
+                      {/* Sub-link Lab List */}
+                      <AnimatePresence initial={false}>
+                        {isGradeExpanded && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.15 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="ml-2 pl-2 border-l border-slate-200/60 space-y-0.5 my-1">
+                              {labs.map((lab) => (
+                                <NavLink
+                                  key={lab.id}
+                                  to={`/app/labs/${lab.id}`}
+                                  onClick={onLinkClick}
+                                  className={({ isActive: linkActive }) => `
+                                    flex items-start px-2.5 py-1.5 rounded-md transition-all text-xs group
+                                    ${linkActive 
+                                      ? 'bg-blue-600 text-white font-medium shadow-xs' 
+                                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                                    }
+                                  `}
+                                  end
+                                >
+                                  <lab.icon className="w-3.5 h-3.5 shrink-0 mr-2 mt-0.5 opacity-80 group-hover:opacity-100" />
+                                  <span className="leading-snug break-words flex-1 text-[12px]">
+                                    {lab.title}
+                                  </span>
+                                </NavLink>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                })}
               </div>
             </motion.div>
           )}
         </AnimatePresence>
-      </>
+      </div>
     );
   }
 
@@ -151,19 +268,42 @@ export default function AppLayout() {
       {/* ─── DESKTOP SIDEBAR (hidden on mobile) ─── */}
       <motion.aside 
         initial={false}
-        animate={{ width: sidebarOpen ? 260 : 80 }}
+        animate={{ width: sidebarOpen ? 280 : 80 }}
         className="hidden lg:flex bg-white border-r border-slate-200 flex-col z-20 shrink-0"
       >
         <div className="h-14 flex items-center px-4 border-b border-slate-200 cursor-pointer" onClick={() => navigate('/')}>
-          <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center shrink-0">
+          <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center shrink-0 shadow-sm">
             <Beaker className="text-white w-5 h-5" />
           </div>
           {sidebarOpen && (
-            <span className="ml-3 font-bold text-lg tracking-tight whitespace-nowrap">VyLab</span>
+            <span className="ml-3 font-bold text-lg tracking-tight whitespace-nowrap text-slate-900">VyLab</span>
           )}
         </div>
 
-        <nav className="flex-1 py-4 px-3 flex flex-col gap-1 overflow-y-auto">
+        {sidebarOpen && (
+          <div className="px-3 pt-3 pb-1 shrink-0">
+            <div className="relative">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search labs..."
+                className="w-full bg-slate-100 text-slate-800 placeholder-slate-400 text-xs rounded-lg pl-9 pr-8 py-2 border border-transparent focus:border-blue-500 focus:bg-white focus:outline-none transition-all"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        <nav className="flex-1 py-3 px-3 flex flex-col gap-1 overflow-y-auto overscroll-contain">
           {/* Dashboard */}
           <NavLink
             to="/app"
@@ -175,7 +315,7 @@ export default function AppLayout() {
             end
           >
             <LayoutDashboard className={`w-5 h-5 shrink-0 ${sidebarOpen ? 'mr-3' : 'mx-auto'}`} />
-            {sidebarOpen && <span className="whitespace-nowrap text-sm">Dashboard</span>}
+            {sidebarOpen && <span className="whitespace-nowrap text-sm font-medium">Dashboard</span>}
           </NavLink>
 
           {/* Syllabus Hub */}
@@ -189,14 +329,15 @@ export default function AppLayout() {
             end
           >
             <GraduationCap className={`w-5 h-5 shrink-0 ${sidebarOpen ? 'mr-3' : 'mx-auto'}`} />
-            {sidebarOpen && <span className="whitespace-nowrap text-sm">Syllabus Hub</span>}
+            {sidebarOpen && <span className="whitespace-nowrap text-sm font-medium">Syllabus Hub</span>}
           </NavLink>
 
           {/* Chemistry Section */}
           <DisciplineSection
             label="Chemistry"
             icon={FlaskConical}
-            labs={chemLabs}
+            labsByGrade={chemLabsByGrade}
+            totalLabsCount={chemLabs.length}
             expanded={chemExpanded}
             onToggle={() => setChemExpanded(!chemExpanded)}
             accentClass="bg-pink-50 text-pink-700 font-semibold"
@@ -211,7 +352,8 @@ export default function AppLayout() {
           <DisciplineSection
             label="Physics"
             icon={Zap}
-            labs={physicsLabs}
+            labsByGrade={physicsLabsByGrade}
+            totalLabsCount={physicsLabs.length}
             expanded={physicsExpanded}
             onToggle={() => setPhysicsExpanded(!physicsExpanded)}
             accentClass="bg-blue-50 text-blue-700 font-semibold"
@@ -235,7 +377,7 @@ export default function AppLayout() {
               `}
             >
               <item.icon className={`w-5 h-5 shrink-0 ${sidebarOpen ? 'mr-3' : 'mx-auto'}`} />
-              {sidebarOpen && <span className="whitespace-nowrap text-sm">{item.name}</span>}
+              {sidebarOpen && <span className="whitespace-nowrap text-sm font-medium">{item.name}</span>}
             </NavLink>
           ))}
         </nav>
@@ -259,13 +401,13 @@ export default function AppLayout() {
             {/* Hamburger button on mobile */}
             <button 
               onClick={() => setIsMobileDrawerOpen(true)}
-              className="lg:hidden p-1 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-800 transition-colors"
+              className="lg:hidden p-1.5 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors cursor-pointer"
               aria-label="Open mobile menu"
             >
               <Menu className="w-5 h-5" />
             </button>
             {/* Mobile logo */}
-            <div className="lg:hidden w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center cursor-pointer" onClick={() => navigate('/app')}>
+            <div className="lg:hidden w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center cursor-pointer shadow-xs" onClick={() => navigate('/app')}>
               <Beaker className="text-white w-4 h-4" />
             </div>
             <h2 className="font-semibold text-sm lg:text-lg text-slate-800 truncate">
@@ -331,36 +473,61 @@ export default function AppLayout() {
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed left-0 top-0 bottom-0 w-72 bg-white border-r border-slate-200 flex flex-col z-50 lg:hidden shadow-2xl overflow-hidden"
+              transition={{ type: 'spring', damping: 25, stiffness: 220 }}
+              className="fixed left-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white border-r border-slate-200 flex flex-col z-50 lg:hidden shadow-2xl h-[100dvh] overflow-hidden"
             >
-              <div className="h-14 flex items-center justify-between px-4 border-b border-slate-200">
+              {/* Drawer Header */}
+              <div className="h-14 flex items-center justify-between px-4 border-b border-slate-200 shrink-0">
                 <div className="flex items-center cursor-pointer" onClick={() => { navigate('/app'); setIsMobileDrawerOpen(false); }}>
-                  <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center shrink-0 shadow-sm">
                     <Beaker className="text-white w-5 h-5" />
                   </div>
-                  <span className="ml-3 font-bold text-lg tracking-tight whitespace-nowrap">VyLab</span>
+                  <span className="ml-3 font-bold text-lg tracking-tight whitespace-nowrap text-slate-900">VyLab</span>
                 </div>
                 <button
                   onClick={() => setIsMobileDrawerOpen(false)}
-                  className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-500 hover:text-slate-700 transition-colors"
+                  className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-500 hover:text-slate-700 transition-colors cursor-pointer"
+                  aria-label="Close menu"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
-              <nav className="flex-1 py-4 px-3 flex flex-col gap-1 overflow-y-auto">
+              {/* Mobile Search Input */}
+              <div className="px-3 pt-3 pb-1 shrink-0">
+                <div className="relative">
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search labs & topics..."
+                    className="w-full bg-slate-100 text-slate-800 placeholder-slate-400 text-xs rounded-lg pl-9 pr-8 py-2 border border-transparent focus:border-blue-500 focus:bg-white focus:outline-none transition-all"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery('')}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Scrollable Navigation Area */}
+              <nav className="flex-1 py-3 px-3 flex flex-col gap-1 overflow-y-auto overscroll-contain touch-pan-y pb-24 [webkit-overflow-scrolling:touch]">
                 {/* Dashboard */}
                 <NavLink
                   to="/app"
                   onClick={() => setIsMobileDrawerOpen(false)}
                   className={({ isActive }) => `
-                    flex items-center px-3 py-2.5 rounded-lg transition-all text-sm
-                    ${isActive ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}
+                    flex items-center px-3 py-2.5 rounded-lg transition-all text-sm font-medium
+                    ${isActive ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'}
                   `}
                   end
                 >
-                  <LayoutDashboard className="w-5 h-5 shrink-0 mr-3" />
+                  <LayoutDashboard className="w-5 h-5 shrink-0 mr-3 text-slate-500" />
                   <span className="text-sm">Dashboard</span>
                 </NavLink>
 
@@ -369,20 +536,54 @@ export default function AppLayout() {
                   to="/app/labs"
                   onClick={() => setIsMobileDrawerOpen(false)}
                   className={({ isActive }) => `
-                    flex items-center px-3 py-2.5 rounded-lg transition-all text-sm
-                    ${isActive && location.pathname === '/app/labs' ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}
+                    flex items-center px-3 py-2.5 rounded-lg transition-all text-sm font-medium
+                    ${isActive && location.pathname === '/app/labs' ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'}
                   `}
                   end
                 >
-                  <GraduationCap className="w-5 h-5 shrink-0 mr-3" />
+                  <GraduationCap className="w-5 h-5 shrink-0 mr-3 text-slate-500" />
                   <span className="text-sm">Syllabus Hub</span>
                 </NavLink>
+
+                <div className="h-px bg-slate-100 my-1.5" />
+
+                {/* Quick Expand / Collapse controls */}
+                <div className="flex items-center justify-between px-2 text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
+                  <span>CAPS Lab Curriculum</span>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        setChemExpanded(true);
+                        setPhysicsExpanded(true);
+                        setExpandedGrades({
+                          'Chemistry-10': true, 'Chemistry-11': true, 'Chemistry-12': true,
+                          'Physics-10': true, 'Physics-11': true, 'Physics-12': true,
+                        });
+                      }}
+                      className="hover:text-blue-600 transition-colors cursor-pointer"
+                    >
+                      Expand All
+                    </button>
+                    <span>•</span>
+                    <button
+                      onClick={() => {
+                        setChemExpanded(false);
+                        setPhysicsExpanded(false);
+                        setExpandedGrades({});
+                      }}
+                      className="hover:text-blue-600 transition-colors cursor-pointer"
+                    >
+                      Collapse All
+                    </button>
+                  </div>
+                </div>
 
                 {/* Chemistry Section */}
                 <DisciplineSection
                   label="Chemistry"
                   icon={FlaskConical}
-                  labs={chemLabs}
+                  labsByGrade={chemLabsByGrade}
+                  totalLabsCount={chemLabs.length}
                   expanded={chemExpanded}
                   onToggle={() => setChemExpanded(!chemExpanded)}
                   accentClass="bg-pink-50 text-pink-700 font-semibold"
@@ -394,7 +595,8 @@ export default function AppLayout() {
                 <DisciplineSection
                   label="Physics"
                   icon={Zap}
-                  labs={physicsLabs}
+                  labsByGrade={physicsLabsByGrade}
+                  totalLabsCount={physicsLabs.length}
                   expanded={physicsExpanded}
                   onToggle={() => setPhysicsExpanded(!physicsExpanded)}
                   accentClass="bg-blue-50 text-blue-700 font-semibold"
@@ -404,17 +606,21 @@ export default function AppLayout() {
 
                 <div className="h-px bg-slate-100 my-2" />
 
+                <div className="px-2 text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
+                  Study Tools
+                </div>
+
                 {otherNav.map((item) => (
                   <NavLink
                     key={item.path}
                     to={item.path}
                     onClick={() => setIsMobileDrawerOpen(false)}
                     className={({ isActive }) => `
-                      flex items-center px-3 py-2.5 rounded-lg transition-all text-sm
-                      ${isActive ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}
+                      flex items-center px-3 py-2.5 rounded-lg transition-all text-sm font-medium
+                      ${isActive ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'}
                     `}
                   >
-                    <item.icon className="w-5 h-5 shrink-0 mr-3" />
+                    <item.icon className="w-5 h-5 shrink-0 mr-3 text-slate-500" />
                     <span className="text-sm">{item.name}</span>
                   </NavLink>
                 ))}
