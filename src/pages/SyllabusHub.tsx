@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { motion } from 'motion/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowRight, Search, FlaskConical, Zap, GraduationCap, LayoutGrid } from 'lucide-react';
 import { labRegistry, Discipline } from '../data/experiments';
 
@@ -9,9 +9,24 @@ type DisciplineFilter = 'all' | Discipline;
 
 export default function SyllabusHub() {
   const navigate = useNavigate();
-  const [gradeFilter, setGradeFilter] = useState<GradeFilter>('all');
-  const [disciplineFilter, setDisciplineFilter] = useState<DisciplineFilter>('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const gradeFilter = (searchParams.get('grade') as GradeFilter) || 'all';
+  const disciplineFilter = (searchParams.get('discipline') as DisciplineFilter) || 'all';
+  const searchQuery = searchParams.get('q') || '';
+
+  const updateFilters = (newGrade?: GradeFilter, newDiscipline?: DisciplineFilter, newSearch?: string) => {
+    const params = new URLSearchParams(searchParams);
+    const g = newGrade !== undefined ? newGrade : gradeFilter;
+    const d = newDiscipline !== undefined ? newDiscipline : disciplineFilter;
+    const q = newSearch !== undefined ? newSearch : searchQuery;
+
+    if (g && g !== 'all') params.set('grade', g); else params.delete('grade');
+    if (d && d !== 'all') params.set('discipline', d); else params.delete('discipline');
+    if (q && q.trim()) params.set('q', q); else params.delete('q');
+
+    setSearchParams(params, { replace: true });
+  };
 
   const filteredLabs = useMemo(() => {
     return labRegistry.filter(lab => {
@@ -79,7 +94,7 @@ export default function SyllabusHub() {
           <input
             type="text"
             value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
+            onChange={e => updateFilters(undefined, undefined, e.target.value)}
             placeholder="Search experiments, topics, simulations..."
             className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow"
           />
@@ -90,8 +105,8 @@ export default function SyllabusHub() {
           {disciplineOptions.map(opt => (
             <button
               key={opt.value}
-              onClick={() => setDisciplineFilter(opt.value)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-colors whitespace-nowrap ${
+              onClick={() => updateFilters(undefined, opt.value, undefined)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-colors whitespace-nowrap cursor-pointer ${
                 disciplineFilter === opt.value
                   ? 'bg-white shadow-sm text-slate-900'
                   : 'text-slate-500 hover:text-slate-700'
@@ -108,8 +123,8 @@ export default function SyllabusHub() {
           {gradeOptions.map(opt => (
             <button
               key={opt.value}
-              onClick={() => setGradeFilter(opt.value)}
-              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors whitespace-nowrap ${
+              onClick={() => updateFilters(opt.value, undefined, undefined)}
+              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors whitespace-nowrap cursor-pointer ${
                 gradeFilter === opt.value
                   ? 'bg-white shadow-sm text-slate-900'
                   : 'text-slate-500 hover:text-slate-700'
@@ -128,8 +143,8 @@ export default function SyllabusHub() {
         </p>
         {(gradeFilter !== 'all' || disciplineFilter !== 'all' || searchQuery) && (
           <button
-            onClick={() => { setGradeFilter('all'); setDisciplineFilter('all'); setSearchQuery(''); }}
-            className="text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+            onClick={() => updateFilters('all', 'all', '')}
+            className="text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors cursor-pointer"
           >
             Clear Filters
           </button>

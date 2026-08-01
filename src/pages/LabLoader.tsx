@@ -18,6 +18,15 @@ export default function LabLoader() {
 
   const lab = labId ? getLabById(labId) : undefined;
 
+  const handleBack = () => {
+    // If user has history in session, go back; otherwise fallback to syllabus hub
+    if (window.history.state && window.history.state.idx > 0) {
+      navigate(-1);
+    } else {
+      navigate('/app/labs');
+    }
+  };
+
   if (!lab) {
     return (
       <div className="flex flex-col items-center justify-center h-full min-h-[400px] gap-6 text-center">
@@ -31,11 +40,11 @@ export default function LabLoader() {
           </p>
         </div>
         <button
-          onClick={() => navigate('/app/labs')}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-5 rounded-xl transition-colors shadow-sm text-sm"
+          onClick={handleBack}
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-5 rounded-xl transition-colors shadow-sm text-sm cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Syllabus Hub
+          Back
         </button>
       </div>
     );
@@ -48,9 +57,9 @@ export default function LabLoader() {
       {/* Breadcrumb header */}
       <div className="flex items-center gap-3 mb-3 shrink-0">
         <button
-          onClick={() => navigate('/app/labs')}
-          className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700 transition-colors"
-          aria-label="Back to Syllabus Hub"
+          onClick={handleBack}
+          className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-700 transition-colors cursor-pointer"
+          aria-label="Go back"
         >
           <ArrowLeft className="w-4 h-4" />
         </button>

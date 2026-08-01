@@ -57,9 +57,15 @@ export default function AppLayout() {
     }
   }, [location.pathname]);
 
-  const toggleGrade = (discipline: string, grade: number) => {
+  const toggleGrade = (discipline: string, grade: number, e?: React.MouseEvent) => {
     const key = `${discipline}-${grade}`;
     setExpandedGrades(prev => ({ ...prev, [key]: !prev[key] }));
+    if (e?.currentTarget) {
+      const el = e.currentTarget as HTMLElement;
+      setTimeout(() => {
+        el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }, 50);
+    }
   };
 
   // Filtered labs by search query
@@ -170,7 +176,13 @@ export default function AppLayout() {
       <div className="mt-1">
         {/* Main Discipline Header */}
         <button
-          onClick={onToggle}
+          onClick={(e) => {
+            onToggle();
+            const el = e.currentTarget;
+            setTimeout(() => {
+              el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }, 50);
+          }}
           className={`flex items-center px-3 py-2.5 rounded-lg transition-all w-full text-left font-medium cursor-pointer ${
             isActive ? accentClass : 'text-slate-700 hover:bg-slate-100'
           }`}
@@ -206,7 +218,7 @@ export default function AppLayout() {
                     <div key={grade} className="rounded-lg">
                       {/* Sub-link Grade Accordion Toggle */}
                       <button
-                        onClick={() => toggleGrade(label, grade)}
+                        onClick={(e) => toggleGrade(label, grade, e)}
                         className={`flex items-center w-full px-2.5 py-1.5 rounded-md text-xs font-semibold transition-colors cursor-pointer ${
                           isGradeActive
                             ? 'text-blue-700 bg-blue-50/70'

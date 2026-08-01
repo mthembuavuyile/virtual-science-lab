@@ -7,12 +7,22 @@ import { labRegistry } from '../data/experiments';
 export default function DashboardPage() {
   const navigate = useNavigate();
 
-  // Pick 3 featured labs to showcase
-  const featured = [
-    labRegistry.find(l => l.id === 'electrodynamics')!,
-    labRegistry.find(l => l.id === 'ohms-law')!,
-    labRegistry.find(l => l.id === 'electrochemistry')!,
-  ].filter(Boolean);
+  // Featured labs to showcase on home page
+  const featuredIds = [
+    'g10-chemical-bonding',
+    'g11-ideal-gases',
+    'electrochemistry',
+    'g10-heating-curves',
+    'g10-atom-periodic',
+    'ohms-law',
+    'g12-momentum',
+    'g12-doppler',
+    'electrodynamics',
+  ];
+
+  const featured = featuredIds
+    .map(id => labRegistry.find(l => l.id === id))
+    .filter(Boolean);
 
   const chemCount = labRegistry.filter(l => l.discipline === 'Chemistry').length;
   const physicsCount = labRegistry.filter(l => l.discipline === 'Physics').length;
@@ -84,7 +94,7 @@ export default function DashboardPage() {
         </button>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6 mb-8">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {featured.map((lab) => {
           const DIcon = lab.icon;
           return (

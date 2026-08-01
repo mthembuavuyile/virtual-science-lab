@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { Beaker, BookOpen, Presentation, ChevronRight, Zap } from 'lucide-react';
+import { Beaker, BookOpen, Presentation, ChevronRight, Zap, ArrowRight } from 'lucide-react';
+import { labRegistry } from '../data/experiments';
 
 const AtomAnimation = () => {
   return (
@@ -114,6 +115,74 @@ export default function LandingPage() {
                 <h3 className="text-xl font-bold text-slate-900 mb-3">AI Syllabus Tutor</h3>
                 <p className="text-slate-600 leading-relaxed">Stuck on a concept? Chat with our AI tutor trained specifically on the CAPS physical science guidelines to guide your learning.</p>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Featured Simulators Section */}
+        <section id="featured-simulators" className="py-20 bg-gradient-to-b from-slate-900 to-slate-950 text-white border-b border-slate-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
+              <div>
+                <span className="text-xs font-extrabold uppercase tracking-widest text-blue-400 mb-2 block">
+                  Interactive STEM Modules
+                </span>
+                <h2 className="text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
+                  Featured Simulators
+                </h2>
+              </div>
+              <Link
+                to="/app/labs"
+                className="mt-4 md:mt-0 text-sm font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1 transition-colors"
+              >
+                Explore All CAPS Simulators <ChevronRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                'g10-chemical-bonding',
+                'g11-ideal-gases',
+                'electrochemistry',
+                'g10-heating-curves',
+                'g10-atom-periodic',
+                'ohms-law',
+                'g12-momentum',
+                'g12-doppler',
+                'electrodynamics',
+              ]
+                .map(id => labRegistry.find(l => l.id === id))
+                .filter(Boolean)
+                .map(lab => {
+                  if (!lab) return null;
+                  const DIcon = lab.icon;
+                  return (
+                    <Link
+                      key={lab.id}
+                      to={`/app/labs/${lab.id}`}
+                      className="bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 hover:border-blue-500/50 rounded-2xl overflow-hidden transition-all duration-300 group flex flex-col hover:-translate-y-1 shadow-lg"
+                    >
+                      <div className={`h-36 bg-gradient-to-br ${lab.gradient} flex items-center justify-center relative overflow-hidden`}>
+                        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)]" style={{ backgroundSize: '16px 16px' }} />
+                        <div className="absolute top-3 left-3 bg-black/40 backdrop-blur-md text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-white/10">
+                          Grade {lab.grade} • {lab.discipline}
+                        </div>
+                        <DIcon className="text-white w-12 h-12 opacity-90 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500" />
+                      </div>
+                      <div className="p-5 flex-1 flex flex-col">
+                        <h3 className="text-lg font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
+                          {lab.title}
+                        </h3>
+                        <p className="text-slate-400 text-xs leading-relaxed flex-1 mb-4">
+                          {lab.description}
+                        </p>
+                        <div className="text-xs font-bold text-blue-400 flex items-center gap-1.5 opacity-90 group-hover:opacity-100">
+                          Launch Simulator <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
             </div>
           </div>
         </section>
