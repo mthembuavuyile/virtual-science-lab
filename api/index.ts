@@ -202,7 +202,7 @@ Support your answers with CAPS-relevant formulas and exam tips where appropriate
         ];
 
         const response = await ai.models.generateContent({
-          model: 'gemini-3.5-flash',
+          model: 'gemini-3.6-flash',
           contents,
           config: {
             systemInstruction,
@@ -236,7 +236,7 @@ If language is 'Slang', write the "conceptBreakdown" and "saContext" using South
 Return ONLY a valid JSON block, no surrounding markdown wrappers except optionally \`\`\`json.`;
 
         const response = await ai.models.generateContent({
-          model: 'gemini-3.5-flash',
+          model: 'gemini-3.6-flash',
           contents: prompt,
           config: {
             responseMimeType: 'application/json',
@@ -255,7 +255,7 @@ The user chose the answer: "${userAnswer}".
 Briefly evaluate if the user's choice is correct or incorrect, and explain why. Keep the explanation encouraging and under 3 sentences, specifically geared towards a high school student.`;
 
         const response = await ai.models.generateContent({
-          model: 'gemini-3.5-flash',
+          model: 'gemini-3.6-flash',
           contents: prompt,
           config: {
             temperature: 0.5,
@@ -281,7 +281,7 @@ You MUST return a JSON object with the following keys:
 Return ONLY a valid JSON block, no surrounding markdown wrappers except optionally \`\`\`json.`;
 
         const response = await ai.models.generateContent({
-          model: 'gemini-3.5-flash',
+          model: 'gemini-3.6-flash',
           contents: prompt,
           config: {
             responseMimeType: 'application/json',
@@ -320,7 +320,7 @@ You MUST return a JSON object with:
 Return ONLY a valid JSON block, no surrounding markdown wrappers except optionally \`\`\`json.`;
 
         const response = await ai.models.generateContent({
-          model: 'gemini-3.5-flash',
+          model: 'gemini-3.6-flash',
           contents: prompt,
           config: {
             responseMimeType: 'application/json',
@@ -349,7 +349,7 @@ You MUST return a JSON object with:
 Return ONLY a valid JSON block, no surrounding markdown wrappers except optionally \`\`\`json.`;
 
         const response = await ai.models.generateContent({
-          model: 'gemini-3.5-flash',
+          model: 'gemini-3.6-flash',
           contents: prompt,
           config: {
             responseMimeType: 'application/json',
@@ -377,7 +377,7 @@ If modifying or refining an existing simulation, edit the following current code
 ${codeHistory && codeHistory.length > 0 ? `CURRENT CODE:\n${codeHistory[codeHistory.length - 1]}` : 'Start from scratch.'}`;
 
         const response = await ai.models.generateContent({
-          model: 'gemini-3.5-flash',
+          model: 'gemini-3.6-flash',
           contents: sandboxPrompt,
           config: {
             systemInstruction,
