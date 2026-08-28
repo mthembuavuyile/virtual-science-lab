@@ -1,3 +1,4 @@
+<<<<<<< HEAD
   export const generalQuizzes: Record<string, { q: string; o: string[]; c: number; exp: string }[]> = {
     'g10-atom-periodic': [
       {
@@ -337,4 +338,7 @@
         exp: 'The work function (W0) is the minimum binding energy keeping the electron inside the metal.'
       }
     ]
-  };
+  };
+=======
+export const generalQuizzes: Record<string, { q: string; o: string[]; c: number; exp: string }
+>>>>>>> 68ed5d1b1b522fcf6f49106d82d8c8f00594ecb3

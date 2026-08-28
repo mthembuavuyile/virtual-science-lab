@@ -1,3 +1,4 @@
+<<<<<<< HEAD
   export const guidesContent: Record<string, { theory: string; procedure: string; tech: string; formulas: string[] }> = {
     // Grade 10 Physics
     'g10-vectors': {
@@ -90,4 +91,7 @@
       tech: 'Connect a vacuum phototube to a variable power supply and sensitive microammeter. Shine monochromatic light of different wavelengths on the cathode. Adjust the stopping potential to measure the maximum kinetic energy of the photoelectrons.',
       formulas: ['E = h * f = h * c / \\lambda', 'E = W_0 + K_{max} (Einstein Photoelectric Equation)', 'W_0 = h * f_0 (Work Function)']
     }
-  };
+  };
+=======
+export const guidesContent: Record<string, { theory: string; procedure: string; tech: string; formulas: string[] }
+>>>>>>> 68ed5d1b1b522fcf6f49106d82d8c8f00594ecb3
