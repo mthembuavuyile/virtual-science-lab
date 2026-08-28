@@ -100,6 +100,7 @@ export default function AppLayout() {
   }, [physicsLabs]);
 
   const otherNav = [
+    { name: 'CAPS SBA Practicals', path: '/app/sba', icon: FileText, badge: 'FAT Pass' },
     { name: 'AI Tutor', path: '/app/tutor', icon: MessageSquare },
     { name: 'AI Sandbox', path: '/app/sandbox', icon: Terminal },
     { name: 'SBA Lab Guide', path: '/app/sba-guide', icon: FileText },
@@ -109,9 +110,9 @@ export default function AppLayout() {
   // Bottom bar items (mobile)
   const bottomNavItems: Array<{ name: string; path: string; icon: any; matchPrefix?: string }> = [
     { name: 'Home', path: '/app', icon: LayoutDashboard },
-    { name: 'Labs', path: '/app/labs', icon: GraduationCap, matchPrefix: '/app/labs' },
+    { name: 'SBA Labs', path: '/app/sba', icon: FileText, matchPrefix: '/app/sba' },
+    { name: 'All Labs', path: '/app/labs', icon: GraduationCap, matchPrefix: '/app/labs' },
     { name: 'Tutor', path: '/app/tutor', icon: MessageSquare },
-    { name: 'Notebook', path: '/app/notebook', icon: BookOpen },
   ];
 
   // Get page title from path

@@ -8,6 +8,8 @@ import LabLoader from './pages/LabLoader';
 import TutorPage from './pages/TutorPage';
 import NotebookPage from './pages/NotebookPage';
 import SbaGuidePage from './pages/SbaGuidePage';
+import SbaHubPage from './pages/SbaHubPage';
+import SbaRunnerPage from './pages/SbaRunnerPage';
 import SandboxPage from './pages/SandboxPage';
 import NotFoundPage from './pages/NotFoundPage';
 
@@ -19,6 +21,10 @@ function App() {
         
         <Route path="/app" element={<AppLayout />}>
           <Route index element={<DashboardPage />} />
+
+          {/* ── CAPS Formal SBA Assessment Engine ── */}
+          <Route path="sba" element={<SbaHubPage />} />
+          <Route path="sba/:practicalId" element={<SbaRunnerPage />} />
 
           {/* ── Unified Lab System ── */}
           <Route path="labs" element={<SyllabusHub />} />
@@ -37,7 +43,7 @@ function App() {
           {/* Physics → individual labs */}
           <Route path="physics" element={<Navigate to="/app/labs" replace />} />
 
-          {/* ── Other Sections (unchanged) ── */}
+          {/* ── Other Sections ── */}
           <Route path="tutor" element={<TutorPage />} />
           <Route path="sandbox" element={<SandboxPage />} />
           <Route path="sba-guide" element={<SbaGuidePage />} />

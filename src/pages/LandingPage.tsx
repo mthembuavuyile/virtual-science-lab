@@ -63,57 +63,90 @@ export default function LandingPage() {
       </header>
 
       <main>
-        <section className="pt-24 pb-32 overflow-hidden relative">
+        <section className="pt-20 pb-28 overflow-hidden relative">
           <AtomAnimation />
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+              
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-100 dark:bg-blue-900/60 border border-blue-200 dark:border-blue-700 text-blue-800 dark:text-blue-300 text-xs font-bold mb-6 shadow-sm">
+                <span>🇿🇦</span> South Africa's #1 CAPS • SACAI • IEB SBA Practical Engine
+              </div>
 
-              <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 mb-8 max-w-4xl mx-auto leading-tight">
-                Your Pocket Science Laboratory
+              <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-slate-900 mb-6 max-w-5xl mx-auto leading-[1.1]">
+                No Science Lab at Home? Complete Mandatory <span className="text-blue-600">Matric Practicals</span> Online.
               </h1>
-              <p className="text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-                Run real experiments from home using interactive simulators. Explore <span className="text-pink-600 font-semibold">Chemistry</span> and <span className="text-blue-600 font-semibold">Physics</span> without the need for expensive equipment. Perfectly aligned to the South African CAPS curriculum.
+
+              <p className="text-lg md:text-xl text-slate-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+                The certified virtual practical assessment platform for <strong>Homeschooling Parents</strong> (Impaq, Brainline, CambriLearn) and <strong>Independent Matric Centers</strong>. Run calibrated apparatus, collect authentic jittered data, and export official <strong>4-page DBE Moderation Dossier PDFs</strong> in minutes.
               </p>
-              <div className="flex flex-col items-center justify-center">
-                <Link to="/app" className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg text-lg font-semibold shadow-xl shadow-blue-600/20 transition-all flex items-center justify-center gap-2">
-                  Launch Simulators <ChevronRight className="w-5 h-5" />
+
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Link to="/app/sba" className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl text-base font-bold shadow-xl shadow-blue-600/25 transition-all flex items-center justify-center gap-2">
+                  Launch SBA Practical Hub <ChevronRight className="w-5 h-5" />
                 </Link>
-                <p className="text-xs text-slate-500 mt-3 font-medium">
-                  No account registration required &mdash; start experimenting instantly as a guest.
-                </p>
+                <Link to="/app/sba/gr12-internal-resistance" className="w-full sm:w-auto bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 px-7 py-4 rounded-xl text-base font-bold shadow-sm transition-all flex items-center justify-center gap-2">
+                  Try Free Practical (Internal Resistance)
+                </Link>
+              </div>
+
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs font-semibold text-slate-500">
+                <span className="flex items-center gap-1.5 text-slate-700">
+                  ✅ 100% Guaranteed Umalusi & SACAI Layout
+                </span>
+                <span className="flex items-center gap-1.5 text-slate-700">
+                  ✅ Unique Anti-Plagiarism Random Variance
+                </span>
+                <span className="flex items-center gap-1.5 text-slate-700">
+                  ✅ Instant 4-Page Moderation PDF
+                </span>
               </div>
             </motion.div>
           </div>
         </section>
 
-        <section id="features" className="py-24 bg-white border-y border-slate-200">
+        <section id="features" className="py-20 bg-white border-y border-slate-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold text-slate-900 mb-4">Powerful STEM Modules</h2>
-              <p className="text-slate-600 max-w-2xl mx-auto">Explore our diverse range of interactive science tools designed precisely for high school learners.</p>
+              <span className="text-xs font-extrabold uppercase tracking-widest text-blue-600 mb-2 block">
+                The End-to-End SBA Workflow
+              </span>
+              <h2 className="text-3xl font-bold text-slate-900 mb-4">
+                From Virtual Experiment to Certified Moderation PDF
+              </h2>
+              <p className="text-slate-600 max-w-2xl mx-auto text-sm">
+                Designed specifically around Department of Basic Education (DBE) Subject Assessment Guidelines for Physical Sciences Grades 10–12.
+              </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">
               <div className="p-8 rounded-2xl bg-slate-50 border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center mb-6">
-                  <Beaker className="text-pink-600 w-6 h-6" />
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3">Chemistry</h3>
-                <p className="text-slate-600 leading-relaxed">Run pH indicating titrations, mix inorganic chemicals and observe precipitate formation in real-time visual simulations.</p>
-              </div>
-              <div className="p-8 rounded-2xl bg-slate-50 border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
                 <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
-                  <Zap className="text-blue-600 w-6 h-6" />
+                  <Beaker className="text-blue-600 w-6 h-6" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3">Physics</h3>
-                <p className="text-slate-600 leading-relaxed">Adjust voltages and resistance in Ohm's law circuits, or configure velocity and gravity in our 2D projectile kinematics labs.</p>
+                <h3 className="text-lg font-bold text-slate-900 mb-2">1. Calibrated Digital Rigs</h3>
+                <p className="text-slate-600 text-sm leading-relaxed">
+                  Tweak real physical parameters (rheostats, burette stopcocks, water baths) with calibrated instrument noise so every learner produces authentic, non-identical data tables.
+                </p>
               </div>
+
               <div className="p-8 rounded-2xl bg-slate-50 border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-6">
-                  <BookOpen className="text-purple-600 w-6 h-6" />
+                <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mb-6">
+                  <Zap className="text-indigo-600 w-6 h-6" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3">AI Syllabus Tutor</h3>
-                <p className="text-slate-600 leading-relaxed">Stuck on a concept? Chat with our AI tutor trained specifically on the CAPS physical science guidelines to guide your learning.</p>
+                <h3 className="text-lg font-bold text-slate-900 mb-2">2. Auto-Graphing & Gradients</h3>
+                <p className="text-slate-600 text-sm leading-relaxed">
+                  Interactive Cartesian canvas plots points, draws lines of best fit, calculates mathematical slopes, and extracts physical constants (internal resistance r, EMF E, refractive index n) directly on screen.
+                </p>
+              </div>
+
+              <div className="p-8 rounded-2xl bg-slate-50 border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+                <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center mb-6">
+                  <BookOpen className="text-emerald-600 w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-2">3. 1-Click Moderation PDF</h3>
+                <p className="text-slate-600 text-sm leading-relaxed">
+                  Evaluates answers against the official DBE marking rubric and downloads a formal 4-page A4 portfolio report ready for teacher sign-off and district moderation.
+                </p>
               </div>
             </div>
           </div>
