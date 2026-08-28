@@ -160,8 +160,13 @@ setInterval(() => {
   }
 }, 60 * 60 * 1000);
 
-// Model fallback list ordered by speed and availability
-const CANDIDATE_MODELS = ['gemini-3.5-flash', 'gemini-3.5-flash-lite', 'gemini-3.6-flash'];
+// Model fallback list ordered by speed, capability, and availability (Gemini 3.x Flash series)
+const CANDIDATE_MODELS = [
+  'gemini-3.5-flash',
+  'gemini-3.5-flash-lite',
+  'gemini-3.6-flash',
+  'gemini-3.7-flash',
+];
 
 async function generateContentWithFallback(
   ai: GoogleGenAI,
