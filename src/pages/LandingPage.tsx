@@ -33,9 +33,7 @@ export default function LandingPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
               
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-100 dark:bg-blue-900/60 border border-blue-200 dark:border-blue-700 text-blue-800 dark:text-blue-300 text-xs font-bold mb-6 shadow-sm">
-                <span>🇿🇦</span> South Africa's #1 CAPS • SACAI • IEB SBA Practical Engine
-              </div>
+
 
               <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-slate-900 mb-6 max-w-5xl mx-auto leading-[1.1]">
                 No Science Lab at Home? Complete Mandatory <span className="text-blue-600">Matric Practicals</span> Online.
