@@ -72,9 +72,12 @@ export default function SandboxPage() {
     }
   }, [code]);
 
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
   async function handleBuildSimulation(promptText: string) {
     if (!promptText.trim()) return;
     setLoading(true);
+    setErrorMsg(null);
     setActivePrompt(promptText);
     
     // Save prompt to refinements
@@ -88,10 +91,15 @@ export default function SandboxPage() {
     try {
       const generatedCode = await generateDynamicSandboxLab(promptText, history);
       setCode(generatedCode);
-      setHistory(prev => [...prev, generatedCode]);
+      if (generatedCode.includes('Simulation Generation Issue') || generatedCode.includes('Failed to Generate')) {
+        setErrorMsg('Simulation generation encountered an issue. You can retry.');
+      } else {
+        setHistory(prev => [...prev, generatedCode]);
+      }
       setActiveTab('preview');
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      setErrorMsg(err?.message || 'Failed to generate simulation. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -208,6 +216,24 @@ export default function SandboxPage() {
 
         {/* Input Chat Area */}
         <div className="p-3 border-t border-slate-800 bg-slate-900/50 flex flex-col gap-2">
+          {errorMsg && (
+            <div className="flex items-center justify-between p-2 bg-red-950/40 border border-red-800/40 rounded-xl text-xs text-red-300">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <AlertCircle className="w-3.5 h-3.5 text-red-400 shrink-0" />
+                <span className="truncate">{errorMsg}</span>
+              </div>
+              {activePrompt && (
+                <button
+                  onClick={() => handleBuildSimulation(activePrompt)}
+                  disabled={loading}
+                  className="px-2 py-0.5 bg-red-800/60 hover:bg-red-700 rounded-md text-[10px] font-semibold text-white transition shrink-0 ml-2"
+                >
+                  Retry
+                </button>
+              )}
+            </div>
+          )}
+
           {loading && (
             <div className="flex items-center gap-2 p-2 bg-indigo-950/20 border border-indigo-900/20 rounded-xl text-xs text-indigo-400">
               <div className="w-3.5 h-3.5 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin"></div>

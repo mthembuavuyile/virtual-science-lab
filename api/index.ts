@@ -160,6 +160,43 @@ setInterval(() => {
   }
 }, 60 * 60 * 1000);
 
+// Model fallback list ordered by speed and availability
+const CANDIDATE_MODELS = ['gemini-3.5-flash', 'gemini-3.5-flash-lite', 'gemini-3.6-flash'];
+
+async function generateContentWithFallback(
+  ai: GoogleGenAI,
+  params: {
+    contents: any;
+    config?: any;
+    preferredModel?: string;
+  }
+) {
+  const modelsToTry = [
+    params.preferredModel,
+    ...CANDIDATE_MODELS.filter(m => m !== params.preferredModel)
+  ].filter(Boolean) as string[];
+
+  let lastError: any = null;
+  for (const model of modelsToTry) {
+    try {
+      const response = await ai.models.generateContent({
+        model,
+        contents: params.contents,
+        config: params.config,
+      });
+      return response;
+    } catch (err: any) {
+      console.warn(`[Gemini Proxy] Failed with model ${model}:`, err?.message || err);
+      lastError = err;
+      // If error is auth or bad request, don't retry other models
+      if (err?.status === 401 || err?.status === 403 || err?.status === 400) {
+        throw err;
+      }
+    }
+  }
+  throw lastError || new Error('All model attempts failed.');
+}
+
 // Proxy endpoint for Gemini requests
 app.post('/api/gemini', originGuard, rateLimiter, async (req, res) => {
   const { action, payload } = req.body;
@@ -201,8 +238,7 @@ Support your answers with CAPS-relevant formulas and exam tips where appropriate
           { role: 'user', parts: [{ text: message }] }
         ];
 
-        const response = await ai.models.generateContent({
-          model: 'gemini-3.6-flash',
+        const response = await generateContentWithFallback(ai, {
           contents,
           config: {
             systemInstruction,
@@ -235,8 +271,7 @@ If language is 'Slang', write the "conceptBreakdown" and "saContext" using South
 
 Return ONLY a valid JSON block, no surrounding markdown wrappers except optionally \`\`\`json.`;
 
-        const response = await ai.models.generateContent({
-          model: 'gemini-3.6-flash',
+        const response = await generateContentWithFallback(ai, {
           contents: prompt,
           config: {
             responseMimeType: 'application/json',
@@ -254,8 +289,7 @@ The user chose the answer: "${userAnswer}".
 
 Briefly evaluate if the user's choice is correct or incorrect, and explain why. Keep the explanation encouraging and under 3 sentences, specifically geared towards a high school student.`;
 
-        const response = await ai.models.generateContent({
-          model: 'gemini-3.6-flash',
+        const response = await generateContentWithFallback(ai, {
           contents: prompt,
           config: {
             temperature: 0.5,
@@ -280,8 +314,7 @@ You MUST return a JSON object with the following keys:
 
 Return ONLY a valid JSON block, no surrounding markdown wrappers except optionally \`\`\`json.`;
 
-        const response = await ai.models.generateContent({
-          model: 'gemini-3.6-flash',
+        const response = await generateContentWithFallback(ai, {
           contents: prompt,
           config: {
             responseMimeType: 'application/json',
@@ -319,8 +352,7 @@ You MUST return a JSON object with:
 
 Return ONLY a valid JSON block, no surrounding markdown wrappers except optionally \`\`\`json.`;
 
-        const response = await ai.models.generateContent({
-          model: 'gemini-3.6-flash',
+        const response = await generateContentWithFallback(ai, {
           contents: prompt,
           config: {
             responseMimeType: 'application/json',
@@ -348,8 +380,7 @@ You MUST return a JSON object with:
 
 Return ONLY a valid JSON block, no surrounding markdown wrappers except optionally \`\`\`json.`;
 
-        const response = await ai.models.generateContent({
-          model: 'gemini-3.6-flash',
+        const response = await generateContentWithFallback(ai, {
           contents: prompt,
           config: {
             responseMimeType: 'application/json',
@@ -376,15 +407,21 @@ CRITICAL RULES:
 If modifying or refining an existing simulation, edit the following current code:
 ${codeHistory && codeHistory.length > 0 ? `CURRENT CODE:\n${codeHistory[codeHistory.length - 1]}` : 'Start from scratch.'}`;
 
-        const response = await ai.models.generateContent({
-          model: 'gemini-3.6-flash',
+        const response = await generateContentWithFallback(ai, {
           contents: sandboxPrompt,
           config: {
             systemInstruction,
             temperature: 0.3,
           }
         });
-        return res.json({ text: response.text || '' });
+
+        let rawHtml = response.text || '';
+        const codeBlockMatch = rawHtml.match(/```(?:html)?\s*([\s\S]*?)```/i);
+        if (codeBlockMatch) {
+          rawHtml = codeBlockMatch[1].trim();
+        }
+
+        return res.json({ text: rawHtml });
       }
 
       default:

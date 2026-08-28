@@ -65,11 +65,11 @@ function cleanJsonString(str: string): string {
 }
 
 // General helper to perform the proxy fetch
-const API_TIMEOUT_MS = 30000; // 30 second timeout
+const API_TIMEOUT_MS = 120000; // 120 second timeout for complex generation
 
-async function callProxy(action: string, payload: any): Promise<string> {
+async function callProxy(action: string, payload: any, timeoutMs = API_TIMEOUT_MS): Promise<string> {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
     const response = await fetch('/api/gemini', {
@@ -232,9 +232,16 @@ export async function moderateSbaReport(
  */
 export async function generateDynamicSandboxLab(prompt: string, codeHistory: string[] = []): Promise<string> {
   try {
-    return await callProxy('generateDynamicSandboxLab', { prompt, codeHistory });
-  } catch (error) {
+    const rawCode = await callProxy('generateDynamicSandboxLab', { prompt, codeHistory });
+    let cleaned = (rawCode || '').trim();
+    const codeBlockMatch = cleaned.match(/```(?:html)?\s*([\s\S]*?)```/i);
+    if (codeBlockMatch) {
+      cleaned = codeBlockMatch[1].trim();
+    }
+    return cleaned;
+  } catch (error: any) {
     console.error('Gemini API Proxy Error (generateDynamicSandboxLab):', error);
+    const errorDetails = error?.message || 'Connection error or rate limit.';
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -243,9 +250,12 @@ export async function generateDynamicSandboxLab(prompt: string, codeHistory: str
 </head>
 <body class="bg-slate-950 text-white flex flex-col items-center justify-center min-h-screen p-6 font-sans">
   <div class="max-w-md bg-slate-900 border border-slate-800 p-6 rounded-2xl text-center shadow-xl">
-    <h1 class="text-xl font-bold text-red-500">Failed to Generate Simulation</h1>
-    <p class="text-slate-400 text-sm mt-2">There was an issue connecting to the Gemini API. Please check your internet connection and try again.</p>
-    <button onclick="window.location.reload()" class="mt-4 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-xs font-semibold transition">Try Again</button>
+    <div class="w-12 h-12 bg-red-500/20 text-red-400 rounded-xl flex items-center justify-center mx-auto mb-4 border border-red-500/30">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </div>
+    <h1 class="text-xl font-bold text-red-400">Simulation Generation Issue</h1>
+    <p class="text-slate-300 text-xs mt-2">${errorDetails}</p>
+    <p class="text-slate-500 text-[11px] mt-2">Try re-running the request or selecting another CAPS lesson prompt from the left panel.</p>
   </div>
 </body>
 </html>`;
