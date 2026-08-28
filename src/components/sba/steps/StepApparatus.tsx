@@ -454,8 +454,8 @@ export default function StepApparatus({ practical, onAddDataRow, loggedCount }: 
                   className="w-32 h-28 rounded-b-3xl border-4 border-slate-600 transition-colors duration-500 relative flex items-center justify-center"
                   style={{ backgroundColor: flaskColor }}
                 >
-                  <span className="text-[11px] font-bold text-slate-800 bg-white/70 px-2 py-0.5 rounded">
-                    {isEndpointReached ? '🌸 Endpoint (Pink)' : '💧 Colourless'}
+                  <span className="text-[11px] font-bold text-slate-800 bg-white/80 px-2 py-0.5 rounded shadow-xs">
+                    {isEndpointReached ? 'Endpoint (Pink)' : 'Colourless'}
                   </span>
                 </div>
               </div>
@@ -862,8 +862,8 @@ export default function StepApparatus({ practical, onAddDataRow, loggedCount }: 
         <div className="mt-6 pt-5 border-t border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-4">
           <span className="text-xs text-slate-400">
             {loggedCount >= practical.recommendedDataPointsCount
-              ? '✅ Sufficient data points logged. You may log more or proceed to Step 3.'
-              : `⚠️ Log at least ${practical.recommendedDataPointsCount - loggedCount} more point(s) for statistical accuracy.`}
+              ? 'Sufficient data points logged. You may log more or proceed to Step 3.'
+              : `Log at least ${practical.recommendedDataPointsCount - loggedCount} more point(s) for statistical accuracy.`}
           </span>
 
           <button

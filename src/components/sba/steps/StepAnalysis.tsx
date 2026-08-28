@@ -116,8 +116,12 @@ export default function StepAnalysis({
               <h3 className="text-xl font-extrabold text-slate-900 dark:text-white mt-0.5">
                 Score: {evaluation.totalMarksAwarded} / {evaluation.maxMarks} Marks ({evaluation.percentage}%)
               </h3>
-              <p className="text-xs text-slate-500 mt-1 font-semibold">
-                Status: {evaluation.gradeLevel} • {evaluation.isModerationPassed ? '✅ Moderation Passed' : '⚠️ Review Required'}
+              <p className="text-xs text-slate-500 mt-1 font-semibold flex items-center gap-1.5">
+                <span>Status: {evaluation.gradeLevel}</span>
+                <span>•</span>
+                <span className={evaluation.isModerationPassed ? "text-emerald-600 font-bold" : "text-amber-600 font-bold"}>
+                  {evaluation.isModerationPassed ? 'Moderation Passed' : 'Review Required'}
+                </span>
               </p>
             </div>
 

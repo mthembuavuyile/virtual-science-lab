@@ -1,4 +1,5 @@
 import React from 'react';
+import { FlaskConical } from 'lucide-react';
 
 export function CurriculumSection() {
   return (
@@ -61,8 +62,8 @@ export function CurriculumSection() {
                 </div>
 
                 <div className="pt-3 border-t border-slate-100">
-                  <h4 className="font-extrabold text-slate-800 mb-1 flex items-center gap-1">
-                    🧪 Tech & Guided Practicals
+                  <h4 className="font-extrabold text-slate-800 mb-1 flex items-center gap-1.5">
+                    <FlaskConical className="w-3.5 h-3.5 text-blue-600" /> Tech & Guided Practicals
                   </h4>
                   <p className="text-[11px] text-slate-500 leading-relaxed font-semibold">
                     • Phase curves using melted stearic acid logs.<br />
@@ -117,8 +118,8 @@ export function CurriculumSection() {
                 </div>
 
                 <div className="pt-3 border-t border-slate-100">
-                  <h4 className="font-extrabold text-slate-800 mb-1 flex items-center gap-1">
-                    🧪 Tech & Guided Practicals
+                  <h4 className="font-extrabold text-slate-800 mb-1 flex items-center gap-1.5">
+                    <FlaskConical className="w-3.5 h-3.5 text-pink-600" /> Tech & Guided Practicals
                   </h4>
                   <p className="text-[11px] text-slate-500 leading-relaxed font-semibold">
                     • Newton's 2nd law via <b>Phyphox</b> on a trolley.<br />
@@ -177,8 +178,8 @@ export function CurriculumSection() {
                 </div>
 
                 <div className="pt-3 border-t border-slate-100">
-                  <h4 className="font-extrabold text-slate-800 mb-1 flex items-center gap-1">
-                    🧪 Tech & Guided Practicals
+                  <h4 className="font-extrabold text-slate-800 mb-1 flex items-center gap-1.5">
+                    <FlaskConical className="w-3.5 h-3.5 text-purple-600" /> Tech & Guided Practicals
                   </h4>
                   <p className="text-[11px] text-slate-500 leading-relaxed font-semibold">
                     • Momentum cart crash video tracking calculations.<br />
@@ -201,3 +202,4 @@ export function CurriculumSection() {
     </section>
   );
 }
+

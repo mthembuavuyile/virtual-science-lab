@@ -4,8 +4,17 @@ import { useNavigate } from 'react-router-dom';
 import { Beaker, Zap, MessageSquare, GraduationCap, ArrowRight, FlaskConical, Atom, TestTubes } from 'lucide-react';
 import { labRegistry } from '../data/experiments';
 
+function getTemporalGreeting(): string {
+  const hour = new Date().getHours();
+  if (hour >= 4 && hour < 12) return 'Good morning';
+  if (hour >= 12 && hour < 17) return 'Good afternoon';
+  if (hour >= 17 && hour < 22) return 'Good evening';
+  return 'Working late?';
+}
+
 export default function DashboardPage() {
   const navigate = useNavigate();
+  const greeting = getTemporalGreeting();
 
   // Featured labs to showcase on home page
   const featuredIds = [
@@ -28,23 +37,29 @@ export default function DashboardPage() {
   const physicsCount = labRegistry.filter(l => l.discipline === 'Physics').length;
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <div className="bg-slate-900 p-8 md:p-10 rounded-[2rem] shadow-xl mb-8 relative overflow-hidden border border-slate-800">
-        <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)]" style={{ backgroundSize: '24px 24px' }}></div>
-        <div className="absolute right-0 top-0 w-96 h-96 bg-blue-500 rounded-full translate-x-1/3 -translate-y-1/4 blur-[100px] opacity-20 pointer-events-none"></div>
-        <div className="absolute left-0 bottom-0 w-64 h-64 bg-purple-500 rounded-full -translate-x-1/4 translate-y-1/3 blur-[80px] opacity-10 pointer-events-none"></div>
-        
+    <div className="max-w-6xl mx-auto space-y-8">
+      <div className="bg-slate-900 p-6 sm:p-8 md:p-10 rounded-2xl shadow-sm relative overflow-hidden border border-slate-800">
         <div className="relative z-10 text-white">
-          <h1 className="text-3xl md:text-4xl font-extrabold mb-3 tracking-tight text-white">Welcome to VyLab</h1>
-          <p className="text-blue-100/80 max-w-xl text-lg leading-relaxed mb-8 font-medium">
-            Access CAPS-aligned STEM simulators. Browse all {labRegistry.length} experiments or jump into a featured lab below.
+          <span className="text-xs font-semibold text-blue-400 uppercase tracking-wider mb-1 block">
+            {greeting} — Physical Sciences Workspace
+          </span>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-3 tracking-tight text-white">
+            Welcome to VyLab
+          </h1>
+          <p className="text-slate-300 max-w-xl text-sm sm:text-base leading-relaxed mb-6 font-normal">
+            Access CAPS-aligned STEM simulators. Browse all {labRegistry.length} experiments, complete formal SBA practicals, or consult the AI syllabus tutor.
           </p>
-          <div className="flex flex-wrap gap-4">
-            <button onClick={() => navigate('/app/labs')} className="bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-6 rounded-xl transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] flex items-center gap-2 hover:-translate-y-0.5">
-              <GraduationCap className="w-5 h-5" />
+          <div className="flex flex-wrap gap-3">
+            <button onClick={() => navigate('/app/labs')} className="bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 px-5 rounded-xl transition flex items-center gap-2 cursor-pointer shadow-xs text-xs sm:text-sm">
+              <GraduationCap className="w-4 h-4" />
               Browse All Labs
             </button>
-            <button onClick={() => navigate('/app/tutor')} className="bg-white/10 hover:bg-white/20 border border-white/10 backdrop-blur-md text-white font-semibold py-3 px-6 rounded-xl transition-all hover:-translate-y-0.5">
+            <button onClick={() => navigate('/app/sba')} className="bg-slate-800 hover:bg-slate-700 text-white font-semibold py-2.5 px-5 rounded-xl transition flex items-center gap-2 cursor-pointer text-xs sm:text-sm">
+              <Beaker className="w-4 h-4" />
+              SBA Practical Hub
+            </button>
+            <button onClick={() => navigate('/app/tutor')} className="bg-white/10 hover:bg-white/20 border border-white/10 text-white font-semibold py-2.5 px-5 rounded-xl transition flex items-center gap-2 cursor-pointer text-xs sm:text-sm">
+              <MessageSquare className="w-4 h-4" />
               Ask AI Tutor
             </button>
           </div>
