@@ -104,9 +104,14 @@ function validatePayload(action: string, payload: any): string | null {
   return null; // valid
 }
 
-// Initialize GoogleGenAI
-const apiKey = process.env.GEMINI_API_KEY || '';
-const ai = new GoogleGenAI({ apiKey });
+// Dynamic helper to get active API key & GoogleGenAI client
+const getAiClient = () => {
+  const apiKey = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY || process.env.MY_API_KEY || '';
+  if (!apiKey) {
+    throw new Error('Gemini API key is not configured on the server.');
+  }
+  return new GoogleGenAI({ apiKey });
+};
 
 // Simple in-memory sliding-window IP rate limiter
 interface RequestLog {
@@ -169,9 +174,12 @@ app.post('/api/gemini', originGuard, rateLimiter, async (req, res) => {
     return res.status(400).json({ error: validationError });
   }
 
-  if (!apiKey) {
-    console.error('GEMINI_API_KEY is not configured on the server.');
-    return res.status(500).json({ error: 'Gemini API key is not configured on the server.' });
+  let ai: GoogleGenAI;
+  try {
+    ai = getAiClient();
+  } catch (err: any) {
+    console.error('GEMINI_API_KEY error:', err.message);
+    return res.status(500).json({ error: err.message || 'Gemini API key is not configured on the server.' });
   }
 
   try {
@@ -388,8 +396,8 @@ ${codeHistory && codeHistory.length > 0 ? `CURRENT CODE:\n${codeHistory[codeHist
   }
 });
 
-// Serve locally if run directly
-if (!process.env.VERCEL) {
+// Serve locally if run directly as standalone server
+if (process.env.RUN_STANDALONE === 'true') {
   const PORT = process.env.PORT || 3001;
   app.listen(PORT, () => {
     console.log(`[Proxy Server] Running locally on http://localhost:${PORT}`);
