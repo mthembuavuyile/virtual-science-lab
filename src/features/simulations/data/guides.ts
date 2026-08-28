@@ -1,0 +1,1 @@
+export const guidesContent: Record<string, { theory: string; procedure: string; tech: string; formulas: string[] }
