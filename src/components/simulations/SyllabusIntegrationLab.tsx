@@ -124,6 +124,11 @@ export default function SyllabusIntegrationLab() {
   const [circuitR1, setCircuitR1] = useState(10); // Ohms
   const [circuitR2, setCircuitR2] = useState(10); // Ohms
   const [circuitType, setCircuitType] = useState<'series' | 'parallel'>('series');
+  // Quantitative Chem
+  const [quantMassA, setQuantMassA] = useState(10);
+  const [quantMassB, setQuantMassB] = useState(10);
+  // Acids Bases
+  const [titrationVol, setTitrationVol] = useState(0);
 
   // Generic state object to feed the AI co-pilot panel
   const [liveTelemetry, setLiveTelemetry] = useState<Record<string, any>>({});
@@ -688,6 +693,56 @@ export default function SyllabusIntegrationLab() {
         resistor_2_ohms: circuitR2,
         equivalent_resistance_ohms: rEq.toFixed(2),
         total_current_A: totalI.toFixed(2)
+      });
+    }
+
+    // Quantitative Chem (Limiting Reactants: 2H2 + O2 -> 2H2O)
+    if (labId === 'g11-quantitative') {
+      const molesH2 = quantMassA / 2.016;
+      const molesO2 = quantMassB / 31.998;
+      const limiting = (molesH2 / 2) < molesO2 ? 'H2 (Hydrogen)' : 'O2 (Oxygen)';
+      const h2oYield = limiting === 'H2 (Hydrogen)' ? molesH2 : (molesO2 * 2);
+      
+      setLiveTelemetry({
+        mass_H2_g: quantMassA,
+        mass_O2_g: quantMassB,
+        moles_H2: molesH2.toFixed(3),
+        moles_O2: molesO2.toFixed(3),
+        limiting_reactant: limiting,
+        theoretical_yield_H2O_mol: h2oYield.toFixed(3),
+        theoretical_yield_H2O_g: (h2oYield * 18.015).toFixed(2)
+      });
+    }
+
+    // Acids Bases (Titration of HCl with NaOH)
+    if (labId === 'g11-acids-bases') {
+      const initialVolA = 25; // mL of 0.1M HCl
+      const concA = 0.1;
+      const concB = 0.1; // NaOH
+      const molesH = (initialVolA * concA) / 1000;
+      const molesOH = (titrationVol * concB) / 1000;
+      
+      let pH = 1.0;
+      if (titrationVol === 0) {
+        pH = 1.0;
+      } else if (molesH > molesOH) {
+        const excessH = (molesH - molesOH);
+        const totalVol = (initialVolA + titrationVol) / 1000;
+        pH = -Math.log10(excessH / totalVol);
+      } else if (molesH === molesOH) {
+        pH = 7.0;
+      } else {
+        const excessOH = (molesOH - molesH);
+        const totalVol = (initialVolA + titrationVol) / 1000;
+        const pOH = -Math.log10(excessOH / totalVol);
+        pH = 14 - pOH;
+      }
+      
+      setLiveTelemetry({
+        analyte_HCl_vol_mL: initialVolA,
+        titrant_NaOH_added_mL: titrationVol,
+        calculated_pH: pH.toFixed(2),
+        equivalence_reached: titrationVol >= 25 ? 'Yes' : 'No'
       });
     }
   }, [
@@ -1775,12 +1830,54 @@ export default function SyllabusIntegrationLab() {
             </div>
           )}
 
-          {/* 16. General Falling Workbook Quiz / fallbacks */}
+          {/* 16. Quantitative Chem (Limiting Reactants) */}
+          {lab.id === 'g11-quantitative' && (
+            <div className="w-full text-center space-y-4">
+              <div className="flex items-center justify-center gap-4 bg-slate-900 p-6 rounded-xl border border-slate-700 shadow-inner">
+                <div className="flex flex-col items-center">
+                  <div className="w-16 h-16 rounded-full bg-blue-500/20 border-2 border-blue-500 flex items-center justify-center text-blue-300 font-bold text-xs">{quantMassA}g</div>
+                  <span className="text-[10px] text-slate-400 mt-2 font-bold uppercase">Hydrogen</span>
+                </div>
+                <div className="text-xl font-bold text-slate-500">+</div>
+                <div className="flex flex-col items-center">
+                  <div className="w-16 h-16 rounded-full bg-red-500/20 border-2 border-red-500 flex items-center justify-center text-red-300 font-bold text-xs">{quantMassB}g</div>
+                  <span className="text-[10px] text-slate-400 mt-2 font-bold uppercase">Oxygen</span>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-xs font-mono bg-slate-50 p-2.5 rounded-lg border">
+                <div>Limiting: <span className="font-bold text-rose-600">{liveTelemetry.limiting_reactant}</span></div>
+                <div>H2O Yield: <span className="font-bold text-emerald-600">{liveTelemetry.theoretical_yield_H2O_g} g</span></div>
+              </div>
+            </div>
+          )}
+
+          {/* 17. Acids and Bases (Titration) */}
+          {lab.id === 'g11-acids-bases' && (
+            <div className="w-full text-center space-y-4">
+              <div className="flex justify-center items-center h-32 bg-slate-50 rounded-xl border border-slate-200 relative">
+                {/* Burette */}
+                <div className="absolute top-2 w-4 h-20 border-2 border-slate-400 rounded-b flex flex-col justify-end bg-slate-100 overflow-hidden">
+                  <div className="w-full bg-slate-300" style={{ height: `${100 - (titrationVol / 50) * 100}%` }} />
+                </div>
+                {/* Flask */}
+                <div className="absolute bottom-2 w-16 h-16 border-2 border-slate-400 rounded-b-full rounded-t-lg bg-slate-100/50 flex flex-col justify-end overflow-hidden shadow-inner">
+                  <div className={`w-full transition-colors duration-500 ${parseFloat(liveTelemetry.calculated_pH) >= 7 ? 'bg-pink-300' : 'bg-slate-200'}`} style={{ height: `${40 + (titrationVol / 50) * 60}%` }} />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-xs font-mono bg-slate-900 text-slate-300 p-2.5 rounded-lg shadow-inner">
+                <div>NaOH added: <span className="font-bold text-blue-400">{titrationVol} mL</span></div>
+                <div>pH: <span className={`font-bold ${parseFloat(liveTelemetry.calculated_pH) < 7 ? 'text-red-400' : parseFloat(liveTelemetry.calculated_pH) > 7 ? 'text-purple-400' : 'text-emerald-400'}`}>{liveTelemetry.calculated_pH}</span></div>
+              </div>
+            </div>
+          )}
+
+          {/* 18. General Falling Workbook Quiz / fallbacks */}
           {![
             'g10-heating-curves', 'g10-motion-1d', 'g10-mechanical-energy', 'g10-waves-sound',
             'g11-vectors-2d', 'g11-newton-laws', 'g11-optics', 'g11-ideal-gases', 'g11-intermolecular',
             'g12-momentum', 'g12-doppler', 'g12-optical-phenomena',
-            'g10-stoichiometry-intro', 'g10-aqueous-reactions', 'g10-circuits'
+            'g10-stoichiometry-intro', 'g10-aqueous-reactions', 'g10-circuits',
+            'g11-quantitative', 'g11-acids-bases'
           ].includes(lab.id) && (
             <div className="w-full space-y-3">
               <h4 className="text-xs font-bold text-slate-700 flex items-center gap-1">
@@ -2238,12 +2335,44 @@ export default function SyllabusIntegrationLab() {
               </div>
             )}
 
+            {/* 16. Quantitative Chem (Limiting Reactants) */}
+            {lab.id === 'g11-quantitative' && (
+              <div className="space-y-3">
+                <div>
+                  <label className="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                    H2 Mass (g) <span className="font-mono text-blue-600 font-bold">{quantMassA} g</span>
+                  </label>
+                  <input type="range" min="1" max="50" value={quantMassA} onChange={e => setQuantMassA(Number(e.target.value))} className="w-full accent-blue-600" />
+                </div>
+                <div>
+                  <label className="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                    O2 Mass (g) <span className="font-mono text-red-600 font-bold">{quantMassB} g</span>
+                  </label>
+                  <input type="range" min="1" max="100" value={quantMassB} onChange={e => setQuantMassB(Number(e.target.value))} className="w-full accent-red-600" />
+                </div>
+              </div>
+            )}
+
+            {/* 17. Acids and Bases (Titration) */}
+            {lab.id === 'g11-acids-bases' && (
+              <div className="space-y-3">
+                <div>
+                  <label className="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                    0.1M NaOH Added (Titrant) <span className="font-mono text-purple-600 font-bold">{titrationVol} mL</span>
+                  </label>
+                  <input type="range" min="0" max="50" step="0.5" value={titrationVol} onChange={e => setTitrationVol(Number(e.target.value))} className="w-full accent-purple-600" />
+                </div>
+                <div className="text-[10px] text-slate-500 font-bold text-center">Analyte: 25mL of 0.1M HCl</div>
+              </div>
+            )}
+
             {/* Fallbacks or non-sim topics (e.g. atomic structure calculations, etc.) */}
             {![
               'g10-heating-curves', 'g10-motion-1d', 'g10-mechanical-energy', 'g10-waves-sound',
               'g11-vectors-2d', 'g11-newton-laws', 'g11-optics', 'g11-ideal-gases', 'g11-intermolecular',
               'g12-momentum', 'g12-doppler', 'g12-optical-phenomena',
-              'g10-stoichiometry-intro', 'g10-aqueous-reactions', 'g10-circuits'
+              'g10-stoichiometry-intro', 'g10-aqueous-reactions', 'g10-circuits',
+              'g11-quantitative', 'g11-acids-bases'
             ].includes(lab.id) && (
               <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2 text-xs">
                 <span className="font-bold text-slate-800 uppercase tracking-widest text-[9px] block">Concept Workbook Parameters</span>
