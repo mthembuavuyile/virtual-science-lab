@@ -66,7 +66,7 @@ const MomentumLab = React.lazy(() => import('../components/simulations/MomentumL
 
 // ─── Unified Curriculum Integration Guide Component ─────────────────
 
-const SyllabusIntegrationLab = React.lazy(() => import('../components/simulations/SyllabusIntegrationLab'));
+const SyllabusIntegrationLab = React.lazy(() => import('../features/simulations/components/SyllabusIntegrationLab'));
 
 // ─── Lab Registry ─────────────────────────────────────────────────
 
