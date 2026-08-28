@@ -35,6 +35,28 @@ export default function StepApparatus({ practical, onAddDataRow, loggedCount }: 
   // 6. Newton's 2nd Law Lab States
   const [hangingMassGrams, setHangingMassGrams] = useState(20);
 
+  // 7. Heating Curves
+  const [heatingTimeMin, setHeatingTimeMin] = useState(0);
+
+  // 8. Circuits
+  const [circuitConfig, setCircuitConfig] = useState<'Series' | 'Parallel'>('Series');
+  const [circuitSwitch, setCircuitSwitch] = useState(false);
+
+  // 9. Intermolecular Forces
+  const [evapTime, setEvapTime] = useState(0);
+  const [selectedLiquid, setSelectedLiquid] = useState<'Water' | 'Ethanol' | 'Acetone'>('Water');
+
+  // 10. Momentum
+  const [pushForce, setPushForce] = useState(3);
+
+  // 11. Work Energy
+  const [displacement, setDisplacement] = useState(0.5);
+
+  // 12. Esters
+  const [heatingTimeEster, setHeatingTimeEster] = useState(5);
+  const [alcoholType, setAlcoholType] = useState('Ethanol');
+  const [acidType, setAcidType] = useState('Ethanoic Acid');
+
   // Noise generator for anti-plagiarism variance
   const randomNoise = useMemo(() => (Math.random() - 0.5) * 0.04, [loggedCount]);
 
@@ -142,6 +164,85 @@ export default function StepApparatus({ practical, onAddDataRow, loggedCount }: 
     return { hangingMassGrams, netForce: fNet, deltaV, acceleration: accel };
   }, [hangingMassGrams, randomNoise]);
 
+  /* ────────── 7. HEATING CURVES CALCULATION ────────── */
+  const heatingPhysics = useMemo(() => {
+    let t = 25 + heatingTimeMin * 10;
+    if (heatingTimeMin >= 5 && heatingTimeMin <= 8) {
+       t = 69; // melting plateau for stearic acid
+    } else if (heatingTimeMin > 8) {
+       t = 69 + (heatingTimeMin - 8) * 8; // heating liquid
+    }
+    const finalT = Number((t * (1 + randomNoise * 0.05)).toFixed(1));
+    return { time: heatingTimeMin, temperature: finalT };
+  }, [heatingTimeMin, randomNoise]);
+
+  /* ────────── 8. CIRCUITS CALCULATION ────────── */
+  const circuitPhysics = useMemo(() => {
+    if (!circuitSwitch) return { current: 0, voltage: 0, resistance: 0 };
+    const v_source = 4.5;
+    const r_single = 10;
+    let r_eq = circuitConfig === 'Series' ? r_single * 3 : r_single / 3;
+    let currentRaw = v_source / r_eq;
+    let voltageRaw = circuitConfig === 'Series' ? currentRaw * r_single : v_source;
+    
+    let current = Number((currentRaw * (1 + randomNoise)).toFixed(2));
+    let voltage = Number((voltageRaw * (1 + randomNoise)).toFixed(2));
+    return { current, voltage, resistance: r_eq };
+  }, [circuitConfig, circuitSwitch, randomNoise]);
+
+  /* ────────── 9. IMF CALCULATION ────────── */
+  const imfPhysics = useMemo(() => {
+    let maxDrop = selectedLiquid === 'Water' ? 3 : selectedLiquid === 'Ethanol' ? 8 : 15;
+    let drop = (evapTime / 10) * maxDrop;
+    let t_init = 25.0;
+    let t_final = t_init - drop;
+    return {
+       liquid: selectedLiquid,
+       tempInit: Number(t_init.toFixed(1)),
+       tempFinal: Number((t_final * (1 + randomNoise * 0.05)).toFixed(1)),
+       tempDrop: Number((drop * (1 + randomNoise * 0.05)).toFixed(1))
+    };
+  }, [selectedLiquid, evapTime, randomNoise]);
+
+  /* ────────── 10. MOMENTUM CALCULATION ────────── */
+  const momentumPhysics = useMemo(() => {
+     let v_i = pushForce * 0.4 * (1 + randomNoise);
+     let m1 = 0.5, m2 = 0.5; // kg
+     let p_i = m1 * v_i;
+     let v_fRaw = p_i / (m1 + m2);
+     let v_f = v_fRaw * 0.95 * (1 + randomNoise * 0.05); // slight inelastic loss
+     let p_f = (m1 + m2) * v_f;
+     return {
+        vi: Number(v_i.toFixed(2)),
+        pi: Number(p_i.toFixed(2)),
+        vf: Number(v_f.toFixed(2)),
+        pf: Number(p_f.toFixed(2))
+     };
+  }, [pushForce, randomNoise]);
+
+  /* ────────── 11. WORK-ENERGY CALCULATION ────────── */
+  const workEnergyPhysics = useMemo(() => {
+     let F = 2.0; // N
+     let friction = 0.2; // N
+     let F_net = F - friction;
+     let w_netRaw = F_net * displacement;
+     let mass = 1.0;
+     let v_fRaw = Math.sqrt((2 * w_netRaw) / mass);
+     
+     let w_net = Number((w_netRaw * (1 + randomNoise * 0.1)).toFixed(3));
+     let v_f = Number((v_fRaw * (1 + randomNoise * 0.05)).toFixed(2));
+     let dek = Number((0.5 * mass * v_f * v_f).toFixed(3));
+     
+     return { wnet: w_net, vi: 0, vf: v_f, dek: dek };
+  }, [displacement, randomNoise]);
+
+  /* ────────── 12. ESTERS CALCULATION ────────── */
+  const esterPhysics = useMemo(() => {
+     let esterName = `${alcoholType.replace('nol', 'yl')} ethanoate`;
+     let odour = alcoholType === 'Ethanol' ? 'Nail Polish / Sweet' : 'Banana / Sweet';
+     return { alcohol: alcoholType, acid: acidType, ester: esterName, odour };
+  }, [alcoholType, acidType]);
+
   /* ────────── LOG DATA ACTION ────────── */
   const handleLogCurrentReading = () => {
     const rowId = `trial-${Date.now()}`;
@@ -193,6 +294,51 @@ export default function StepApparatus({ practical, onAddDataRow, loggedCount }: 
         netForce: newtonPhysics.netForce,
         deltaV: newtonPhysics.deltaV,
         acceleration: newtonPhysics.acceleration
+      };
+    } else if (practical.id === 'gr10-heating-curves') {
+      newRow = {
+        ...newRow,
+        time: heatingPhysics.time,
+        temperature: heatingPhysics.temperature
+      };
+    } else if (practical.id === 'gr10-circuits') {
+      newRow = {
+        ...newRow,
+        reading: circuitConfig,
+        current: circuitPhysics.current,
+        voltage: circuitPhysics.voltage
+      };
+    } else if (practical.id === 'gr11-imf') {
+      newRow = {
+        ...newRow,
+        liquid: imfPhysics.liquid,
+        tempInit: imfPhysics.tempInit,
+        tempFinal: imfPhysics.tempFinal,
+        tempDrop: imfPhysics.tempDrop
+      };
+    } else if (practical.id === 'gr12-momentum') {
+      newRow = {
+        ...newRow,
+        vi: momentumPhysics.vi,
+        pi: momentumPhysics.pi,
+        vf: momentumPhysics.vf,
+        pf: momentumPhysics.pf
+      };
+    } else if (practical.id === 'gr12-work-energy') {
+      newRow = {
+        ...newRow,
+        wnet: workEnergyPhysics.wnet,
+        vi: workEnergyPhysics.vi,
+        vf: workEnergyPhysics.vf,
+        dek: workEnergyPhysics.dek
+      };
+    } else if (practical.id === 'gr12-esters') {
+      newRow = {
+        ...newRow,
+        alcohol: esterPhysics.alcohol,
+        acid: esterPhysics.acid,
+        ester: esterPhysics.ester,
+        odour: esterPhysics.odour
       };
     }
 
@@ -494,6 +640,219 @@ export default function StepApparatus({ practical, onAddDataRow, loggedCount }: 
               <div className="flex justify-between text-slate-300">
                 <span>Acceleration (a):</span>
                 <strong className="text-emerald-400">{newtonPhysics.acceleration} m/s²</strong>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ─── RIG 7: HEATING CURVES ─── */}
+        {practical.id === 'gr10-heating-curves' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-slate-950/80 border border-slate-800 p-5 rounded-xl space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-xs font-bold text-slate-300">Elapsed Time (min)</span>
+                <span className="font-mono text-base font-bold text-orange-400">{heatingTimeMin} min</span>
+              </div>
+              <input
+                type="range"
+                min={0}
+                max={15}
+                step={1}
+                value={heatingTimeMin}
+                onChange={e => setHeatingTimeMin(Number(e.target.value))}
+                className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-500"
+              />
+            </div>
+            <div className="bg-slate-950/80 border border-slate-800 p-5 rounded-xl flex flex-col justify-center space-y-2 font-mono text-sm">
+              <div className="flex justify-between text-slate-300">
+                <span>Temperature (°C):</span>
+                <strong className="text-red-400">{heatingPhysics.temperature} °C</strong>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ─── RIG 8: CIRCUITS ─── */}
+        {practical.id === 'gr10-circuits' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-slate-950/80 border border-slate-800 p-5 rounded-xl space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-xs font-bold text-slate-300">Circuit Configuration</span>
+              </div>
+              <div className="flex gap-4">
+                <button
+                  type="button"
+                  onClick={() => setCircuitConfig('Series')}
+                  className={`flex-1 py-2 rounded-lg text-xs font-bold transition ${circuitConfig === 'Series' ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-400'}`}
+                >Series</button>
+                <button
+                  type="button"
+                  onClick={() => setCircuitConfig('Parallel')}
+                  className={`flex-1 py-2 rounded-lg text-xs font-bold transition ${circuitConfig === 'Parallel' ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-400'}`}
+                >Parallel</button>
+              </div>
+              <div className="flex justify-between items-center mt-4">
+                <span className="text-xs font-bold text-slate-300">Switch</span>
+                <button
+                  type="button"
+                  onClick={() => setCircuitSwitch(!circuitSwitch)}
+                  className={`px-4 py-2 rounded-lg text-xs font-bold transition ${circuitSwitch ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white'}`}
+                >{circuitSwitch ? 'ON (CLOSED)' : 'OFF (OPEN)'}</button>
+              </div>
+            </div>
+            <div className="bg-slate-950/80 border border-slate-800 p-5 rounded-xl flex flex-col justify-center space-y-2 font-mono text-sm">
+              <div className="flex justify-between text-slate-300">
+                <span>Voltmeter (V):</span>
+                <strong className="text-blue-400">{circuitPhysics.voltage} V</strong>
+              </div>
+              <div className="flex justify-between text-slate-300">
+                <span>Ammeter (A):</span>
+                <strong className="text-amber-400">{circuitPhysics.current} A</strong>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ─── RIG 9: IMF ─── */}
+        {practical.id === 'gr11-imf' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-slate-950/80 border border-slate-800 p-5 rounded-xl space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-xs font-bold text-slate-300">Liquid Type</span>
+              </div>
+              <div className="flex gap-2">
+                {['Water', 'Ethanol', 'Acetone'].map(l => (
+                  <button
+                    key={l}
+                    type="button"
+                    onClick={() => setSelectedLiquid(l as any)}
+                    className={`flex-1 py-2 rounded-lg text-xs font-bold transition ${selectedLiquid === l ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-400'}`}
+                  >{l}</button>
+                ))}
+              </div>
+              <div className="flex justify-between items-center mt-4">
+                <span className="text-xs font-bold text-slate-300">Evaporation Time (min)</span>
+                <span className="font-mono text-base font-bold text-indigo-400">{evapTime}</span>
+              </div>
+              <input
+                type="range" min={0} max={10} step={1}
+                value={evapTime} onChange={e => setEvapTime(Number(e.target.value))}
+                className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+              />
+            </div>
+            <div className="bg-slate-950/80 border border-slate-800 p-5 rounded-xl flex flex-col justify-center space-y-2 font-mono text-sm">
+              <div className="flex justify-between text-slate-300">
+                <span>Final Temp (°C):</span>
+                <strong className="text-teal-400">{imfPhysics.tempFinal} °C</strong>
+              </div>
+              <div className="flex justify-between text-slate-300">
+                <span>Temp Drop (°C):</span>
+                <strong className="text-rose-400">{imfPhysics.tempDrop} °C</strong>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ─── RIG 10: MOMENTUM ─── */}
+        {practical.id === 'gr12-momentum' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-slate-950/80 border border-slate-800 p-5 rounded-xl space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-xs font-bold text-slate-300">Initial Push Force (N)</span>
+                <span className="font-mono text-base font-bold text-violet-400">{pushForce} N</span>
+              </div>
+              <input
+                type="range" min={1} max={5} step={1}
+                value={pushForce} onChange={e => setPushForce(Number(e.target.value))}
+                className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-violet-500"
+              />
+            </div>
+            <div className="bg-slate-950/80 border border-slate-800 p-5 rounded-xl flex flex-col justify-center space-y-2 font-mono text-sm">
+              <div className="flex justify-between text-slate-300">
+                <span>Initial Velocity (m/s):</span>
+                <strong className="text-blue-400">{momentumPhysics.vi} m/s</strong>
+              </div>
+              <div className="flex justify-between text-slate-300">
+                <span>Final Velocity (m/s):</span>
+                <strong className="text-emerald-400">{momentumPhysics.vf} m/s</strong>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ─── RIG 11: WORK-ENERGY ─── */}
+        {practical.id === 'gr12-work-energy' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-slate-950/80 border border-slate-800 p-5 rounded-xl space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-xs font-bold text-slate-300">Displacement (m)</span>
+                <span className="font-mono text-base font-bold text-pink-400">{displacement} m</span>
+              </div>
+              <input
+                type="range" min={0.2} max={1.0} step={0.1}
+                value={displacement} onChange={e => setDisplacement(Number(e.target.value))}
+                className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-pink-500"
+              />
+            </div>
+            <div className="bg-slate-950/80 border border-slate-800 p-5 rounded-xl flex flex-col justify-center space-y-2 font-mono text-sm">
+              <div className="flex justify-between text-slate-300">
+                <span>Net Work Done (J):</span>
+                <strong className="text-amber-400">{workEnergyPhysics.wnet} J</strong>
+              </div>
+              <div className="flex justify-between text-slate-300">
+                <span>Change in K.E. (J):</span>
+                <strong className="text-emerald-400">{workEnergyPhysics.dek} J</strong>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ─── RIG 12: ESTERS ─── */}
+        {practical.id === 'gr12-esters' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-slate-950/80 border border-slate-800 p-5 rounded-xl space-y-4">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-xs font-bold text-slate-300">Alcohol</span>
+                <span className="text-xs font-bold text-slate-300">Acid</span>
+              </div>
+              <div className="flex gap-4">
+                <select
+                  value={alcoholType}
+                  onChange={e => setAlcoholType(e.target.value)}
+                  className="flex-1 bg-slate-800 text-slate-200 rounded p-2 text-xs"
+                >
+                  <option value="Methanol">Methanol</option>
+                  <option value="Ethanol">Ethanol</option>
+                  <option value="Propanol">Propanol</option>
+                </select>
+                <select
+                  value={acidType}
+                  onChange={e => setAcidType(e.target.value)}
+                  className="flex-1 bg-slate-800 text-slate-200 rounded p-2 text-xs"
+                >
+                  <option value="Methanoic Acid">Methanoic Acid</option>
+                  <option value="Ethanoic Acid">Ethanoic Acid</option>
+                  <option value="Propanoic Acid">Propanoic Acid</option>
+                </select>
+              </div>
+              <div className="flex justify-between items-center mt-4">
+                <span className="text-xs font-bold text-slate-300">Heating Time (min)</span>
+                <span className="font-mono text-base font-bold text-amber-400">{heatingTimeEster} min</span>
+              </div>
+              <input
+                type="range" min={0} max={10} step={1}
+                value={heatingTimeEster} onChange={e => setHeatingTimeEster(Number(e.target.value))}
+                className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-amber-500"
+              />
+            </div>
+            <div className="bg-slate-950/80 border border-slate-800 p-5 rounded-xl flex flex-col justify-center space-y-2 font-mono text-sm">
+              <div className="flex justify-between text-slate-300">
+                <span>Ester Formed:</span>
+                <strong className="text-blue-400">{esterPhysics.ester}</strong>
+              </div>
+              <div className="flex justify-between text-slate-300">
+                <span>Odour Observed:</span>
+                <strong className="text-pink-400">{heatingTimeEster > 2 ? esterPhysics.odour : 'No smell yet...'}</strong>
               </div>
             </div>
           </div>
