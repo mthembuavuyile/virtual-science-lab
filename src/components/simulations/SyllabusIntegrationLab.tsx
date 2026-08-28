@@ -45,8 +45,6 @@ import {
 import { getLabById, LabEntry } from '../../data/experiments';
 import AnalyzeExperimentPanel from '../AnalyzeExperimentPanel';
 import RichText from '../ui/RichText';
-import { guidesContent } from '@/src/features/simulations/data/guides';
-import { generalQuizzes } from '@/src/features/simulations/data/quizzes';
 
 export default function SyllabusIntegrationLab() {
   const { labId } = useParams<{ labId: string }>();
@@ -772,7 +770,7 @@ export default function SyllabusIntegrationLab() {
   }
 
   // Define Syllabus Guide metadata to show on the details pane
-  > = {
+  const guidesContent: Record<string, { theory: string; procedure: string; tech: string; formulas: string[] }> = {
     // Grade 10 Physics
     'g10-vectors': {
       theory: 'Vectors have both magnitude and direction, unlike scalars which only have magnitude. Displacement, velocity, force, and acceleration are vector quantities. When adding vectors in 1D, choose a reference positive direction (e.g. Right is positive).',
@@ -878,7 +876,7 @@ export default function SyllabusIntegrationLab() {
   const activeGuide = getGuide();
 
   // Mini quiz questions for fallback or general sections
-  []> = {
+  const generalQuizzes: Record<string, { q: string; o: string[]; c: number; exp: string }[]> = {
     'g10-atom-periodic': [
       {
         q: 'What is the correct electron configuration for a neutral Oxygen atom (Z = 8)?',
