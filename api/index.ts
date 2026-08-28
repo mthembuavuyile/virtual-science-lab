@@ -194,7 +194,7 @@ Support your answers with CAPS-relevant formulas and exam tips where appropriate
         ];
 
         const response = await ai.models.generateContent({
-          model: 'gemini-2.5-flash',
+          model: 'gemini-3.5-flash',
           contents,
           config: {
             systemInstruction,
@@ -228,7 +228,7 @@ If language is 'Slang', write the "conceptBreakdown" and "saContext" using South
 Return ONLY a valid JSON block, no surrounding markdown wrappers except optionally \`\`\`json.`;
 
         const response = await ai.models.generateContent({
-          model: 'gemini-2.5-flash',
+          model: 'gemini-3.5-flash',
           contents: prompt,
           config: {
             responseMimeType: 'application/json',

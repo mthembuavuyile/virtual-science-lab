@@ -4,40 +4,6 @@ import { Link } from 'react-router-dom';
 import { Beaker, BookOpen, Presentation, ChevronRight, Zap, ArrowRight } from 'lucide-react';
 import { labRegistry } from '../data/experiments';
 
-const AtomAnimation = () => {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 flex items-center justify-center max-h-[800px]">
-      <motion.div
-        animate={{ rotate: 360 }}
-        transition={{ duration: 150, repeat: Infinity, ease: "linear" }}
-        className="relative w-[500px] h-[500px] md:w-[800px] md:h-[800px] flex items-center justify-center opacity-40"
-      >
-        <div className="absolute w-32 h-32 bg-blue-400/5 rounded-full blur-2xl" />
-        
-        {/* Core - Technical style */}
-        <div className="absolute w-2 h-2 bg-blue-600/20 rounded-full" />
-        <div className="absolute w-8 h-8 border border-blue-600/10 rounded-full" />
-        
-        {/* Orbits - Very thin and technical */}
-        <div className="absolute w-full h-[20%] border border-slate-300 rounded-[100%] rotate-0" />
-        <div className="absolute w-full h-[20%] border border-slate-300 rounded-[100%] rotate-60" />
-        <div className="absolute w-full h-[20%] border border-slate-300 rounded-[100%] -rotate-60" />
-
-        {/* Electrons - small precise dots */}
-        <div className="absolute w-full h-[20%] rounded-[100%] rotate-0">
-           <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-blue-400 rounded-full" />
-        </div>
-        <div className="absolute w-full h-[20%] rounded-[100%] rotate-60">
-           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-1.5 h-1.5 bg-blue-400 rounded-full" />
-        </div>
-        <div className="absolute w-full h-[20%] rounded-[100%] -rotate-60">
-           <div className="absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-blue-400 rounded-full" />
-        </div>
-      </motion.div>
-    </div>
-  );
-};
-
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
@@ -63,8 +29,7 @@ export default function LandingPage() {
       </header>
 
       <main>
-        <section className="pt-20 pb-28 overflow-hidden relative">
-          <AtomAnimation />
+        <section className="pt-20 pb-28 relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
               
@@ -153,7 +118,7 @@ export default function LandingPage() {
         </section>
 
         {/* Featured Simulators Section */}
-        <section id="featured-simulators" className="py-20 bg-gradient-to-b from-slate-900 to-slate-950 text-white border-b border-slate-800">
+        <section id="featured-simulators" className="py-20 bg-slate-950 text-white border-b border-slate-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
               <div>
@@ -193,24 +158,24 @@ export default function LandingPage() {
                     <Link
                       key={lab.id}
                       to={`/app/labs/${lab.id}`}
-                      className="bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 hover:border-blue-500/50 rounded-2xl overflow-hidden transition-all duration-300 group flex flex-col hover:-translate-y-1 shadow-lg"
+                      className="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl overflow-hidden transition-all group flex flex-col hover:-translate-y-1 shadow-sm"
                     >
-                      <div className={`h-36 bg-gradient-to-br ${lab.gradient} flex items-center justify-center relative overflow-hidden`}>
-                        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)]" style={{ backgroundSize: '16px 16px' }} />
-                        <div className="absolute top-3 left-3 bg-black/40 backdrop-blur-md text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-white/10">
-                          Grade {lab.grade} • {lab.discipline}
+                      <div className="h-32 bg-slate-800 flex flex-col items-center justify-center relative">
+                        <div className="absolute top-3 left-3 bg-slate-700 text-slate-300 text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1 uppercase tracking-wider">
+                          <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                          Gr {lab.grade} {lab.discipline}
                         </div>
-                        <DIcon className="text-white w-12 h-12 opacity-90 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500" />
+                        <DIcon className="text-blue-500 w-10 h-10 group-hover:scale-110 transition-transform duration-300" />
                       </div>
-                      <div className="p-5 flex-1 flex flex-col">
-                        <h3 className="text-lg font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
+                      <div className="p-5 flex-1 flex flex-col bg-slate-900">
+                        <h3 className="text-base font-bold text-slate-100 mb-2">
                           {lab.title}
                         </h3>
                         <p className="text-slate-400 text-xs leading-relaxed flex-1 mb-4">
                           {lab.description}
                         </p>
-                        <div className="text-xs font-bold text-blue-400 flex items-center gap-1.5 opacity-90 group-hover:opacity-100">
-                          Launch Simulator <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        <div className="text-xs font-semibold text-blue-400 flex items-center gap-1.5 mt-auto">
+                          Launch Module <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </div>
                       </div>
                     </Link>

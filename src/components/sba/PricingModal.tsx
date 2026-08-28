@@ -56,7 +56,7 @@ export default function PricingModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="p-5 bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white flex justify-between items-center relative">
+        <div className="p-5 bg-slate-900 border-b border-slate-800 text-white flex justify-between items-center relative">
           <div>
             <span className="text-[11px] font-bold tracking-wider uppercase text-blue-300">
               Official SACAI & DBE Compliance Pass

@@ -929,6 +929,430 @@ export const sbaPracticals: SbaPractical[] = [
         maxMarks: 4
       }
     ]
+  },
+
+  // ─── 7. Gr 10 Heating Curves (Chemistry Term 1) ───────────────
+  {
+    id: 'gr10-heating-curves',
+    title: 'Grade 10 Chemistry: Heating & Cooling Curve of Stearic Acid',
+    shortTitle: 'Heating Curves',
+    discipline: 'Chemistry',
+    grade: 10,
+    term: 1,
+    capsTaskNumber: 'FAT 1 / Chemistry SBA Practical',
+    capsCode: 'CAPS-CHEM-GR10-T1-EXP01',
+    marks: 20,
+    durationMinutes: 40,
+    isFree: true,
+    badge: 'Core Gr 10 Practical',
+    description: 'Investigate the phase change of stearic acid as it is heated and cooled by measuring its temperature over time.',
+    aim: 'To plot a heating and cooling curve for stearic acid and identify its melting and freezing points.',
+    investigativeQuestionPrompt: 'State an investigative question regarding the relationship between the temperature of stearic acid and time during heating.',
+    expectedInvestigativeQuestion: 'How does the temperature of stearic acid change over time as it is heated and undergoes a phase change?',
+    expectedHypothesisPattern: 'The temperature of stearic acid will increase until it reaches its melting point, where it will remain constant during the phase change, and then increase again.',
+    variables: {
+      independent: {
+        name: 'Time',
+        symbol: 't',
+        unit: 'min',
+        description: 'Measured using a stopwatch at regular 1-minute intervals.'
+      },
+      dependent: {
+        name: 'Temperature',
+        symbol: 'T',
+        unit: '°C',
+        description: 'Measured with a laboratory thermometer.'
+      },
+      controlled: [
+        {
+          name: 'Mass of stearic acid',
+          symbol: 'm',
+          unit: 'g',
+          description: 'Constant amount of substance used.'
+        },
+        {
+          name: 'Heating rate',
+          symbol: 'Q/t',
+          unit: 'W',
+          description: 'Constant heat supplied by the water bath.'
+        }
+      ]
+    },
+    apparatusDescription: [
+      'Boiling tube containing solid stearic acid',
+      'Beaker acting as a water bath',
+      'Bunsen burner, tripod, and wire gauze',
+      'Thermometer (-10 to 110 °C)',
+      'Stopwatch'
+    ],
+    controls: [
+      {
+        id: 'time',
+        label: 'Elapsed Time (t)',
+        type: 'slider',
+        min: 0,
+        max: 15,
+        step: 1,
+        defaultValue: 0,
+        unit: 'min'
+      }
+    ],
+    dataColumns: [
+      { key: 'time', label: 'Time', symbol: 't', unit: 'min', decimalPlaces: 0 },
+      { key: 'temperature', label: 'Temperature', symbol: 'T', unit: '°C', decimalPlaces: 1 }
+    ],
+    recommendedDataPointsCount: 6,
+    graphConfig: {
+      xAxis: {
+        key: 'time',
+        label: 'Time',
+        symbol: 't',
+        unit: 'min',
+        min: 0,
+        max: 15,
+        step: 1
+      },
+      yAxis: {
+        key: 'temperature',
+        label: 'Temperature',
+        symbol: 'T',
+        unit: '°C',
+        min: 20,
+        max: 100,
+        step: 10
+      },
+      expectedSlopeName: 'Heating Rate',
+      expectedSlopeUnit: '°C/min',
+      expectedSlopeSign: 'positive',
+      physicalMeaningOfSlope: 'The gradient represents the rate of temperature increase of the solid/liquid phases. The flat zero-gradient section represents the latent heat of fusion.',
+      physicalMeaningOfIntercept: 'Initial temperature of the stearic acid before heating.'
+    },
+    precautions: [
+      'Stir the water bath continuously to ensure uniform heating.',
+      'Do not heat the stearic acid directly; always use a water bath to prevent it from catching fire.'
+    ],
+    commonErrors: [
+      'Not stirring the water bath, leading to uneven temperature distribution.',
+      'Allowing the thermometer bulb to touch the bottom of the boiling tube.'
+    ],
+    rubric: [
+      { id: 'hc1', category: 'Investigative Framework', criterion: 'States correct investigative question and identifies variables (3 marks)', maxMarks: 3 },
+      { id: 'hc2', category: 'Data Collection & Accuracy', criterion: 'Tabulates temperature readings at 1-minute intervals (4 marks)', maxMarks: 4 },
+      { id: 'hc3', category: 'Graphical Analysis', criterion: 'Plots heating curve with correct axes and labels (5 marks)', maxMarks: 5 },
+      { id: 'hc4', category: 'Graphical Analysis', criterion: 'Identifies melting point correctly from the graph (3 marks)', maxMarks: 3 },
+      { id: 'hc5', category: 'Error Analysis & Conclusion', criterion: 'Draws valid conclusion regarding phase change and latent heat (5 marks)', maxMarks: 5 }
+    ]
+  },
+
+  // ─── 8. Gr 10 Electric Circuits (Physics Term 2) ───────────────
+  {
+    id: 'gr10-circuits',
+    title: 'Grade 10 Physics: Series and Parallel Circuits',
+    shortTitle: 'Basic Circuits',
+    discipline: 'Physics',
+    grade: 10,
+    term: 2,
+    capsTaskNumber: 'FAT 2 / Physics SBA Practical',
+    capsCode: 'CAPS-PHY-GR10-T2-EXP01',
+    marks: 20,
+    durationMinutes: 45,
+    isFree: false,
+    badge: 'Core Gr 10 Practical',
+    description: 'Investigate the relationship between voltage, current, and resistance in simple series and parallel resistor networks.',
+    aim: 'To verify that resistors in series divide potential difference, while resistors in parallel divide current.',
+    investigativeQuestionPrompt: 'State an investigative question about how potential difference changes across resistors in series.',
+    expectedInvestigativeQuestion: 'How does the total potential difference across a series circuit compare to the sum of the potential differences across individual resistors?',
+    expectedHypothesisPattern: 'In a series circuit, the total potential difference is equal to the sum of the potential differences across each component.',
+    variables: {
+      independent: { name: 'Circuit Configuration', symbol: 'Config', unit: '', description: 'Series vs Parallel setup.' },
+      dependent: { name: 'Voltage and Current', symbol: 'V, I', unit: 'V, A', description: 'Readings on voltmeter and ammeter.' },
+      controlled: [{ name: 'Battery Voltage', symbol: 'V_s', unit: 'V', description: 'Maintained constant.' }]
+    },
+    apparatusDescription: [
+      'Power supply (3 cells in series)',
+      '3 identical resistors (e.g. 10 Ω)',
+      'Voltmeter and Ammeter',
+      'Connecting wires and switch'
+    ],
+    controls: [
+      { id: 'switch', label: 'Circuit Switch', type: 'switch', defaultValue: false }
+    ],
+    dataColumns: [
+      { key: 'reading', label: 'Component', symbol: 'R', unit: '', decimalPlaces: 0 },
+      { key: 'current', label: 'Current', symbol: 'I', unit: 'A', decimalPlaces: 2 },
+      { key: 'voltage', label: 'Voltage', symbol: 'V', unit: 'V', decimalPlaces: 2 }
+    ],
+    recommendedDataPointsCount: 4,
+    graphConfig: {
+      xAxis: { key: 'current', label: 'Current', symbol: 'I', unit: 'A', min: 0, max: 2, step: 0.5 },
+      yAxis: { key: 'voltage', label: 'Voltage', symbol: 'V', unit: 'V', min: 0, max: 6, step: 1 },
+      expectedSlopeName: 'Resistance', expectedSlopeUnit: 'Ω', expectedSlopeSign: 'positive',
+      physicalMeaningOfSlope: 'Resistance of the component.', physicalMeaningOfIntercept: 'Zero volts at zero current.'
+    },
+    precautions: [
+      'Ensure ammeters are always connected in series and voltmeters in parallel.',
+      'Open the switch when not taking readings to preserve battery.'
+    ],
+    commonErrors: [
+      'Connecting the voltmeter in series, drastically reducing current.',
+      'Reading wrong scale on analog meters.'
+    ],
+    rubric: [
+      { id: 'c1', category: 'Investigative Framework', criterion: 'States correct investigative question and identifies variables (3 marks)', maxMarks: 3 },
+      { id: 'c2', category: 'Data Collection & Accuracy', criterion: 'Accurately records V and I for series/parallel configs (6 marks)', maxMarks: 6 },
+      { id: 'c3', category: 'Calculations & Constant Derivation', criterion: 'Calculates equivalent resistance correctly for both configurations (6 marks)', maxMarks: 6 },
+      { id: 'c4', category: 'Error Analysis & Conclusion', criterion: 'Formulates valid conclusion verifying series/parallel laws (5 marks)', maxMarks: 5 }
+    ]
+  },
+
+  // ─── 9. Gr 11 Intermolecular Forces (Chemistry Term 3) ─────────
+  {
+    id: 'gr11-imf',
+    title: 'Grade 11 Chemistry: Evaporation Rates & Intermolecular Forces',
+    shortTitle: 'Intermolecular Forces',
+    discipline: 'Chemistry',
+    grade: 11,
+    term: 3,
+    capsTaskNumber: 'FAT 3 / Chemistry SBA Practical',
+    capsCode: 'CAPS-CHEM-GR11-T3-EXP01',
+    marks: 20,
+    durationMinutes: 40,
+    isFree: false,
+    badge: 'Core Gr 11 Practical',
+    description: 'Investigate the rate of evaporation of water, ethanol, and acetone to determine relative strengths of intermolecular forces.',
+    aim: 'To determine the relationship between the strength of intermolecular forces and the rate of evaporation/temperature drop of various liquids.',
+    investigativeQuestionPrompt: 'State an investigative question regarding the relationship between a liquid\'s intermolecular forces and its temperature drop during evaporation.',
+    expectedInvestigativeQuestion: 'How does the strength of intermolecular forces in a liquid affect its rate of evaporation (temperature drop)?',
+    expectedHypothesisPattern: 'Liquids with weaker intermolecular forces (e.g. acetone) will evaporate faster, causing a greater temperature drop than liquids with stronger forces (e.g. water).',
+    variables: {
+      independent: { name: 'Type of Liquid', symbol: 'Liquid', unit: '', description: 'Water, Ethanol, Acetone.' },
+      dependent: { name: 'Temperature Drop', symbol: 'ΔT', unit: '°C', description: 'Difference between initial and final temperature.' },
+      controlled: [{ name: 'Initial volume and surface area', symbol: 'V', unit: 'ml', description: 'Same amount of liquid on identical filter paper.' }]
+    },
+    apparatusDescription: [
+      'Thermometers wrapped with filter paper',
+      'Water, Ethanol, Acetone (propanone)',
+      'Stopwatch'
+    ],
+    controls: [
+      { id: 'time', label: 'Evaporation Time', type: 'slider', min: 0, max: 10, step: 1, defaultValue: 0, unit: 'min' }
+    ],
+    dataColumns: [
+      { key: 'liquid', label: 'Liquid', symbol: '', unit: '', decimalPlaces: 0 },
+      { key: 'tempInit', label: 'Initial Temp', symbol: 'T_i', unit: '°C', decimalPlaces: 1 },
+      { key: 'tempFinal', label: 'Final Temp', symbol: 'T_f', unit: '°C', decimalPlaces: 1 },
+      { key: 'tempDrop', label: 'Temperature Drop', symbol: 'ΔT', unit: '°C', isCalculated: true, decimalPlaces: 1 }
+    ],
+    recommendedDataPointsCount: 3,
+    graphConfig: {
+      xAxis: { key: 'liquid', label: 'Liquid', symbol: '', unit: '', min: 0, max: 3, step: 1 },
+      yAxis: { key: 'tempDrop', label: 'Temperature Drop (ΔT)', symbol: 'ΔT', unit: '°C', min: 0, max: 15, step: 1 },
+      expectedSlopeName: 'N/A (Bar Chart)', expectedSlopeUnit: '', expectedSlopeSign: 'positive',
+      physicalMeaningOfSlope: 'Bar chart: taller bars indicate weaker intermolecular forces.', physicalMeaningOfIntercept: ''
+    },
+    precautions: [
+      'Ensure identical ventilation/draft conditions for all thermometers.',
+      'Acetone is highly flammable; keep away from open flames.'
+    ],
+    commonErrors: [
+      'Unequal wrapping of filter paper causing different evaporation surface areas.'
+    ],
+    rubric: [
+      { id: 'imf1', category: 'Investigative Framework', criterion: 'States correct investigative question and hypotheses based on IMF (3 marks)', maxMarks: 3 },
+      { id: 'imf2', category: 'Data Collection & Accuracy', criterion: 'Records T_i and T_f and calculates ΔT correctly for 3 liquids (6 marks)', maxMarks: 6 },
+      { id: 'imf3', category: 'Graphical Analysis', criterion: 'Draws a bar graph of temperature drop per liquid (5 marks)', maxMarks: 5 },
+      { id: 'imf4', category: 'Error Analysis & Conclusion', criterion: 'Concludes correctly ranking the IMF strength: Water > Ethanol > Acetone (6 marks)', maxMarks: 6 }
+    ]
+  },
+
+  // ─── 10. Gr 12 Momentum (Physics Term 1) ───────────────
+  {
+    id: 'gr12-momentum',
+    title: 'Grade 12 Physics: Conservation of Linear Momentum',
+    shortTitle: 'Conservation of Momentum',
+    discipline: 'Physics',
+    grade: 12,
+    term: 1,
+    capsTaskNumber: 'FAT 1 / Physics SBA Practical',
+    capsCode: 'CAPS-PHY-GR12-T1-EXP02',
+    marks: 20,
+    durationMinutes: 45,
+    isFree: false,
+    badge: 'Core Gr 12 Practical',
+    description: 'Investigate the conservation of linear momentum during an inelastic collision between two trolleys.',
+    aim: 'To verify the Principle of Conservation of Linear Momentum during an inelastic collision in an isolated system.',
+    investigativeQuestionPrompt: 'State an investigative question about the total momentum of a system before and after a collision.',
+    expectedInvestigativeQuestion: 'Is the total momentum of an isolated system conserved during an inelastic collision?',
+    expectedHypothesisPattern: 'The total linear momentum of the trolleys before the collision is equal to the total linear momentum after the collision.',
+    variables: {
+      independent: { name: 'Initial Velocity of Trolley 1', symbol: 'v_i', unit: 'm/s', description: 'Pushed at various speeds.' },
+      dependent: { name: 'Final Velocity of Combined Trolleys', symbol: 'v_f', unit: 'm/s', description: 'Measured after inelastic coupling.' },
+      controlled: [{ name: 'Masses of Trolleys', symbol: 'm1, m2', unit: 'kg', description: 'Kept constant throughout trials.' }]
+    },
+    apparatusDescription: [
+      'Two dynamics trolleys with velcro/magnetic couplers',
+      'Friction-compensated track',
+      'Ticker-timer or photogates',
+      'Mass balance'
+    ],
+    controls: [
+      { id: 'pushForce', label: 'Initial Push Strength', type: 'slider', min: 1, max: 5, step: 1, defaultValue: 3, unit: 'N' }
+    ],
+    dataColumns: [
+      { key: 'trial', label: 'Trial', symbol: '#', unit: '', decimalPlaces: 0 },
+      { key: 'vi', label: 'Initial Velocity (v1i)', symbol: 'v_i', unit: 'm/s', decimalPlaces: 2 },
+      { key: 'pi', label: 'Initial Momentum (p_i)', symbol: 'p_i', unit: 'kg·m/s', isCalculated: true, decimalPlaces: 2 },
+      { key: 'vf', label: 'Final Velocity (v_f)', symbol: 'v_f', unit: 'm/s', decimalPlaces: 2 },
+      { key: 'pf', label: 'Final Momentum (p_f)', symbol: 'p_f', unit: 'kg·m/s', isCalculated: true, decimalPlaces: 2 }
+    ],
+    recommendedDataPointsCount: 4,
+    graphConfig: {
+      xAxis: { key: 'pi', label: 'Initial Momentum', symbol: 'p_i', unit: 'kg·m/s', min: 0, max: 5, step: 1 },
+      yAxis: { key: 'pf', label: 'Final Momentum', symbol: 'p_f', unit: 'kg·m/s', min: 0, max: 5, step: 1 },
+      expectedSlopeName: 'Conservation Ratio', expectedSlopeUnit: '', expectedSlopeSign: 'positive',
+      physicalMeaningOfSlope: 'A slope of 1 indicates perfect conservation (p_initial = p_final).', physicalMeaningOfIntercept: 'Passes through origin.'
+    },
+    precautions: [
+      'Ensure the track is properly friction-compensated.',
+      'Check that the trolleys couple firmly without bouncing.'
+    ],
+    commonErrors: [
+      'Failing to compensate for friction, leading to momentum loss.',
+      'Misreading ticker tape spacing.'
+    ],
+    rubric: [
+      { id: 'mom1', category: 'Investigative Framework', criterion: 'States Principle of Conservation of Linear Momentum (3 marks)', maxMarks: 3 },
+      { id: 'mom2', category: 'Data Collection & Accuracy', criterion: 'Calculates initial and final velocities accurately from data (5 marks)', maxMarks: 5 },
+      { id: 'mom3', category: 'Calculations & Constant Derivation', criterion: 'Calculates p_initial and p_final and determines percentage difference (7 marks)', maxMarks: 7 },
+      { id: 'mom4', category: 'Error Analysis & Conclusion', criterion: 'Identifies friction as external force and states valid conclusion (5 marks)', maxMarks: 5 }
+    ]
+  },
+
+  // ─── 11. Gr 12 Work, Energy and Power (Physics Term 2) ───────────────
+  {
+    id: 'gr12-work-energy',
+    title: 'Grade 12 Physics: Work-Energy Theorem',
+    shortTitle: 'Work-Energy Theorem',
+    discipline: 'Physics',
+    grade: 12,
+    term: 2,
+    capsTaskNumber: 'FAT 2 / Physics SBA Practical',
+    capsCode: 'CAPS-PHY-GR12-T2-EXP02',
+    marks: 20,
+    durationMinutes: 45,
+    isFree: false,
+    badge: 'Core Gr 12 Practical',
+    description: 'Verify the Work-Energy Theorem by determining the work done by a net force and comparing it to the change in kinetic energy.',
+    aim: 'To verify the Work-Energy Theorem which states that the net work done on an object equals its change in kinetic energy (W_net = ΔE_k).',
+    investigativeQuestionPrompt: 'State an investigative question relating net work done to the change in kinetic energy.',
+    expectedInvestigativeQuestion: 'Is the net work done on a trolley equal to its change in kinetic energy?',
+    expectedHypothesisPattern: 'The net work done on an object by a net force is equal to the object\'s change in kinetic energy.',
+    variables: {
+      independent: { name: 'Net Force applied / Distance', symbol: 'F_net / Δx', unit: 'N / m', description: 'Varying the pulling force or distance.' },
+      dependent: { name: 'Change in Kinetic Energy', symbol: 'ΔE_k', unit: 'J', description: 'Calculated from initial and final velocities.' },
+      controlled: [{ name: 'Mass of trolley', symbol: 'm', unit: 'kg', description: 'Kept constant.' }]
+    },
+    apparatusDescription: [
+      'Dynamics trolley on a track',
+      'Ticker-timer or photogates',
+      'Hanging masses and pulley',
+      'Ruler/measuring tape'
+    ],
+    controls: [
+      { id: 'distance', label: 'Displacement (Δx)', type: 'slider', min: 0.2, max: 1.0, step: 0.1, defaultValue: 0.5, unit: 'm' }
+    ],
+    dataColumns: [
+      { key: 'trial', label: 'Trial', symbol: '#', unit: '', decimalPlaces: 0 },
+      { key: 'wnet', label: 'Net Work Done (W_net)', symbol: 'W_net', unit: 'J', isCalculated: true, decimalPlaces: 3 },
+      { key: 'vi', label: 'Initial Velocity (v_i)', symbol: 'v_i', unit: 'm/s', decimalPlaces: 2 },
+      { key: 'vf', label: 'Final Velocity (v_f)', symbol: 'v_f', unit: 'm/s', decimalPlaces: 2 },
+      { key: 'dek', label: 'Change in K.E. (ΔE_k)', symbol: 'ΔE_k', unit: 'J', isCalculated: true, decimalPlaces: 3 }
+    ],
+    recommendedDataPointsCount: 4,
+    graphConfig: {
+      xAxis: { key: 'wnet', label: 'Net Work', symbol: 'W_net', unit: 'J', min: 0, max: 2, step: 0.5 },
+      yAxis: { key: 'dek', label: 'Change in K.E.', symbol: 'ΔE_k', unit: 'J', min: 0, max: 2, step: 0.5 },
+      expectedSlopeName: 'Equality Ratio', expectedSlopeUnit: '', expectedSlopeSign: 'positive',
+      physicalMeaningOfSlope: 'A slope of 1 indicates W_net = ΔE_k.', physicalMeaningOfIntercept: 'Passes through origin.'
+    },
+    precautions: [
+      'Ensure the track is horizontally level or properly friction-compensated.',
+      'Measure displacement precisely between photogates.'
+    ],
+    commonErrors: [
+      'Ignoring kinetic friction in the W_net calculation.',
+      'Not squaring velocity when calculating kinetic energy.'
+    ],
+    rubric: [
+      { id: 'we1', category: 'Investigative Framework', criterion: 'States Work-Energy Theorem correctly (3 marks)', maxMarks: 3 },
+      { id: 'we2', category: 'Data Collection & Accuracy', criterion: 'Records velocities and displacement accurately (5 marks)', maxMarks: 5 },
+      { id: 'we3', category: 'Calculations & Constant Derivation', criterion: 'Calculates W_net (including friction) and ΔE_k correctly (7 marks)', maxMarks: 7 },
+      { id: 'we4', category: 'Error Analysis & Conclusion', criterion: 'Compares W_net and ΔE_k, attributes differences to energy loss, states conclusion (5 marks)', maxMarks: 5 }
+    ]
+  },
+
+  // ─── 12. Gr 12 Preparation of Esters (Chemistry Term 2/3) ───────────────
+  {
+    id: 'gr12-esters',
+    title: 'Grade 12 Chemistry: Preparation of Esters',
+    shortTitle: 'Preparation of Esters',
+    discipline: 'Chemistry',
+    grade: 12,
+    term: 3,
+    capsTaskNumber: 'FAT 3 / Chemistry SBA Practical',
+    capsCode: 'CAPS-CHEM-GR12-T3-EXP02',
+    marks: 20,
+    durationMinutes: 45,
+    isFree: false,
+    badge: 'Core Gr 12 Practical',
+    description: 'Prepare an ester (e.g. ethyl ethanoate) by reacting an alcohol with a carboxylic acid in the presence of concentrated sulfuric acid as a catalyst.',
+    aim: 'To synthesize an ester using a condensation/esterification reaction and identify it by its characteristic smell.',
+    investigativeQuestionPrompt: 'State the purpose of adding concentrated sulfuric acid to the reaction mixture.',
+    expectedInvestigativeQuestion: 'What is the role of concentrated sulfuric acid in the esterification reaction between an alcohol and a carboxylic acid?',
+    expectedHypothesisPattern: 'Concentrated sulfuric acid acts as a catalyst to speed up the reaction and as a dehydrating agent to shift equilibrium towards the ester.',
+    variables: {
+      independent: { name: 'Alcohol / Acid combination', symbol: 'Reactants', unit: '', description: 'E.g., ethanol + ethanoic acid.' },
+      dependent: { name: 'Ester Formed (Odour)', symbol: 'Product', unit: '', description: 'Detected by wafting.' },
+      controlled: [{ name: 'Heating Method', symbol: 'Water Bath', unit: '°C', description: 'Controlled heating prevents ignition of flammable reactants.' }]
+    },
+    apparatusDescription: [
+      'Test tubes',
+      'Water bath (Beaker with boiling water)',
+      'Ethanol, Ethanoic Acid (Glacial)',
+      'Concentrated Sulfuric Acid (H2SO4)',
+      'Sodium Carbonate solution'
+    ],
+    controls: [
+      { id: 'heatingTime', label: 'Heating Time in Water Bath', type: 'slider', min: 0, max: 10, step: 1, defaultValue: 5, unit: 'min' }
+    ],
+    dataColumns: [
+      { key: 'alcohol', label: 'Alcohol Used', symbol: '', unit: '', decimalPlaces: 0 },
+      { key: 'acid', label: 'Carboxylic Acid', symbol: '', unit: '', decimalPlaces: 0 },
+      { key: 'ester', label: 'Ester Name', symbol: '', unit: '', decimalPlaces: 0 },
+      { key: 'odour', label: 'Smell/Odour Observed', symbol: '', unit: '', decimalPlaces: 0 }
+    ],
+    recommendedDataPointsCount: 3,
+    graphConfig: {
+      xAxis: { key: 'alcohol', label: 'Reaction', symbol: '', unit: '', min: 0, max: 1, step: 1 },
+      yAxis: { key: 'ester', label: 'Product', symbol: '', unit: '', min: 0, max: 1, step: 1 },
+      expectedSlopeName: 'N/A', expectedSlopeUnit: '', expectedSlopeSign: 'positive',
+      physicalMeaningOfSlope: 'Qualitative practical, no graph required.', physicalMeaningOfIntercept: ''
+    },
+    precautions: [
+      'Never heat the test tube directly over a flame; alcohols are highly flammable.',
+      'Concentrated H2SO4 is highly corrosive; wear safety goggles and gloves.',
+      'Waft the vapour gently towards your nose to smell it.'
+    ],
+    commonErrors: [
+      'Smelling directly from the test tube, causing respiratory irritation.',
+      'Failing to neutralize excess acid with sodium carbonate before smelling, masking the ester smell.'
+    ],
+    rubric: [
+      { id: 'est1', category: 'Investigative Framework', criterion: 'Writes correct balanced equation with structural formulae for esterification (5 marks)', maxMarks: 5 },
+      { id: 'est2', category: 'Data Collection & Accuracy', criterion: 'Records correct IUPAC names and odours for the esters produced (5 marks)', maxMarks: 5 },
+      { id: 'est3', category: 'Calculations & Constant Derivation', criterion: 'Explains the dual role of conc. H2SO4 (catalyst and dehydrating agent) (4 marks)', maxMarks: 4 },
+      { id: 'est4', category: 'Error Analysis & Conclusion', criterion: 'Explains why a water bath is used and why Na2CO3 is added (safety & purification) (6 marks)', maxMarks: 6 }
+    ]
   }
 ];
 

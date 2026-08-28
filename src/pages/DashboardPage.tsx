@@ -29,7 +29,7 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-6xl mx-auto">
-      <div className="bg-gradient-to-br from-slate-900 via-blue-950 to-blue-900 p-8 md:p-10 rounded-[2rem] shadow-2xl shadow-blue-900/20 mb-8 relative overflow-hidden border border-blue-800/50">
+      <div className="bg-slate-900 p-8 md:p-10 rounded-[2rem] shadow-xl mb-8 relative overflow-hidden border border-slate-800">
         <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)]" style={{ backgroundSize: '24px 24px' }}></div>
         <div className="absolute right-0 top-0 w-96 h-96 bg-blue-500 rounded-full translate-x-1/3 -translate-y-1/4 blur-[100px] opacity-20 pointer-events-none"></div>
         <div className="absolute left-0 bottom-0 w-64 h-64 bg-purple-500 rounded-full -translate-x-1/4 translate-y-1/3 blur-[80px] opacity-10 pointer-events-none"></div>
@@ -104,7 +104,7 @@ export default function DashboardPage() {
               className="bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all cursor-pointer group flex flex-col"
               onClick={() => navigate(`/app/labs/${lab.id}`)}
             >
-              <div className={`h-40 bg-gradient-to-br ${lab.gradient} flex items-center justify-center relative overflow-hidden`}>
+              <div className="h-40 bg-slate-800 flex items-center justify-center relative overflow-hidden">
                 <div className="absolute inset-0 opacity-[0.15] bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)]" style={{ backgroundSize: '16px 16px' }}></div>
                 <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-md text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm border border-white/20">
                   {lab.priority}

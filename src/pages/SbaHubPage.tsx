@@ -41,7 +41,7 @@ export default function SbaHubPage() {
       <div className="max-w-6xl mx-auto space-y-8">
         
         {/* Hero Header */}
-        <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 rounded-3xl p-6 md:p-10 text-white shadow-2xl relative overflow-hidden">
+        <div className="bg-slate-900 rounded-3xl p-6 md:p-10 text-white shadow-xl relative overflow-hidden">
           <div className="max-w-2xl relative z-10 space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-bold">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
