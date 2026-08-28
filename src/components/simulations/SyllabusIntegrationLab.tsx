@@ -110,6 +110,20 @@ export default function SyllabusIntegrationLab() {
   const [lightWavelength, setLightWavelength] = useState(400); // nm
   const [lightIntensity, setLightIntensity] = useState(50); // %
   const [phototubeMetal, setPhototubeMetal] = useState<'cesium' | 'sodium' | 'zinc'>('cesium');
+  
+  // The Mole
+  const [carbonCount, setCarbonCount] = useState(1);
+  const [hydrogenCount, setHydrogenCount] = useState(4);
+  const [oxygenCount, setOxygenCount] = useState(0);
+  const [moleSampleMass, setMoleSampleMass] = useState(16); // grams
+  // Aqueous Reactions
+  const [solA, setSolA] = useState<'AgNO3' | 'NaCl' | 'BaCl2'>('AgNO3');
+  const [solB, setSolB] = useState<'NaCl' | 'Na2SO4' | 'KNO3'>('NaCl');
+  // Circuits
+  const [circuitV, setCircuitV] = useState(12); // Volts
+  const [circuitR1, setCircuitR1] = useState(10); // Ohms
+  const [circuitR2, setCircuitR2] = useState(10); // Ohms
+  const [circuitType, setCircuitType] = useState<'series' | 'parallel'>('series');
 
   // Generic state object to feed the AI co-pilot panel
   const [liveTelemetry, setLiveTelemetry] = useState<Record<string, any>>({});
@@ -628,6 +642,54 @@ export default function SyllabusIntegrationLab() {
         current_signal_microamps: isEjected ? (lightIntensity * 0.4).toFixed(1) : 0
       });
     }
+
+    // The Mole (Stoichiometry)
+    if (labId === 'g10-stoichiometry-intro') {
+      const molarMass = (carbonCount * 12.011) + (hydrogenCount * 1.008) + (oxygenCount * 15.999);
+      const moles = moleSampleMass / molarMass;
+      setLiveTelemetry({
+        carbon_atoms: carbonCount,
+        hydrogen_atoms: hydrogenCount,
+        oxygen_atoms: oxygenCount,
+        calculated_molar_mass_g_mol: molarMass.toFixed(2),
+        sample_mass_grams: moleSampleMass,
+        calculated_moles_n: moles.toFixed(3)
+      });
+    }
+
+    // Aqueous Reactions
+    if (labId === 'g10-aqueous-reactions') {
+      let precipitate = 'None';
+      if (solA === 'AgNO3' && solB === 'NaCl') precipitate = 'AgCl (White Precipitate)';
+      else if (solA === 'BaCl2' && solB === 'Na2SO4') precipitate = 'BaSO4 (White Precipitate)';
+      
+      setLiveTelemetry({
+        solution_A: solA,
+        solution_B: solB,
+        precipitate_formed: precipitate,
+        reaction_type: precipitate !== 'None' ? 'Precipitation (Double Displacement)' : 'No Reaction'
+      });
+    }
+
+    // Circuits Intro
+    if (labId === 'g10-circuits') {
+      let rEq = 0;
+      if (circuitType === 'series') {
+        rEq = circuitR1 + circuitR2;
+      } else {
+        rEq = 1 / ((1 / circuitR1) + (1 / circuitR2));
+      }
+      const totalI = circuitV / rEq;
+      
+      setLiveTelemetry({
+        circuit_type: circuitType,
+        source_voltage_V: circuitV,
+        resistor_1_ohms: circuitR1,
+        resistor_2_ohms: circuitR2,
+        equivalent_resistance_ohms: rEq.toFixed(2),
+        total_current_A: totalI.toFixed(2)
+      });
+    }
   }, [
     labId, 
     isPlaying, 
@@ -787,6 +849,316 @@ export default function SyllabusIntegrationLab() {
         c: 2,
         exp: 'Metallic bonding is described as positively charged metal cores floating in a sea of delocalised valence electrons.'
       }
+    ],
+    'g10-heating-curves': [
+      {
+        q: 'What happens to the temperature of a pure substance during a phase change (like melting)?',
+        o: ['It increases rapidly', 'It decreases', 'It remains constant', 'It fluctuates'],
+        c: 2,
+        exp: 'During a phase change, the added heat energy is used to break intermolecular bonds rather than increase kinetic energy, so temperature is constant.'
+      }
+    ],
+    'g10-aqueous-reactions': [
+      {
+        q: 'What is a precipitate in an aqueous reaction?',
+        o: ['A gas bubble formed', 'An insoluble solid that emerges from a liquid solution', 'A sudden drop in temperature', 'A change in color of a liquid'],
+        c: 1,
+        exp: 'A precipitate is an insoluble solid that forms when two aqueous solutions react.'
+      },
+      {
+        q: 'Which of the following is typically a strong electrolyte in water?',
+        o: ['Sugar (Glucose)', 'Sodium Chloride (NaCl)', 'Pure water', 'Ethanol'],
+        c: 1,
+        exp: 'Sodium Chloride fully dissociates into ions in water, making it a strong electrolyte.'
+      }
+    ],
+    'g10-stoichiometry-intro': [
+      {
+        q: 'What is the value of Avogadro\'s number?',
+        o: ['6.02 x 10^23', '3.00 x 10^8', '9.81', '1.60 x 10^-19'],
+        c: 0,
+        exp: 'Avogadro\'s number (6.022 x 10^23) is the number of particles in exactly one mole of a pure substance.'
+      },
+      {
+        q: 'If the molar mass of Carbon is 12 g/mol and Oxygen is 16 g/mol, what is the molar mass of CO2?',
+        o: ['28 g/mol', '32 g/mol', '44 g/mol', '56 g/mol'],
+        c: 2,
+        exp: '12 + (2 * 16) = 12 + 32 = 44 g/mol.'
+      }
+    ],
+    'g10-hydrosphere': [
+      {
+        q: 'What is the primary driving force of the water cycle?',
+        o: ['Lunar gravity', 'Geothermal heat', 'Solar energy', 'Wind currents'],
+        c: 2,
+        exp: 'The sun provides the energy needed for evaporation and transpiration, driving the global water cycle.'
+      },
+      {
+        q: 'Which process in water purification is used to kill bacteria?',
+        o: ['Filtration', 'Chlorination', 'Sedimentation', 'Flocculation'],
+        c: 1,
+        exp: 'Chlorine or other disinfectants are added to water to kill harmful microorganisms.'
+      }
+    ],
+    'g10-vectors': [
+      {
+        q: 'Which of the following is a vector quantity?',
+        o: ['Distance', 'Speed', 'Mass', 'Displacement'],
+        c: 3,
+        exp: 'Displacement has both magnitude and a specific direction, making it a vector.'
+      },
+      {
+        q: 'If you walk 4m East, then 3m West, what is your total displacement?',
+        o: ['7m East', '1m East', '1m West', '7m West'],
+        c: 1,
+        exp: 'Displacement is a vector sum: +4m (East) and -3m (West) = +1m (East).'
+      }
+    ],
+    'g10-motion-1d': [
+      {
+        q: 'What does the slope of a position-time graph represent?',
+        o: ['Acceleration', 'Displacement', 'Velocity', 'Force'],
+        c: 2,
+        exp: 'The rate of change of position with respect to time is velocity (dx/dt).'
+      },
+      {
+        q: 'If an object is slowing down while moving in the positive direction, its acceleration is:',
+        o: ['Positive', 'Negative', 'Zero', 'Constant'],
+        c: 1,
+        exp: 'To slow down, the acceleration must be opposite to the direction of velocity. Thus, it is negative.'
+      }
+    ],
+    'g10-mechanical-energy': [
+      {
+        q: 'In a frictionless system, the total mechanical energy is:',
+        o: ['Continuously decreasing', 'Always zero', 'Conserved (constant)', 'Equal to potential energy only'],
+        c: 2,
+        exp: 'The Law of Conservation of Mechanical Energy states that PE + KE remains constant in an isolated system.'
+      },
+      {
+        q: 'When a pendulum swings to its highest point, its kinetic energy is:',
+        o: ['At its maximum', 'Zero', 'Equal to its potential energy', 'Negative'],
+        c: 1,
+        exp: 'At the highest point, it momentarily stops, meaning velocity is 0 and Kinetic Energy is 0.'
+      }
+    ],
+    'g10-waves-sound': [
+      {
+        q: 'The pitch of a sound is directly related to its:',
+        o: ['Amplitude', 'Frequency', 'Speed', 'Wavelength'],
+        c: 1,
+        exp: 'Higher frequency sound waves are perceived as having a higher pitch.'
+      },
+      {
+        q: 'Sound waves are an example of:',
+        o: ['Transverse waves', 'Electromagnetic waves', 'Longitudinal waves', 'Standing waves'],
+        c: 2,
+        exp: 'Sound waves are longitudinal, consisting of alternating compressions and rarefactions.'
+      }
+    ],
+    'g10-circuits': [
+      {
+        q: 'In a series circuit, which quantity remains the same across all components?',
+        o: ['Voltage', 'Current', 'Resistance', 'Power'],
+        c: 1,
+        exp: 'Current has only one path to flow in a series circuit, so it is the same everywhere.'
+      },
+      {
+        q: 'What happens to the total resistance when you add more resistors in parallel?',
+        o: ['It increases', 'It decreases', 'It stays the same', 'It drops to zero'],
+        c: 1,
+        exp: 'Adding parallel branches provides more paths for current, thus decreasing overall resistance.'
+      }
+    ],
+    'g11-intermolecular': [
+      {
+        q: 'Which intermolecular force is the strongest?',
+        o: ['London Dispersion Forces', 'Dipole-Dipole interactions', 'Hydrogen Bonding', 'Ion-Dipole forces'],
+        c: 2,
+        exp: 'Hydrogen bonding is an exceptionally strong dipole-dipole interaction occurring between H and N, O, or F.'
+      },
+      {
+        q: 'A liquid with strong intermolecular forces will have a:',
+        o: ['Low boiling point', 'High vapor pressure', 'High boiling point', 'Fast evaporation rate'],
+        c: 2,
+        exp: 'Strong IMFs require more energy (higher temperature) to overcome for boiling to occur.'
+      }
+    ],
+    'g11-ideal-gases': [
+      {
+        q: 'Boyle\'s Law states that at constant temperature, pressure is:',
+        o: ['Directly proportional to volume', 'Inversely proportional to volume', 'Equal to volume', 'Independent of volume'],
+        c: 1,
+        exp: 'P1*V1 = P2*V2. As volume decreases, pressure increases proportionally.'
+      },
+      {
+        q: 'According to Charles\'s Law, what must be held constant?',
+        o: ['Pressure', 'Volume', 'Temperature', 'Moles of gas'],
+        c: 0,
+        exp: 'Charles\'s Law (V1/T1 = V2/T2) assumes pressure and the amount of gas are held constant.'
+      }
+    ],
+    'g11-quantitative': [
+      {
+        q: 'What is a limiting reagent?',
+        o: ['The product formed in the smallest amount', 'The reactant that is left over', 'The reactant that is completely consumed first', 'A catalyst that speeds up the reaction'],
+        c: 2,
+        exp: 'The limiting reagent dictates the maximum amount of product that can be formed.'
+      },
+      {
+        q: 'Percentage yield is calculated by:',
+        o: ['(Theoretical Yield / Actual Yield) * 100', '(Actual Yield / Theoretical Yield) * 100', 'Actual Yield + Theoretical Yield', '(Actual Yield - Theoretical Yield) / 100'],
+        c: 1,
+        exp: 'Percentage yield compares what was actually produced to the maximum theoretically possible.'
+      }
+    ],
+    'g11-acids-bases': [
+      {
+        q: 'According to the Arrhenius theory, an acid is a substance that:',
+        o: ['Produces OH⁻ ions in solution', 'Accepts a proton (H⁺)', 'Produces H⁺ (H₃O⁺) ions in aqueous solution', 'Donates an electron pair'],
+        c: 2,
+        exp: 'Arrhenius acids increase the concentration of H⁺ ions when dissolved in water.'
+      },
+      {
+        q: 'What are the products of a standard acid-base neutralisation reaction?',
+        o: ['Salt and Hydrogen gas', 'Salt and Water', 'Base and Water', 'Acid and Salt'],
+        c: 1,
+        exp: 'An acid and a base react to form a salt and water (e.g., HCl + NaOH -> NaCl + H2O).'
+      }
+    ],
+    'g11-lithosphere': [
+      {
+        q: 'Which sector is a major part of the South African mining industry?',
+        o: ['Silicon extraction', 'Gold and Platinum', 'Lithium batteries', 'Bauxite mining'],
+        c: 1,
+        exp: 'South Africa is known globally for its extensive gold, platinum group metals, and coal reserves.'
+      },
+      {
+        q: 'What is the main environmental concern of deep-level gold mining?',
+        o: ['Acid mine drainage', 'Ozone layer depletion', 'Excess oxygen production', 'Ocean acidification'],
+        c: 0,
+        exp: 'Acid mine drainage occurs when sulphide minerals are exposed to air and water, forming sulfuric acid.'
+      }
+    ],
+    'g11-vectors-2d': [
+      {
+        q: 'To resolve a vector into its vertical component (y-axis) when given the angle with the x-axis, you use:',
+        o: ['Cosine', 'Sine', 'Tangent', 'Pythagorean theorem'],
+        c: 1,
+        exp: 'Vy = V * sin(θ), assuming θ is the angle relative to the horizontal.'
+      },
+      {
+        q: 'The resultant of two forces, 3N East and 4N North, is:',
+        o: ['7N', '1N', '5N', '12N'],
+        c: 2,
+        exp: 'Using Pythagoras: √(3² + 4²) = √(9+16) = √25 = 5N.'
+      }
+    ],
+    'g11-newton-laws': [
+      {
+        q: 'Newton\'s First Law is also known as the Law of:',
+        o: ['Inertia', 'Acceleration', 'Action-Reaction', 'Gravitation'],
+        c: 0,
+        exp: 'An object will remain at rest or uniform motion unless acted upon by a net external force (Inertia).'
+      },
+      {
+        q: 'If the net force on an object is doubled, its acceleration will:',
+        o: ['Halve', 'Remain the same', 'Double', 'Quadruple'],
+        c: 2,
+        exp: 'According to Newton\'s Second Law (F = ma), acceleration is directly proportional to net force.'
+      }
+    ],
+    'g11-optics': [
+      {
+        q: 'Refraction occurs when light:',
+        o: ['Bounces off a mirror', 'Changes speed passing between different optical media', 'Is absorbed by a black surface', 'Travels through a vacuum'],
+        c: 1,
+        exp: 'Refraction is the bending of light caused by a change in its wave speed in different densities.'
+      },
+      {
+        q: 'Total internal reflection can only happen when light travels from:',
+        o: ['A less dense to a more dense medium', 'A vacuum into glass', 'A more dense to a less dense medium', 'Air into water'],
+        c: 2,
+        exp: 'It requires light moving towards a lower refractive index medium (e.g., glass to air) at an angle greater than the critical angle.'
+      }
+    ],
+    'g11-electrostatics': [
+      {
+        q: 'According to Coulomb\'s Law, the electrostatic force is inversely proportional to:',
+        o: ['The product of the charges', 'The square of the distance between charges', 'The mass of the charges', 'The medium\'s temperature'],
+        c: 1,
+        exp: 'F = k(q1*q2)/r². The force drops off with the square of the distance (1/r²).'
+      },
+      {
+        q: 'Electric field lines point in the direction a ______ charge would move.',
+        o: ['Negative test', 'Positive test', 'Neutral', 'Stationary'],
+        c: 1,
+        exp: 'By convention, electric field lines emanate from positive charges and point towards negative ones.'
+      }
+    ],
+    'g11-electromagnetism': [
+      {
+        q: 'Faraday\'s Law of Electromagnetic Induction states that an induced EMF is proportional to the:',
+        o: ['Rate of change of magnetic flux', 'Strength of the magnetic field alone', 'Resistance of the wire', 'Length of the coil only'],
+        c: 0,
+        exp: 'EMF = -N(ΔΦ/Δt). The faster the magnetic flux changes, the greater the induced voltage.'
+      },
+      {
+        q: 'Which rule determines the direction of the induced current opposing the change in magnetic flux?',
+        o: ['Fleming\'s Left Hand Rule', 'Ohm\'s Law', 'Lenz\'s Law', 'Ampere\'s Law'],
+        c: 2,
+        exp: 'Lenz\'s Law states the induced current will flow to create a magnetic field that opposes the change producing it.'
+      }
+    ],
+    'g12-work-energy': [
+      {
+        q: 'The Work-Energy Theorem states that the net work done on an object equals its change in:',
+        o: ['Potential Energy', 'Kinetic Energy', 'Mechanical Energy', 'Momentum'],
+        c: 1,
+        exp: 'W_net = ΔEK. Work done by all forces results in a change of speed/kinetic energy.'
+      },
+      {
+        q: 'Power is defined as:',
+        o: ['Force times distance', 'Work done per unit time', 'Energy conserved over distance', 'Mass times acceleration'],
+        c: 1,
+        exp: 'P = W / t. It is the rate at which work is done or energy is transferred.'
+      }
+    ],
+    'g12-momentum': [
+      {
+        q: 'What is conserved in an isolated system according to the law of conservation of momentum?',
+        o: ['Kinetic Energy', 'Potential Energy', 'Total Momentum', 'Velocity'],
+        c: 2,
+        exp: 'In any collision in an isolated system, the total momentum before equals total momentum after.'
+      }
+    ],
+    'g12-doppler': [
+      {
+        q: 'As an ambulance with a siren approaches you, the sound waves are:',
+        o: ['Compressed, lowering the pitch', 'Spread out, lowering the pitch', 'Compressed, raising the pitch', 'Spread out, raising the pitch'],
+        c: 2,
+        exp: 'The relative motion compresses the wave fronts ahead of the source, resulting in a higher perceived frequency.'
+      },
+      {
+        q: 'If a star is moving away from Earth, its light spectrum will be:',
+        o: ['Blue-shifted', 'Red-shifted', 'Unchanged', 'Invisible'],
+        c: 1,
+        exp: 'Moving away stretches the light waves, shifting them towards the longer wavelength (red) end of the spectrum.'
+      }
+    ],
+    'g12-optical-phenomena': [
+      {
+        q: 'The photoelectric effect provides strong evidence for the:',
+        o: ['Wave nature of light', 'Particle nature of light', 'Continuous energy spectrum', 'Refraction of light'],
+        c: 1,
+        exp: 'It proves light exists as discrete energy packets (photons) that collide with electrons.'
+      },
+      {
+        q: 'To eject an electron, the incident photon must have an energy greater than the metal\'s:',
+        o: ['Kinetic energy', 'Work function', 'Temperature', 'Atomic mass'],
+        c: 1,
+        exp: 'The work function (W0) is the minimum binding energy keeping the electron inside the metal.'
+      }
     ]
   };
 
@@ -796,12 +1168,6 @@ export default function SyllabusIntegrationLab() {
       o: ['Analyzing variable parameters', 'Relying solely on guesswork', 'Ignoring data trends', 'Eliminating testing groups'],
       c: 0,
       exp: 'Analyzing variable parameters under controlled conditions is the core of scientific inquiry and CAPS practicals.'
-    },
-    {
-      q: 'Why are smartphone sensors like Phyphox useful for high school experiments?',
-      o: ['They replace all school teachers', 'They turn consumer phones into lab meters', 'They increase gaming performance', 'They avoid science theory completely'],
-      c: 1,
-      exp: 'Sensor applications like Phyphox let students capture actual physics measurements (acceleration, sound pitch) without needing expensive lab timers.'
     }
   ];
 
@@ -1356,11 +1722,65 @@ export default function SyllabusIntegrationLab() {
             </div>
           )}
 
-          {/* 13. General Falling Workbook Quiz / fallbacks */}
+          {/* 13. The Mole */}
+          {lab.id === 'g10-stoichiometry-intro' && (
+            <div className="w-full text-center space-y-4">
+              <div className="text-4xl font-bold bg-slate-900 text-emerald-400 p-6 rounded-xl border-4 border-slate-700 shadow-inner flex items-center justify-center gap-1 font-mono">
+                C<sub className="text-xl text-slate-400">{carbonCount}</sub>H<sub className="text-xl text-slate-400">{hydrogenCount}</sub>{oxygenCount > 0 && <>O<sub className="text-xl text-slate-400">{oxygenCount}</sub></>}
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-xs font-mono bg-slate-50 p-2.5 rounded-lg border">
+                <div>Molar Mass (M): <span className="font-bold text-blue-600">{liveTelemetry.calculated_molar_mass_g_mol} g/mol</span></div>
+                <div>Moles (n): <span className="font-bold text-amber-600">{liveTelemetry.calculated_moles_n} mol</span></div>
+              </div>
+            </div>
+          )}
+
+          {/* 14. Aqueous Reactions */}
+          {lab.id === 'g10-aqueous-reactions' && (
+            <div className="w-full text-center space-y-4">
+              <div className="flex items-center justify-center gap-4 bg-slate-100 p-6 rounded-xl border border-slate-300">
+                <div className="w-16 h-20 bg-blue-200/50 rounded-b-xl border-2 border-slate-400 flex items-center justify-center font-bold text-[10px] shadow-inner text-blue-900">{solA}(aq)</div>
+                <div className="text-2xl font-bold text-slate-400">+</div>
+                <div className="w-16 h-20 bg-teal-200/50 rounded-b-xl border-2 border-slate-400 flex items-center justify-center font-bold text-[10px] shadow-inner text-teal-900">{solB}(aq)</div>
+              </div>
+              <div className={`p-3 rounded-lg border font-bold text-xs transition-colors ${liveTelemetry.precipitate_formed === 'None' ? 'bg-slate-50 text-slate-500' : 'bg-red-50 text-red-700 border-red-300 shadow-sm'}`}>
+                {liveTelemetry.precipitate_formed === 'None' ? 'No Precipitate Formed (Aqueous Products)' : `↓ ${liveTelemetry.precipitate_formed}`}
+              </div>
+            </div>
+          )}
+
+          {/* 15. Circuits */}
+          {lab.id === 'g10-circuits' && (
+            <div className="w-full text-center space-y-4">
+              <div className="h-32 bg-slate-900 border-2 border-slate-800 rounded-xl flex items-center justify-center p-4 relative shadow-inner">
+                {circuitType === 'series' ? (
+                  <div className="w-4/5 h-16 border-2 border-amber-500 rounded-lg flex items-center justify-around relative">
+                    <div className="absolute -left-3 bg-red-500 text-white text-[8px] px-1 font-bold rounded">Battery {circuitV}V</div>
+                    <div className="bg-slate-800 w-8 h-4 border border-slate-600 rounded text-[9px] text-slate-300 flex items-center justify-center font-bold">R1</div>
+                    <div className="bg-slate-800 w-8 h-4 border border-slate-600 rounded text-[9px] text-slate-300 flex items-center justify-center font-bold">R2</div>
+                  </div>
+                ) : (
+                  <div className="w-3/5 h-20 border-2 border-amber-500 rounded-lg flex flex-col items-center justify-around relative">
+                    <div className="absolute -left-3 top-1/2 -translate-y-1/2 bg-red-500 text-white text-[8px] px-1 font-bold rounded">Battery {circuitV}V</div>
+                    <div className="w-full h-0 border-t-2 border-amber-500 absolute top-1/2 -translate-y-1/2" />
+                    <div className="bg-slate-800 w-8 h-4 border border-slate-600 rounded text-[9px] text-slate-300 flex items-center justify-center z-10 -mt-2 font-bold">R1</div>
+                    <div className="bg-slate-800 w-8 h-4 border border-slate-600 rounded text-[9px] text-slate-300 flex items-center justify-center z-10 mt-2 font-bold">R2</div>
+                  </div>
+                )}
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-xs font-mono bg-slate-50 p-2.5 rounded-lg border">
+                <div>Eq Resistance: <span className="font-bold text-indigo-600">{liveTelemetry.equivalent_resistance_ohms} Ω</span></div>
+                <div>Total Current: <span className="font-bold text-emerald-600">{liveTelemetry.total_current_A} A</span></div>
+              </div>
+            </div>
+          )}
+
+          {/* 16. General Falling Workbook Quiz / fallbacks */}
           {![
             'g10-heating-curves', 'g10-motion-1d', 'g10-mechanical-energy', 'g10-waves-sound',
             'g11-vectors-2d', 'g11-newton-laws', 'g11-optics', 'g11-ideal-gases', 'g11-intermolecular',
-            'g12-momentum', 'g12-doppler', 'g12-optical-phenomena'
+            'g12-momentum', 'g12-doppler', 'g12-optical-phenomena',
+            'g10-stoichiometry-intro', 'g10-aqueous-reactions', 'g10-circuits'
           ].includes(lab.id) && (
             <div className="w-full space-y-3">
               <h4 className="text-xs font-bold text-slate-700 flex items-center gap-1">
@@ -1730,11 +2150,100 @@ export default function SyllabusIntegrationLab() {
               </div>
             )}
 
+            {/* 13. The Mole */}
+            {lab.id === 'g10-stoichiometry-intro' && (
+              <div className="space-y-3">
+                <div>
+                  <label className="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                    Carbon Atoms (C) <span className="font-mono text-blue-600 font-bold">{carbonCount}</span>
+                  </label>
+                  <input type="range" min="0" max="10" value={carbonCount} onChange={e => setCarbonCount(Number(e.target.value))} className="w-full accent-blue-600" />
+                </div>
+                <div>
+                  <label className="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                    Hydrogen Atoms (H) <span className="font-mono text-emerald-600 font-bold">{hydrogenCount}</span>
+                  </label>
+                  <input type="range" min="0" max="22" value={hydrogenCount} onChange={e => setHydrogenCount(Number(e.target.value))} className="w-full accent-blue-600" />
+                </div>
+                <div>
+                  <label className="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                    Oxygen Atoms (O) <span className="font-mono text-rose-600 font-bold">{oxygenCount}</span>
+                  </label>
+                  <input type="range" min="0" max="10" value={oxygenCount} onChange={e => setOxygenCount(Number(e.target.value))} className="w-full accent-blue-600" />
+                </div>
+                <div>
+                  <label className="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                    Sample Mass <span className="font-mono text-amber-600 font-bold">{moleSampleMass} g</span>
+                  </label>
+                  <input type="range" min="1" max="100" value={moleSampleMass} onChange={e => setMoleSampleMass(Number(e.target.value))} className="w-full accent-amber-600" />
+                </div>
+              </div>
+            )}
+
+            {/* 14. Aqueous Reactions */}
+            {lab.id === 'g10-aqueous-reactions' && (
+              <div className="space-y-3">
+                <div className="grid grid-cols-3 gap-1.5 text-[10px] font-bold">
+                  <div className="col-span-3 text-xs text-slate-700">Solution A:</div>
+                  {['AgNO3', 'NaCl', 'BaCl2'].map(sol => (
+                    <button 
+                      key={sol}
+                      onClick={() => setSolA(sol as any)}
+                      className={`p-1 rounded border transition ${solA === sol ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-slate-50 text-slate-600'}`}
+                    >
+                      {sol}
+                    </button>
+                  ))}
+                </div>
+                <div className="grid grid-cols-3 gap-1.5 text-[10px] font-bold mt-2">
+                  <div className="col-span-3 text-xs text-slate-700">Solution B:</div>
+                  {['NaCl', 'Na2SO4', 'KNO3'].map(sol => (
+                    <button 
+                      key={sol}
+                      onClick={() => setSolB(sol as any)}
+                      className={`p-1 rounded border transition ${solB === sol ? 'bg-teal-100 text-teal-800 border-teal-200' : 'bg-slate-50 text-slate-600'}`}
+                    >
+                      {sol}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 15. Circuits */}
+            {lab.id === 'g10-circuits' && (
+              <div className="space-y-3">
+                <div className="grid grid-cols-2 gap-2 text-xs font-bold mb-3">
+                  <button onClick={() => setCircuitType('series')} className={`p-2 rounded border ${circuitType === 'series' ? 'bg-indigo-100 border-indigo-300 text-indigo-800' : 'bg-slate-50 text-slate-600'}`}>Series Circuit</button>
+                  <button onClick={() => setCircuitType('parallel')} className={`p-2 rounded border ${circuitType === 'parallel' ? 'bg-indigo-100 border-indigo-300 text-indigo-800' : 'bg-slate-50 text-slate-600'}`}>Parallel Circuit</button>
+                </div>
+                <div>
+                  <label className="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                    Voltage (V) <span className="font-mono text-red-600 font-bold">{circuitV} V</span>
+                  </label>
+                  <input type="range" min="1" max="24" value={circuitV} onChange={e => setCircuitV(Number(e.target.value))} className="w-full accent-red-600" />
+                </div>
+                <div>
+                  <label className="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                    Resistor 1 (R1) <span className="font-mono text-slate-600 font-bold">{circuitR1} Ω</span>
+                  </label>
+                  <input type="range" min="1" max="100" value={circuitR1} onChange={e => setCircuitR1(Number(e.target.value))} className="w-full accent-slate-600" />
+                </div>
+                <div>
+                  <label className="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                    Resistor 2 (R2) <span className="font-mono text-slate-600 font-bold">{circuitR2} Ω</span>
+                  </label>
+                  <input type="range" min="1" max="100" value={circuitR2} onChange={e => setCircuitR2(Number(e.target.value))} className="w-full accent-slate-600" />
+                </div>
+              </div>
+            )}
+
             {/* Fallbacks or non-sim topics (e.g. atomic structure calculations, etc.) */}
             {![
               'g10-heating-curves', 'g10-motion-1d', 'g10-mechanical-energy', 'g10-waves-sound',
               'g11-vectors-2d', 'g11-newton-laws', 'g11-optics', 'g11-ideal-gases', 'g11-intermolecular',
-              'g12-momentum', 'g12-doppler', 'g12-optical-phenomena'
+              'g12-momentum', 'g12-doppler', 'g12-optical-phenomena',
+              'g10-stoichiometry-intro', 'g10-aqueous-reactions', 'g10-circuits'
             ].includes(lab.id) && (
               <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2 text-xs">
                 <span className="font-bold text-slate-800 uppercase tracking-widest text-[9px] block">Concept Workbook Parameters</span>
