@@ -1,0 +1,1 @@
+export const generalQuizzes: Record<string, { q: string; o: string[]; c: number; exp: string }
