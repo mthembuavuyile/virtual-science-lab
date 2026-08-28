@@ -6,7 +6,13 @@ export type SbaPracticalId =
   | 'gr12-reaction-rates'
   | 'gr11-snells-law'
   | 'gr11-boyles-law'
-  | 'gr11-newton2';
+  | 'gr11-newton2'
+  | 'gr10-heating-curves'
+  | 'gr10-circuits'
+  | 'gr11-imf'
+  | 'gr12-momentum'
+  | 'gr12-work-energy'
+  | 'gr12-esters';
 
 export interface VariableDefinition {
   name: string;
