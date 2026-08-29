@@ -56,6 +56,7 @@ const AcidsBasesPage = React.lazy(() => import('../pages/AcidsBasesPage'));
 const ElectrochemistryPage = React.lazy(() => import('../pages/ElectrochemistryPage'));
 const ChlorAlkaliLab = React.lazy(() => import('../components/simulations/ChlorAlkaliLab'));
 const FertiliserLab = React.lazy(() => import('../components/simulations/FertiliserLab'));
+const HydrosphereLab = React.lazy(() => import('../components/simulations/HydrosphereLab'));
 
 // ─── Physics Labs (Full Simulations) ───────────────────────────────
 
@@ -156,13 +157,13 @@ export const labRegistry: LabEntry[] = [
     grade: 10,
     unit: 'Unit 6',
     unitTitle: 'Hydrosphere',
-    description: 'Explore the water cycle, global water distribution, and physical/chemical water purification.',
+    description: 'Explore the hydrological cycle, water budget, 6-stage purification, qualitative ion testing (Cl⁻, SO₄²⁻, CO₃²⁻, NO₃⁻), salinity conductivity, and AMD remediation.',
     icon: Globe,
     gradient: 'from-blue-500 to-cyan-500',
-    priority: 'Standard',
-    difficulty: 'Easy',
-    simulations: ['Water Cycle Simulator', 'Purification Column', 'Salinity Testing'],
-    component: SyllabusIntegrationLab,
+    priority: 'High',
+    difficulty: 'Medium',
+    simulations: ['Water Cycle & Global Budget', 'Municipal Purification Plant', 'Qualitative Ion Testing Rack', 'Conductivity & Salinity Rig', 'AMD & Eutrophication Remediation', 'CAPS Exam Prep Quiz'],
+    component: HydrosphereLab,
   },
 
   // ==========================================

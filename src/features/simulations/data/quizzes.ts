@@ -65,16 +65,39 @@
     ],
     'g10-hydrosphere': [
       {
-        q: 'What is the primary driving force of the water cycle?',
-        o: ['Lunar gravity', 'Geothermal heat', 'Solar energy', 'Wind currents'],
+        q: 'What is the primary driving force of the global water cycle?',
+        o: ['Lunar gravity', 'Geothermal heat', 'Solar energy (radiation)', 'Wind currents'],
         c: 2,
-        exp: 'The sun provides the energy needed for evaporation and transpiration, driving the global water cycle.'
+        exp: 'The sun provides the thermal radiation needed for evaporation from oceans and transpiration from plants.'
       },
       {
-        q: 'Which process in water purification is used to kill bacteria?',
-        o: ['Filtration', 'Chlorination', 'Sedimentation', 'Flocculation'],
+        q: 'Which chemical is commonly added during water purification to cause coagulation and flocculation of suspended clay particles?',
+        o: ['Sodium chloride (NaCl)', 'Aluminium sulphate (Alum)', 'Calcium carbonate (CaCO₃)', 'Hydrochloric acid (HCl)'],
         c: 1,
-        exp: 'Chlorine or other disinfectants are added to water to kill harmful microorganisms.'
+        exp: 'Alum provides Al³⁺ ions that neutralize negatively charged colloidal clay particles so they aggregate into flocs.'
+      },
+      {
+        q: 'In qualitative ion testing, which reagent pair gives a dense white precipitate confirming the presence of sulphate (SO₄²⁻) ions?',
+        o: ['Dilute HNO₃ + Ba(NO₃)₂', 'Concentrated H₂SO₄ + FeSO₄', 'Dilute HCl + Limewater', 'AgNO₃ + dilute NH₃'],
+        c: 0,
+        exp: 'Ba²⁺(aq) + SO₄²⁻(aq) → BaSO₄(s) (dense white precipitate that does not dissolve in dilute acid).'
+      },
+      {
+        q: 'Why does table salt (NaCl) solution conduct electricity brightly while sucrose (sugar) solution does not conduct at all?',
+        o: [
+          'Sugar is insoluble in water',
+          'NaCl dissociates into mobile hydrated ions (Na⁺ and Cl⁻) while sucrose remains neutral molecules',
+          'Sugar absorbs electrical current and converts it to heat',
+          'Salt solution is much colder than sugar solution'
+        ],
+        c: 1,
+        exp: 'Electrical conduction in liquids requires mobile charge carriers (ions). Covalent sucrose does not form ions in water.'
+      },
+      {
+        q: 'What is the primary chemical cause of Acid Mine Drainage (AMD) in the Witwatersrand mining area?',
+        o: ['Leaching of limestone by acid rain', 'Oxidation of pyrite (FeS₂) in the presence of water and oxygen', 'Discharge of untreated alkaline detergent waste', 'Fertilizer runoff from nearby farms'],
+        c: 1,
+        exp: 'Pyrite oxidation produces sulphuric acid and leaches heavy metals: 2FeS₂ + 7O₂ + 2H₂O → 2Fe²⁺ + 4SO₄²⁻ + 4H⁺.'
       }
     ],
     'g10-vectors': [

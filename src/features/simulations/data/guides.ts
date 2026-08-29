@@ -38,6 +38,17 @@
       tech: 'In a real school lab, heat crushed ice in a beaker over a Bunsen burner. Record the temperature every 30 seconds using a thermometer until the water is boiling. Plot the phase change curves on graph paper to measure melting and boiling plateaus.',
       formulas: ['Q = m * c * \\Delta T (sensible heat)', 'Q = m * L (latent heat of phase change)']
     },
+    'g10-hydrosphere': {
+      theory: 'The Hydrosphere encompasses all water bodies on Earth (oceans 97.2%, glaciers 2.15%, groundwater 0.62%, surface freshwater 0.03%). Solar radiation drives the hydrological cycle (evaporation, transpiration, condensation, precipitation, infiltration, runoff). Municipal water purification uses screening, coagulation/flocculation (Alum), sedimentation, multi-media filtration, chlorination (pathogen disinfection), and lime pH stabilization (SANS 241). Qualitative ion testing identifies Cl⁻ (AgNO₃/NH₃), SO₄²⁻ (Ba(NO₃)₂/HNO₃), CO₃²⁻ (HCl/limewater), and NO₃⁻ (brown ring test).',
+      procedure: '1. Adjust solar flux and humidity to observe catchment evaporation and precipitation. 2. Operate the 6-stage purification plant: optimize Alum dosage (25-35 mg/L), settling time, and chlorine residual (0.2-0.5 mg/L) to achieve SANS 241 potable certification. 3. In the ion bench, add AgNO₃ to confirm chloride precipitates (AgCl) and Ba(NO₃)₂ for sulfates (BaSO₄). 4. Use the conductivity rig to compare distilled water vs seawater vs AMD. 5. Neutralize acid mine drainage with lime Ca(OH)₂.',
+      tech: 'Use digital turbidity (NTU), electrical conductivity (μS/cm), and digital pH probes connected to a mobile datalogger (such as Vernier LabQuest or Pasco SPARKvue) to test local river samples against municipal tap water.',
+      formulas: [
+        '\\text{Ag}^+(aq) + \\text{Cl}^-(aq) \\rightarrow \\text{AgCl}(s) \\downarrow',
+        '\\text{Ba}^{2+}(aq) + \\text{SO}_4^{2-}(aq) \\rightarrow \\text{BaSO}_4(s) \\downarrow',
+        '\\text{CO}_3^{2-}(aq) + 2\\text{H}^+(aq) \\rightarrow \\text{CO}_2(g) \\uparrow + \\text{H}_2\\text{O}(l)',
+        '2\\text{FeS}_2(s) + 7\\text{O}_2(g) + 2\\text{H}_2\\text{O}(l) \\rightarrow 2\\text{Fe}^{2+} + 4\\text{SO}_4^{2-} + 4\\text{H}^+'
+      ]
+    },
 
     // Grade 11 Physics
     'g11-vectors-2d': {
