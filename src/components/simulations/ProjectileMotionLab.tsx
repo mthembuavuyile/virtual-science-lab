@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Activity } from 'lucide-react';
+import { Activity, Info } from 'lucide-react';
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer 
 } from 'recharts';
@@ -11,7 +11,49 @@ export default function ProjectileMotionLab() {
   const [mass, setMass] = useState(10);
   const [drag, setDrag] = useState(false);
   const [gravity, setGravity] = useState(9.8);
+  const [selectedBody, setSelectedBody] = useState('Earth');
+  const [planetInfo, setPlanetInfo] = useState('');
+  const [planetImage, setPlanetImage] = useState('');
+  const [isLoadingInfo, setIsLoadingInfo] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const environments = {
+    Earth: 9.8,
+    Moon: 1.62,
+    Mars: 3.72,
+    Venus: 8.87,
+    Jupiter: 24.79
+  };
+
+  useEffect(() => {
+    const fetchEnvironmentData = async () => {
+      setIsLoadingInfo(true);
+      try {
+        // Fetch NASA Image via secure backend proxy
+        const nasaQuery = selectedBody === 'Moon' ? 'Earth Moon' : selectedBody + ' planet';
+        const nasaRes = await fetch(`/api/nasa?q=${encodeURIComponent(nasaQuery)}`);
+        const nasaData = await nasaRes.json();
+        const items = nasaData?.collection?.items || [];
+        if (items.length > 0) {
+          const imageLink = items[0]?.links?.[0]?.href;
+          setPlanetImage(imageLink || '');
+        } else {
+          setPlanetImage('');
+        }
+
+        // Fetch Wikipedia Summary via secure backend proxy
+        const wikiRes = await fetch(`/api/wiki?q=${encodeURIComponent(selectedBody)}`);
+        const wikiData = await wikiRes.json();
+        setPlanetInfo(wikiData?.extract || 'No information available.');
+      } catch (err) {
+        console.error('Failed to fetch environment data', err);
+        setPlanetInfo('Failed to load information.');
+      } finally {
+        setIsLoadingInfo(false);
+      }
+    };
+    fetchEnvironmentData();
+  }, [selectedBody]);
 
   // Compute flight points using Euler integration
   const calculateTrajectory = () => {
@@ -188,14 +230,46 @@ export default function ProjectileMotionLab() {
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1.5">Gravity Environment (g)</label>
             <select 
-              value={gravity} 
-              onChange={e => setGravity(parseFloat(e.target.value))}
+              value={selectedBody} 
+              onChange={e => {
+                const body = e.target.value;
+                setSelectedBody(body);
+                setGravity(environments[body as keyof typeof environments]);
+              }}
               className="w-full bg-white border border-slate-200 text-slate-800 rounded-xl p-2.5 text-xs font-bold outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
             >
-              <option value="9.8">Earth (9.8 m/s²)</option>
-              <option value="1.62">Moon (1.62 m/s²)</option>
-              <option value="3.72">Mars (3.72 m/s²)</option>
+              {Object.entries(environments).map(([name, g]) => (
+                <option key={name} value={name}>{name} ({g} m/s²)</option>
+              ))}
             </select>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-xl p-3 shadow-sm mt-4">
+            <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <Info className="w-3 h-3" /> Environment Data
+            </h4>
+            {isLoadingInfo ? (
+              <div className="animate-pulse space-y-2 mt-2">
+                <div className="h-20 bg-slate-200 rounded-lg w-full"></div>
+                <div className="h-3 bg-slate-200 rounded w-full"></div>
+                <div className="h-3 bg-slate-200 rounded w-5/6"></div>
+              </div>
+            ) : (
+              <div className="space-y-2 mt-2">
+                {planetImage && (
+                  <div className="w-full h-24 rounded-lg overflow-hidden border border-slate-100 bg-slate-900 relative">
+                     <img src={planetImage} alt={selectedBody} className="w-full h-full object-cover opacity-90" />
+                     <div className="absolute bottom-1 right-1 text-[8px] text-white/70 bg-black/50 px-1.5 py-0.5 rounded backdrop-blur-sm">NASA Open API</div>
+                  </div>
+                )}
+                <div className="text-xs text-slate-600 leading-relaxed max-h-32 overflow-y-auto">
+                  {planetInfo}
+                </div>
+                <div className="text-right">
+                   <span className="text-[8px] text-slate-400">Source: Wikimedia REST API</span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

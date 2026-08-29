@@ -450,6 +450,39 @@ ${codeHistory && codeHistory.length > 0 ? `CURRENT CODE:\n${codeHistory[codeHist
   }
 });
 
+// Proxy endpoint for NASA API to prevent API key leaks
+app.get(['/api/nasa', '/nasa'], originGuard, rateLimiter, async (req, res) => {
+  const { q } = req.query;
+  if (!q) return res.status(400).json({ error: 'Query parameter q is required' });
+
+  try {
+    const nasaApiKey = process.env.NASA_API_KEY || 'DEMO_KEY';
+    const response = await fetch(`https://images-api.nasa.gov/search?q=${encodeURIComponent(q as string)}&media_type=image`);
+    if (!response.ok) throw new Error('NASA API error');
+    const data = await response.json();
+    return res.json(data);
+  } catch (error: any) {
+    console.error('NASA API Proxy Error:', error);
+    return res.status(500).json({ error: 'Failed to fetch from NASA API' });
+  }
+});
+
+// Proxy endpoint for Wikimedia API to keep traffic server-side
+app.get(['/api/wiki', '/wiki'], originGuard, rateLimiter, async (req, res) => {
+  const { q } = req.query;
+  if (!q) return res.status(400).json({ error: 'Query parameter q is required' });
+
+  try {
+    const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(q as string)}`);
+    if (!response.ok) throw new Error('Wikimedia API error');
+    const data = await response.json();
+    return res.json(data);
+  } catch (error: any) {
+    console.error('Wikimedia API Proxy Error:', error);
+    return res.status(500).json({ error: 'Failed to fetch from Wikimedia API' });
+  }
+});
+
 // Serve locally if run directly as standalone server
 if (process.env.RUN_STANDALONE === 'true') {
   const PORT = process.env.PORT || 3001;
