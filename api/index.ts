@@ -210,8 +210,8 @@ async function generateContentWithFallback(
   throw lastError || new Error('All model attempts failed.');
 }
 
-// Proxy endpoint for Gemini requests
-app.post('/api/gemini', originGuard, rateLimiter, async (req, res) => {
+// Proxy endpoint for Gemini requests (handles both /api/gemini and /gemini depending on rewrite proxy)
+app.post(['/api/gemini', '/gemini'], originGuard, rateLimiter, async (req, res) => {
   const { action, payload } = req.body;
 
   if (!action) {
