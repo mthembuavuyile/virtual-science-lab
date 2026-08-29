@@ -158,7 +158,7 @@ const rateLimiter = (req: express.Request, res: express.Response, next: express.
 };
 
 // Periodic memory cleanup for stale IP logs (every hour)
-setInterval(() => {
+const cleanupInterval = setInterval(() => {
   const now = Date.now();
   for (const [ip, log] of ipRequestMap.entries()) {
     log.timestamps = log.timestamps.filter(ts => now - ts < RATE_LIMIT_WINDOW_MS);
@@ -167,6 +167,10 @@ setInterval(() => {
     }
   }
 }, 60 * 60 * 1000);
+
+if (cleanupInterval && typeof cleanupInterval.unref === 'function') {
+  cleanupInterval.unref();
+}
 
 // Model fallback list ordered by speed, capability, and availability (Gemini 3.x Flash series)
 const CANDIDATE_MODELS = [

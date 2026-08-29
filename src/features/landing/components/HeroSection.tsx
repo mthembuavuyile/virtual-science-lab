@@ -8,10 +8,7 @@ export function HeroSection() {
     <section className="pt-20 pb-28 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold mb-6">
-            <ShieldCheck className="w-4 h-4 text-blue-600" />
-            <span>CAPS & SACAI Aligned Virtual Science Laboratory</span>
-          </div>
+
 
           <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-slate-900 mb-6 max-w-5xl mx-auto leading-[1.1]">
             South Africa's Complete <span className="text-blue-600">Physical Sciences</span> Virtual Lab.
