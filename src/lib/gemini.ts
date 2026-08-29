@@ -3,6 +3,8 @@ export interface ChatMessage {
   parts: { text: string }[];
 }
 
+import { canUseAI, incrementAIUsage } from './ai-rate-limiter';
+
 // Helper to clean response code blocks and escape raw control characters inside JSON strings
 function cleanJsonString(str: string): string {
   // Strip markdown wrappers
@@ -68,6 +70,10 @@ function cleanJsonString(str: string): string {
 const API_TIMEOUT_MS = 120000; // 120 second timeout for complex generation
 
 async function callProxy(action: string, payload: any, timeoutMs = API_TIMEOUT_MS): Promise<string> {
+  if (!canUseAI()) {
+    throw new Error('AI Rate Limit Exceeded: You have reached your limit of 5 AI requests for today. Please try again tomorrow.');
+  }
+
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
@@ -91,6 +97,7 @@ async function callProxy(action: string, payload: any, timeoutMs = API_TIMEOUT_M
     }
 
     const data = await response.json();
+    incrementAIUsage();
     return data.text;
   } catch (error: any) {
     if (error.name === 'AbortError') {
@@ -126,11 +133,12 @@ export async function analyzeExperiment(
     const text = await callProxy('analyzeExperiment', { simName, state, language });
     const cleaned = cleanJsonString(text || '{}');
     return JSON.parse(cleaned);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Gemini API Proxy Error (analyzeExperiment):', error);
+    const msg = error?.message?.includes('Rate Limit') ? error.message : 'Failed to retrieve analysis. Check API connection.';
     return {
-      conceptBreakdown: 'Failed to retrieve analysis. Check API connection.',
-      saContext: 'Failed to retrieve context.',
+      conceptBreakdown: msg,
+      saContext: msg,
       quiz: {
         question: 'What is the current relationship between current and voltage in an ohmic conductor?',
         options: ['Directly proportional', 'Inversely proportional', 'Exponential', 'No relationship'],
@@ -151,8 +159,9 @@ export async function evaluateQuizAnswer(
 ) {
   try {
     return await callProxy('evaluateQuizAnswer', { question, userAnswer, correctReason });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Gemini API Proxy Error (evaluateQuizAnswer):', error);
+    if (error?.message?.includes('Rate Limit')) return error.message;
     return 'Your answer has been registered. Keep experimenting!';
   }
 }
@@ -165,11 +174,12 @@ export async function generateMatricExamChallenge(topic: string) {
     const text = await callProxy('generateMatricExamChallenge', { topic });
     const cleaned = cleanJsonString(text || '{}');
     return JSON.parse(cleaned);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Gemini API Proxy Error (generateMatricExamChallenge):', error);
+    const msg = error?.message?.includes('Rate Limit') ? error.message : 'Scenario generation failed. Please try again.';
     return {
       title: 'Ohm\'s Law Matric Prep',
-      scenario: 'A circuit is set up with a battery of unknown EMF and internal resistance r. When a 4 ohm resistor is connected, the current is 1.5A...',
+      scenario: msg,
       questions: [
         { num: '1.1', text: 'Define internal resistance in words.', marks: 2 },
         { num: '1.2', text: 'State Ohm\'s Law in words.', marks: 2 }
@@ -192,13 +202,14 @@ export async function evaluateExamAnswer(
     const text = await callProxy('evaluateExamAnswer', { scenario, questions, studentAnswers, memo });
     const cleaned = cleanJsonString(text || '{}');
     return JSON.parse(cleaned);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Gemini API Proxy Error (evaluateExamAnswer):', error);
+    const msg = error?.message?.includes('Rate Limit') ? error.message : 'Could not process grading. Please check your formatting and try again.';
     return {
       totalAwarded: 0,
       maxMarks: 10,
       gradingDetails: [],
-      generalFeedback: 'Could not process grading. Please check your formatting and try again.'
+      generalFeedback: msg
     };
   }
 }
@@ -215,11 +226,12 @@ export async function moderateSbaReport(
     const text = await callProxy('moderateSbaReport', { sbaType, variables, dataPoints });
     const cleaned = cleanJsonString(text || '{}');
     return JSON.parse(cleaned);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Gemini API Proxy Error (moderateSbaReport):', error);
+    const msg = error?.message?.includes('Rate Limit') ? error.message : 'Data uploaded successfully. Ensure measurements are recorded under constant conditions.';
     return {
       isConsistent: true,
-      theoreticalAnalysis: 'Data uploaded successfully. Ensure measurements are recorded under constant conditions.',
+      theoreticalAnalysis: msg,
       sourcesOfError: ['Parallax error', 'Indicator lag', 'Temperature fluctuations'],
       draftDiscussion: 'The relationship shows expected trends under standard classroom limits.',
       conclusionDraft: 'The hypothesis is supported by the recorded variables.'
