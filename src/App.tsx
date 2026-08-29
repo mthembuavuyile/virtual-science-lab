@@ -12,10 +12,13 @@ import SbaHubPage from './pages/SbaHubPage';
 import SbaRunnerPage from './pages/SbaRunnerPage';
 import SandboxPage from './pages/SandboxPage';
 import NotFoundPage from './pages/NotFoundPage';
+import PWAUpdateToast from './components/pwa/PWAUpdateToast';
 
 function App() {
   return (
     <BrowserRouter>
+      {/* Global PWA update toast covering Landing Page and /app */}
+      <PWAUpdateToast />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         

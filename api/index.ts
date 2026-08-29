@@ -24,10 +24,18 @@ const originGuard = (req: express.Request, res: express.Response, next: express.
   const origin = req.headers['origin'] as string | undefined;
   const referer = req.headers['referer'] as string | undefined;
 
-  // In production, require a valid origin or referer from our domain
+  // In production, require a valid origin or referer from our domain or vercel preview/prod domain
   if (process.env.VERCEL) {
-    const isAllowedOrigin = origin && ALLOWED_ORIGINS.some(o => origin.startsWith(o));
-    const isAllowedReferer = referer && ALLOWED_ORIGINS.some(o => referer.startsWith(o));
+    const isAllowedOrigin = origin && (
+      ALLOWED_ORIGINS.some(o => origin.startsWith(o)) ||
+      origin.endsWith('.vercel.app') ||
+      origin.includes('localhost')
+    );
+    const isAllowedReferer = referer && (
+      ALLOWED_ORIGINS.some(o => referer.startsWith(o)) ||
+      referer.includes('.vercel.app') ||
+      referer.includes('localhost')
+    );
 
     if (!isAllowedOrigin && !isAllowedReferer) {
       return res.status(403).json({ error: 'Forbidden: Invalid request origin.' });

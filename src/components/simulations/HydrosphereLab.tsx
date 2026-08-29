@@ -308,16 +308,6 @@ export default function HydrosphereLab() {
   const [humidity, setHumidity] = useState<number>(55); // % (10 to 95)
   const [soilType, setSoilType] = useState<'sandy' | 'loam' | 'clay'>('loam');
   const [vegetationCover, setVegetationCover] = useState<number>(60); // %
-  const [isCycleRunning, setIsCycleRunning] = useState<boolean>(true);
-  const [cycleTick, setCycleTick] = useState<number>(0);
-
-  useEffect(() => {
-    if (!isCycleRunning) return;
-    const interval = setInterval(() => {
-      setCycleTick(t => (t + 1) % 1000);
-    }, 80);
-    return () => clearInterval(interval);
-  }, [isCycleRunning]);
 
   // Derived Water Cycle Metrics
   const waterCycleMetrics = useMemo(() => {

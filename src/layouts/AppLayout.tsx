@@ -20,7 +20,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { labRegistry, LabEntry } from '../data/experiments';
 import OfflineIndicator from '../components/pwa/OfflineIndicator';
 import PWAInstallBanner from '../components/pwa/PWAInstallBanner';
-import PWAUpdateToast from '../components/pwa/PWAUpdateToast';
 import KeyboardShortcutsModal from '../components/pwa/KeyboardShortcutsModal';
 import PWAStatsModal from '../components/pwa/PWAStatsModal';
 import { useRouteMeta } from '../hooks/useRouteMeta';
@@ -444,7 +443,6 @@ export default function AppLayout() {
           </div>
         </header>
 
-        <PWAUpdateToast />
         <PWAInstallBanner />
 
         {/* Content area — bottom padding for mobile nav */}

@@ -18,11 +18,29 @@ export function usePWA() {
     needRefresh: [needRefresh, setNeedRefresh],
     updateServiceWorker,
   } = useRegisterSW({
-    onRegistered(r) {
-      console.log('SW Registered:', r);
+    onRegisteredSW(swUrl, registration) {
+      if (!registration) return;
+      console.log('VyLab SW Registered:', swUrl);
+
+      // 1. Proactive periodic check every 30 minutes
+      const intervalId = setInterval(() => {
+        if (navigator.onLine) {
+          registration.update().catch(err => console.warn('Periodic SW update check failed:', err));
+        }
+      }, 30 * 60 * 1000);
+
+      // 2. Check for updates whenever user returns to the tab/app
+      const checkUpdateOnFocus = () => {
+        if (document.visibilityState === 'visible' && navigator.onLine) {
+          registration.update().catch(err => console.warn('Focus SW update check failed:', err));
+        }
+      };
+
+      document.addEventListener('visibilitychange', checkUpdateOnFocus);
+      window.addEventListener('focus', checkUpdateOnFocus);
     },
     onRegisterError(error) {
-      console.error('SW Registration error:', error);
+      console.error('VyLab SW Registration error:', error);
     },
   });
 
