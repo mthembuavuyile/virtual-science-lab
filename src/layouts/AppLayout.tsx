@@ -4,13 +4,14 @@ import {
   Beaker, 
   LayoutDashboard, 
   Zap, 
-  MessageSquare, 
+  BrainCircuit, 
   BookOpen,
   Menu,
   X,
   ChevronDown,
   ChevronRight,
   FileText,
+  ClipboardCheck,
   Terminal,
   GraduationCap,
   FlaskConical,
@@ -102,8 +103,8 @@ export default function AppLayout() {
   }, [physicsLabs]);
 
   const otherNav = [
-    { name: t('nav_sba'), path: '/app/sba', icon: FileText, badge: 'FAT Pass' },
-    { name: t('nav_tutor'), path: '/app/tutor', icon: MessageSquare },
+    { name: t('nav_sba'), path: '/app/sba', icon: ClipboardCheck, badge: 'FAT Pass' },
+    { name: t('nav_tutor'), path: '/app/tutor', icon: BrainCircuit },
     { name: t('nav_sandbox'), path: '/app/sandbox', icon: Terminal },
     { name: t('nav_sba_guide'), path: '/app/sba-guide', icon: FileText },
     { name: t('nav_notebook'), path: '/app/notebook', icon: BookOpen },
@@ -112,9 +113,9 @@ export default function AppLayout() {
   // Bottom bar items (mobile)
   const bottomNavItems: Array<{ name: string; path: string; icon: any; matchPrefix?: string }> = [
     { name: t('nav_dashboard'), path: '/app', icon: LayoutDashboard },
-    { name: t('nav_sba'), path: '/app/sba', icon: FileText, matchPrefix: '/app/sba' },
+    { name: t('nav_sba'), path: '/app/sba', icon: ClipboardCheck, matchPrefix: '/app/sba' },
     { name: t('nav_labs'), path: '/app/labs', icon: GraduationCap, matchPrefix: '/app/labs' },
-    { name: t('nav_tutor'), path: '/app/tutor', icon: MessageSquare },
+    { name: t('nav_tutor'), path: '/app/tutor', icon: BrainCircuit },
   ];
 
   // Get page title from path
