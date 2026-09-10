@@ -4,8 +4,11 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer 
 } from 'recharts';
 import AnalyzeExperimentPanel from '../AnalyzeExperimentPanel';
+import { useLabAnalysis } from '../../hooks/useLabAnalysis';
 
 export default function ProjectileMotionLab() {
+  const { claimPanel } = useLabAnalysis();
+  useEffect(() => claimPanel(), [claimPanel]);
   const [v, setV] = useState(50);
   const [angle, setAngle] = useState(45);
   const [mass, setMass] = useState(10);

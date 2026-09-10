@@ -1,7 +1,9 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getLabById } from '../data/experiments';
 import { ArrowLeft, Loader2 } from 'lucide-react';
+import AnalyzeExperimentPanel from '../components/AnalyzeExperimentPanel';
+import { LabAnalysisProvider, useLabAnalysis } from '../hooks/useLabAnalysis';
 
 function LabLoadingFallback() {
   return (
@@ -12,14 +14,20 @@ function LabLoadingFallback() {
   );
 }
 
-export default function LabLoader() {
+/** Inner component — has access to the LabAnalysisContext */
+function LabLoaderInner() {
   const { labId } = useParams<{ labId: string }>();
   const navigate = useNavigate();
+  const { isPanelClaimed, resetClaim } = useLabAnalysis();
 
   const lab = labId ? getLabById(labId) : undefined;
 
+  // Reset the panel claim whenever the lab route changes
+  useEffect(() => {
+    resetClaim();
+  }, [labId, resetClaim]);
+
   const handleBack = () => {
-    // If user has history in session, go back; otherwise fallback to syllabus hub
     if (window.history.state && window.history.state.idx > 0) {
       navigate(-1);
     } else {
@@ -52,6 +60,20 @@ export default function LabLoader() {
 
   const LabComponent = lab.component;
 
+  // Baseline state from lab registry metadata.
+  // Labs that render their own <AnalyzeExperimentPanel> with live simulation state
+  // call claimPanel() — this fallback is then suppressed to avoid duplication.
+  const labMetaState = {
+    labId,
+    title: lab.title,
+    discipline: lab.discipline,
+    grade: `Grade ${lab.grade}`,
+    unit: lab.unit,
+    unitTitle: lab.unitTitle,
+    description: lab.description,
+    topics: lab.simulations,
+  };
+
   return (
     <div className="flex flex-col h-full">
       {/* Breadcrumb header */}
@@ -80,6 +102,27 @@ export default function LabLoader() {
           <LabComponent />
         </Suspense>
       </div>
+
+      {/*
+        Universal AI Analyze panel — rendered for ALL labs in the registry.
+        Suppressed only when the lab itself calls claimPanel() to indicate it has
+        rendered its own <AnalyzeExperimentPanel> with richer live simulation state.
+      */}
+      {!isPanelClaimed && (
+        <AnalyzeExperimentPanel
+          simName={lab.title}
+          state={labMetaState}
+        />
+      )}
     </div>
+  );
+}
+
+/** Outer wrapper — provides the LabAnalysisContext for this lab route */
+export default function LabLoader() {
+  return (
+    <LabAnalysisProvider>
+      <LabLoaderInner />
+    </LabAnalysisProvider>
   );
 }

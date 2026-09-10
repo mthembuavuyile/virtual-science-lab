@@ -11,6 +11,7 @@ import {
   Gauge
 } from 'lucide-react';
 import AnalyzeExperimentPanel from '../AnalyzeExperimentPanel';
+import { useLabAnalysis } from '../../hooks/useLabAnalysis';
 
 export type CircuitTopology = 'single' | 'series' | 'parallel';
 export type ConductorType = 'ohmic' | 'bulb' | 'diode';
@@ -23,6 +24,9 @@ interface DataPoint {
 }
 
 export default function OhmsLawLab() {
+  const { claimPanel } = useLabAnalysis();
+  // Tell LabLoader we provide our own panel with live simulation state
+  useEffect(() => claimPanel(), [claimPanel]);
   const [topology, setTopology] = useState<CircuitTopology>('single');
   const [conductor, setConductor] = useState<ConductorType>('ohmic');
   
