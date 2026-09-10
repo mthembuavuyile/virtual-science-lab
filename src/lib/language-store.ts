@@ -8,19 +8,21 @@ export type SupportedLanguage = 'en' | 'zu' | 'xh' | 'af' | 'tn' | 'nso';
 
 export interface LanguageOption {
   code: SupportedLanguage;
-  name: string;          // Native name
+  name: string;          // Native name shown in UI
   englishName: string;   // English label
-  flag: string;          // South Africa flag emoji (common to all)
+  flag: string;          // South Africa flag emoji (all SA)
   shortCode: string;     // Short display code
+  /** Full language name used in AI prompts (e.g. passed to Gemini for response language) */
+  aiLangName: string;
 }
 
 export const SUPPORTED_LANGUAGES: LanguageOption[] = [
-  { code: 'en',  name: 'English',    englishName: 'English',   flag: '🇿🇦', shortCode: 'EN' },
-  { code: 'zu',  name: 'isiZulu',    englishName: 'isiZulu',   flag: '🇿🇦', shortCode: 'ZU' },
-  { code: 'xh',  name: 'isiXhosa',   englishName: 'isiXhosa',  flag: '🇿🇦', shortCode: 'XH' },
-  { code: 'af',  name: 'Afrikaans',  englishName: 'Afrikaans', flag: '🇿🇦', shortCode: 'AF' },
-  { code: 'tn',  name: 'Setswana',   englishName: 'Setswana',  flag: '🇿🇦', shortCode: 'TN' },
-  { code: 'nso', name: 'Sepedi',     englishName: 'Sepedi',    flag: '🇿🇦', shortCode: 'NS' },
+  { code: 'en',  name: 'English',    englishName: 'English',   flag: '🇿🇦', shortCode: 'EN',  aiLangName: 'English' },
+  { code: 'zu',  name: 'isiZulu',    englishName: 'isiZulu',   flag: '🇿🇦', shortCode: 'ZU',  aiLangName: 'Zulu' },
+  { code: 'xh',  name: 'isiXhosa',   englishName: 'isiXhosa',  flag: '🇿🇦', shortCode: 'XH',  aiLangName: 'Xhosa' },
+  { code: 'af',  name: 'Afrikaans',  englishName: 'Afrikaans', flag: '🇿🇦', shortCode: 'AF',  aiLangName: 'Afrikaans' },
+  { code: 'tn',  name: 'Setswana',   englishName: 'Setswana',  flag: '🇿🇦', shortCode: 'TN',  aiLangName: 'Setswana' },
+  { code: 'nso', name: 'Sepedi',     englishName: 'Sepedi',    flag: '🇿🇦', shortCode: 'NS',  aiLangName: 'Sepedi' },
 ];
 
 const STORAGE_KEY = 'vylab_language';

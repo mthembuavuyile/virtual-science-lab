@@ -17,8 +17,10 @@ import {
   Check
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../hooks/useLanguage';
 
 export default function SbaHubPage() {
+  const { t } = useLanguage();
   const [selectedDiscipline, setSelectedDiscipline] = useState<'All' | Discipline>('All');
   const [selectedGrade, setSelectedGrade] = useState<number | 'All'>('All');
   const [pricingOpen, setPricingOpen] = useState(false);
@@ -47,10 +49,10 @@ export default function SbaHubPage() {
             <span>CAPS & SACAI Formal Assessment Engine</span>
           </div>
           <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">
-            Prescribed Formal SBA Practicals & Moderation
+            {t('hub_title')}
           </h1>
           <p className="text-sm text-slate-300 leading-relaxed font-normal">
-            Complete mandatory Grade 10–12 Physical Sciences practical tasks online with calibrated apparatus, unique jittered raw data, and formal 4-page moderation PDF dossier exports.
+            {t('hub_subtitle')}
           </p>
 
           <div className="pt-2 flex flex-wrap items-center gap-3">
@@ -60,13 +62,13 @@ export default function SbaHubPage() {
               className="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold shadow transition flex items-center gap-2 cursor-pointer"
             >
               <Award className="w-4 h-4" />
-              Unlock All Practical Packs (R349)
+              {t('hub_unlock_all')}
             </button>
             <Link
               to="/app/sba/gr12-internal-resistance"
               className="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold border border-white/20 transition flex items-center gap-1.5"
             >
-              Try Free Practical Demo <ChevronRight className="w-3.5 h-3.5" />
+              {t('hub_try_free')} <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
         </div>
@@ -79,11 +81,11 @@ export default function SbaHubPage() {
       {/* Filter Toolbar */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white border border-slate-200 p-4 rounded-xl shadow-xs">
         <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
-          <Filter className="w-4 h-4 text-slate-400" /> Filter by Subject:
+          <Filter className="w-4 h-4 text-slate-400" /> {t('hub_filter_subject')}
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          {['All', 'Physics', 'Chemistry'].map(disc => (
+          {(['All', 'Physics', 'Chemistry'] as const).map(disc => (
             <button
               key={disc}
               onClick={() => setSelectedDiscipline(disc as any)}
@@ -93,13 +95,13 @@ export default function SbaHubPage() {
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
               }`}
             >
-              {disc}
+              {disc === 'All' ? t('hub_all') : disc}
             </button>
           ))}
 
           <span className="h-4 w-px bg-slate-200 mx-1 hidden sm:block" />
 
-          {['All', 10, 11, 12].map(gr => (
+          {(["All", 10, 11, 12] as const).map(gr => (
             <button
               key={String(gr)}
               onClick={() => setSelectedGrade(gr as any)}
@@ -109,7 +111,7 @@ export default function SbaHubPage() {
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
               }`}
             >
-              {gr === 'All' ? 'All Grades' : `Grade ${gr}`}
+              {gr === 'All' ? t('hub_all_grades') : `${t('common_grade')} ${gr}`}
             </button>
           ))}
         </div>
@@ -132,11 +134,11 @@ export default function SbaHubPage() {
                   </span>
                   {practical.isFree ? (
                     <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800">
-                      Free Trial Lab
+                      {t('hub_free_trial')}
                     </span>
                   ) : unlocked ? (
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">
-                      Unlocked
+                      {t('hub_unlocked')}
                     </span>
                   ) : (
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 flex items-center gap-1">
@@ -154,8 +156,8 @@ export default function SbaHubPage() {
                 </p>
 
                 <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                  <span>{practical.discipline} • Gr {practical.grade}</span>
-                  <span className="font-bold text-slate-700">{practical.marks} Marks</span>
+                  <span>{practical.discipline} • {t('common_grade')} {practical.grade}</span>
+                  <span className="font-bold text-slate-700">{practical.marks} {t('hub_marks')}</span>
                 </div>
               </div>
 
@@ -170,7 +172,7 @@ export default function SbaHubPage() {
                 >
                   {unlocked || practical.isFree ? (
                     <>
-                      Launch SBA Practical <ChevronRight className="w-4 h-4" />
+                      {t('sba_launch')} <ChevronRight className="w-4 h-4" />
                     </>
                   ) : (
                     <>

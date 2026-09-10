@@ -3,25 +3,20 @@ import { Sparkles, Brain, Check, X, RefreshCw, BookOpen, ChevronRight, Globe, Al
 import { analyzeExperiment, evaluateQuizAnswer } from '../lib/gemini';
 import { motion, AnimatePresence } from 'motion/react';
 import RichText from './ui/RichText';
+import { useLanguage } from '../hooks/useLanguage';
+import LanguagePicker from './ui/LanguagePicker';
 
 interface AnalyzeExperimentPanelProps {
   simName: string;
   state: Record<string, any>;
 }
 
-const LANGUAGES = [
-  { code: 'English', name: 'English' },
-  { code: 'Zulu', name: 'isiZulu' },
-  { code: 'Xhosa', name: 'isiXhosa' },
-  { code: 'Sepedi', name: 'Sepedi (Northern Sotho)' },
-  { code: 'Afrikaans', name: 'Afrikaans' }
-];
 
 export default function AnalyzeExperimentPanel({ simName, state }: AnalyzeExperimentPanelProps) {
+  const { aiLangName, currentLang } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedLang, setSelectedLang] = useState('English');
   const [analysis, setAnalysis] = useState<{
     conceptBreakdown: string;
     saContext: string;
@@ -48,7 +43,7 @@ export default function AnalyzeExperimentPanel({ simName, state }: AnalyzeExperi
     setQuizSubmitted(false);
     setQuizFeedback('');
     try {
-      const data = await analyzeExperiment(simName, state, selectedLang);
+      const data = await analyzeExperiment(simName, state, aiLangName);
       if (data && data.conceptBreakdown) {
         setAnalysis(data);
       } else {
@@ -93,7 +88,7 @@ export default function AnalyzeExperimentPanel({ simName, state }: AnalyzeExperi
       const newNote = {
         id: Date.now().toString(),
         timestamp: new Date().toLocaleString(),
-        content: `=== AI EXPERIMENT ANALYSIS ===\nLab: ${simName}\nLanguage: ${selectedLang}\nParameters: ${JSON.stringify(state, null, 2)}\n\n--- CONCEPT BREAKDOWN ---\n${analysis.conceptBreakdown}\n\n--- SOUTH AFRICAN CONTEXT ---\n${analysis.saContext}`
+        content: `=== AI EXPERIMENT ANALYSIS ===\nLab: ${simName}\nLanguage: ${currentLang.name}\nParameters: ${JSON.stringify(state, null, 2)}\n\n--- CONCEPT BREAKDOWN ---\n${analysis.conceptBreakdown}\n\n--- SOUTH AFRICAN CONTEXT ---\n${analysis.saContext}`
       };
 
       localStorage.setItem('virtualLabNotebook', JSON.stringify([newNote, ...currentNotes]));
@@ -143,59 +138,52 @@ export default function AnalyzeExperimentPanel({ simName, state }: AnalyzeExperi
                     <Brain className="text-purple-600 w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-800 text-sm md:text-base">Vylex AI Lab Co-Pilot</h3>
+                    <h3 className="font-bold text-slate-800 text-sm md:text-base">VyLex AI Lab Co-Pilot</h3>
                     <p className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">{simName}</p>
                   </div>
                 </div>
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-600 transition"
-                >
-                  <X className="w-5 h-5" />
-                </button>
+                <div className="flex items-center gap-2">
+                  {/* Global language picker — synced with app header */}
+                  <LanguagePicker />
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-600 transition"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
 
               {/* Panel Content (Scrollable) */}
               <div className="flex-1 overflow-y-auto p-4 md:p-6 pb-16 md:pb-6 space-y-6">
-                {/* Language Select */}
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                  <label className="flex items-center gap-2 text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">
-                    <Globe className="w-4 h-4 text-slate-400" />
-                    Explanation Language / Metaphor
-                  </label>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                    {LANGUAGES.map((l) => (
-                      <button
-                        key={l.code}
-                        onClick={() => setSelectedLang(l.code)}
-                        className={`px-2 py-1.5 rounded-lg text-xs font-bold transition-all border ${
-                          selectedLang === l.code
-                            ? 'bg-purple-600 text-white border-purple-600 shadow-sm'
-                            : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
-                        }`}
-                      >
-                        {l.name}
-                      </button>
-                    ))}
+                {/* Active Language Badge — shows selected global language */}
+                <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-3.5 rounded-xl border border-purple-100 flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <Globe className="w-4 h-4 text-purple-500" />
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">AI Response Language</p>
+                      <p className="text-sm font-bold text-slate-800">{currentLang.flag} {currentLang.name}</p>
+                    </div>
                   </div>
-                  <button
-                    onClick={handleAnalyze}
-                    disabled={loading}
-                    className="w-full mt-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow transition disabled:opacity-50"
-                  >
-                    {loading ? (
-                      <>
-                        <RefreshCw className="w-4 h-4 animate-spin" />
-                        Analyzing simulation state...
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className="w-4 h-4" />
-                        Analyze Current State
-                      </>
-                    )}
-                  </button>
+                  <LanguagePicker />
                 </div>
+                <button
+                  onClick={handleAnalyze}
+                  disabled={loading}
+                  className="w-full mt-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow transition disabled:opacity-50"
+                >
+                  {loading ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                      Analyzing simulation state...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4" />
+                      Analyze Current State
+                    </>
+                  )}
+                </button>
 
                 {error && (
                   <div className="p-4 bg-red-50 border border-red-100 rounded-xl flex gap-3 text-red-800 text-xs">

@@ -16,6 +16,8 @@ import {
 } from 'lucide-react';
 import { askTutor, generateMatricExamChallenge, evaluateExamAnswer, ChatMessage } from '../lib/gemini';
 import { motion, AnimatePresence } from 'motion/react';
+import { useLanguage } from '../hooks/useLanguage';
+import LanguagePicker from '../components/ui/LanguagePicker';
 
 // Dynamic temporal greeting helper
 function getTemporalGreeting(): string {
@@ -271,13 +273,8 @@ const FORMULAS: FormulaItem[] = [
   }
 ];
 
-const LANGUAGES = [
-  { code: 'English', name: 'English' },
-  { code: 'Zulu', name: 'isiZulu' },
-  { code: 'Xhosa', name: 'isiXhosa' },
-  { code: 'Sepedi', name: 'Sepedi' },
-  { code: 'Afrikaans', name: 'Afrikaans' }
-];
+// LANGUAGES is now sourced globally from useLanguage() — see hooks/useLanguage.tsx
+// Use allLanguages, aiLangName, currentLang from context instead.
 
 const MATRIC_TOPICS = [
   "Newton's Laws & Dynamics",
@@ -292,6 +289,7 @@ const MATRIC_TOPICS = [
 ];
 
 export default function TutorPage() {
+  const { aiLangName, currentLang } = useLanguage();
   const [activeTab, setActiveTab] = useState<'chat' | 'exam' | 'formula'>('chat');
 
   // CHAT STATE
@@ -306,7 +304,6 @@ export default function TutorPage() {
     ];
   });
   const [chatInput, setChatInput] = useState('');
-  const [chatLang, setChatLang] = useState('English');
   const [chatLoading, setChatLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -359,7 +356,7 @@ export default function TutorPage() {
         parts: [{ text: msg.text }]
       }));
 
-      const reply = await askTutor(userText, historyForAPI, chatLang);
+      const reply = await askTutor(userText, historyForAPI, aiLangName);
       setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), role: 'model', text: reply }]);
     } catch (err) {
       console.error(err);
@@ -469,19 +466,11 @@ export default function TutorPage() {
           </button>
         </div>
 
-        {/* Right Toolbar: Language Selector & Curriculum Indicator */}
+        {/* Right Toolbar: Language Picker & Curriculum Indicator */}
         <div className="flex items-center gap-2.5 self-end sm:self-center">
-          <div className="flex items-center gap-1.5 bg-slate-50 px-2.5 py-1.5 rounded-lg border border-slate-200">
-            <Languages className="w-3.5 h-3.5 text-slate-500" />
-            <select
-              value={chatLang}
-              onChange={(e) => setChatLang(e.target.value)}
-              className="bg-transparent text-xs font-semibold text-slate-700 outline-none border-none cursor-pointer pr-1"
-            >
-              {LANGUAGES.map((l) => (
-                <option key={l.code} value={l.code}>{l.name}</option>
-              ))}
-            </select>
+          {/* Global language picker — controls tutor + analyze AI language */}
+          <div className="flex items-center gap-1.5 bg-slate-50 px-2 py-1.5 rounded-lg border border-slate-200">
+            <LanguagePicker />
           </div>
 
           <div className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-slate-600 bg-slate-50 border border-slate-200 px-2.5 py-1.5 rounded-lg">
@@ -541,7 +530,7 @@ export default function TutorPage() {
                     type="text"
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
-                    placeholder={`Ask a question about Physical Sciences (explaining in ${LANGUAGES.find(l => l.code === chatLang)?.name || 'English'})...`}
+                    placeholder={`Ask a question about Physical Sciences (${currentLang.name})...`}
                     className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs md:text-sm outline-none focus:bg-white focus:ring-2 focus:ring-blue-500 transition font-medium"
                     disabled={chatLoading}
                   />

@@ -32,6 +32,7 @@ import {
   Share2
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useLanguage } from '../../hooks/useLanguage';
 
 interface SbaRunnerProps {
   practical: SbaPractical;
@@ -47,6 +48,7 @@ const STAGES = [
 
 export default function SbaRunner({ practical }: SbaRunnerProps) {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const storageKey = `vylab_sba_progress_${practical.id}`;
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -222,7 +224,7 @@ export default function SbaRunner({ practical }: SbaRunnerProps) {
               onClick={handleDownloadPdf}
               className="flex-1 sm:flex-none px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs transition cursor-pointer"
             >
-              <Download className="w-3.5 h-3.5" /> Export SBA PDF
+              <Download className="w-3.5 h-3.5" /> {t('sba_export_pdf')}
             </button>
           </div>
         </div>
@@ -331,7 +333,7 @@ export default function SbaRunner({ practical }: SbaRunnerProps) {
           </button>
 
           <span className="text-xs text-slate-400 font-medium">
-            Step {currentStep} of 5
+            {t('sba_step_of', { current: currentStep, total: 5 })}
           </span>
 
           {currentStep < 5 ? (
@@ -340,7 +342,12 @@ export default function SbaRunner({ practical }: SbaRunnerProps) {
               onClick={() => setCurrentStep(prev => Math.min(5, prev + 1))}
               className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow flex items-center gap-1.5 transition"
             >
-              Next Step: {STAGES[currentStep].shortName} <ArrowRight className="w-3.5 h-3.5" />
+              {t('sba_next')}: {[
+                t('sba_step_apparatus'),
+                t('sba_step_data'),
+                t('sba_step_graph'),
+                t('sba_step_moderation')
+              ][currentStep - 1] ?? ''} <ArrowRight className="w-3.5 h-3.5" />
             </button>
           ) : (
             <button
@@ -348,7 +355,7 @@ export default function SbaRunner({ practical }: SbaRunnerProps) {
               onClick={handleDownloadPdf}
               className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow flex items-center gap-1.5 transition"
             >
-              <Download className="w-3.5 h-3.5" /> Finish & Download PDF
+              <Download className="w-3.5 h-3.5" /> {t('sba_finish')}
             </button>
           )}
         </div>

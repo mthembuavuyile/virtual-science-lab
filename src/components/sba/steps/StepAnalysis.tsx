@@ -26,14 +26,14 @@ export default function StepAnalysis({
   return (
     <div className="space-y-6">
       {/* Discussion & Errors Form */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm space-y-5">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 flex items-center gap-2">
-          <FileText className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+      <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-5">
+        <h3 className="text-sm font-bold uppercase tracking-wider text-slate-800 flex items-center gap-2">
+          <FileText className="w-4 h-4 text-blue-600" />
           Section E: Error Analysis, Precautions & Scientific Conclusion (4 Marks)
         </h3>
 
         <div>
-          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center justify-between">
+          <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
             <span className="flex items-center gap-1.5">
               <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
               1. Sources of Experimental Error (Systematic & Random) *
@@ -45,12 +45,12 @@ export default function StepAnalysis({
             value={analysis.sourcesOfError}
             onChange={e => updateField('sourcesOfError', e.target.value)}
             placeholder={`e.g. ${practical.commonErrors.join(' ')}`}
-            className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center justify-between">
+          <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
             <span className="flex items-center gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
               2. Precautions Observed *
@@ -62,12 +62,12 @@ export default function StepAnalysis({
             value={analysis.precautionsObserved}
             onChange={e => updateField('precautionsObserved', e.target.value)}
             placeholder={`e.g. ${practical.precautions.join(' ')}`}
-            className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center justify-between">
+          <label className="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
             <span className="flex items-center gap-1.5">
               <CheckCircle2 className="w-3.5 h-3.5 text-blue-500" />
               3. Final Scientific Conclusion *
@@ -107,13 +107,13 @@ export default function StepAnalysis({
 
       {/* Evaluation Results Card */}
       {evaluation && (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-xl space-y-6">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xl space-y-6">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-4 border-b border-slate-200">
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+              <span className="text-xs font-bold uppercase tracking-wider text-blue-600">
                 Formal Moderation Result
               </span>
-              <h3 className="text-xl font-extrabold text-slate-900 dark:text-white mt-0.5">
+              <h3 className="text-xl font-extrabold text-slate-900 mt-0.5">
                 Score: {evaluation.totalMarksAwarded} / {evaluation.maxMarks} Marks ({evaluation.percentage}%)
               </h3>
               <p className="text-xs text-slate-500 mt-1 font-semibold flex items-center gap-1.5">
@@ -137,17 +137,17 @@ export default function StepAnalysis({
 
           {/* Itemized Breakdown Table */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase text-slate-700 dark:text-slate-300">
+            <h4 className="text-xs font-bold uppercase text-slate-700">
               Itemized CAPS Marksheet Breakdown
             </h4>
-            <div className="divide-y divide-slate-200 dark:divide-slate-800 border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden text-xs">
+            <div className="divide-y divide-slate-200 border border-slate-200 rounded-lg overflow-hidden text-xs">
               {evaluation.items.map((it, idx) => (
-                <div key={idx} className="p-3 bg-slate-50/50 dark:bg-slate-800/40 flex justify-between items-center gap-4">
+                <div key={idx} className="p-3 bg-slate-50/50 flex justify-between items-center gap-4">
                   <div className="flex-1">
-                    <span className="font-semibold text-slate-800 dark:text-slate-200 block">{it.criterion}</span>
+                    <span className="font-semibold text-slate-800 block">{it.criterion}</span>
                     <span className="text-[11px] text-slate-500">{it.feedback}</span>
                   </div>
-                  <div className="font-mono font-bold text-sm text-blue-600 dark:text-blue-400 shrink-0">
+                  <div className="font-mono font-bold text-sm text-blue-600 shrink-0">
                     {it.awardedMarks} / {it.maxMarks}
                   </div>
                 </div>
