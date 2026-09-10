@@ -23,9 +23,12 @@ import PWAInstallBanner from '../components/pwa/PWAInstallBanner';
 import KeyboardShortcutsModal from '../components/pwa/KeyboardShortcutsModal';
 import PWAStatsModal from '../components/pwa/PWAStatsModal';
 import { useRouteMeta } from '../hooks/useRouteMeta';
+import { useLanguage } from '../hooks/useLanguage';
+import LanguagePicker from '../components/ui/LanguagePicker';
 
 export default function AppLayout() {
   useRouteMeta();
+  const { t } = useLanguage();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [chemExpanded, setChemExpanded] = useState(true);
   const [physicsExpanded, setPhysicsExpanded] = useState(true);
@@ -99,19 +102,19 @@ export default function AppLayout() {
   }, [physicsLabs]);
 
   const otherNav = [
-    { name: 'CAPS SBA Practicals', path: '/app/sba', icon: FileText, badge: 'FAT Pass' },
-    { name: 'AI Tutor', path: '/app/tutor', icon: MessageSquare },
-    { name: 'AI Sandbox', path: '/app/sandbox', icon: Terminal },
-    { name: 'SBA Lab Guide', path: '/app/sba-guide', icon: FileText },
-    { name: 'My Notebook', path: '/app/notebook', icon: BookOpen },
+    { name: t('nav_sba'), path: '/app/sba', icon: FileText, badge: 'FAT Pass' },
+    { name: t('nav_tutor'), path: '/app/tutor', icon: MessageSquare },
+    { name: t('nav_sandbox'), path: '/app/sandbox', icon: Terminal },
+    { name: t('nav_sba_guide'), path: '/app/sba-guide', icon: FileText },
+    { name: t('nav_notebook'), path: '/app/notebook', icon: BookOpen },
   ];
 
   // Bottom bar items (mobile)
   const bottomNavItems: Array<{ name: string; path: string; icon: any; matchPrefix?: string }> = [
-    { name: 'Home', path: '/app', icon: LayoutDashboard },
-    { name: 'SBA Labs', path: '/app/sba', icon: FileText, matchPrefix: '/app/sba' },
-    { name: 'All Labs', path: '/app/labs', icon: GraduationCap, matchPrefix: '/app/labs' },
-    { name: 'Tutor', path: '/app/tutor', icon: MessageSquare },
+    { name: t('nav_dashboard'), path: '/app', icon: LayoutDashboard },
+    { name: t('nav_sba'), path: '/app/sba', icon: FileText, matchPrefix: '/app/sba' },
+    { name: t('nav_labs'), path: '/app/labs', icon: GraduationCap, matchPrefix: '/app/labs' },
+    { name: t('nav_tutor'), path: '/app/tutor', icon: MessageSquare },
   ];
 
   // Get page title from path
@@ -326,7 +329,7 @@ export default function AppLayout() {
           {/* Dashboard */}
           <NavLink
             to="/app"
-            title={sidebarOpen ? undefined : "Dashboard"}
+            title={sidebarOpen ? undefined : t('nav_dashboard')}
             className={({ isActive }) => `
               flex items-center px-3 py-2.5 rounded-lg transition-all
               ${isActive ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}
@@ -334,13 +337,13 @@ export default function AppLayout() {
             end
           >
             <LayoutDashboard className={`w-5 h-5 shrink-0 ${sidebarOpen ? 'mr-3' : 'mx-auto'}`} />
-            {sidebarOpen && <span className="whitespace-nowrap text-sm font-medium">Dashboard</span>}
+            {sidebarOpen && <span className="whitespace-nowrap text-sm font-medium">{t('nav_dashboard')}</span>}
           </NavLink>
 
           {/* Syllabus Hub */}
           <NavLink
             to="/app/labs"
-            title={sidebarOpen ? undefined : "Syllabus Hub"}
+            title={sidebarOpen ? undefined : t('nav_syllabus')}
             className={({ isActive }) => `
               flex items-center px-3 py-2.5 rounded-lg transition-all
               ${isActive && location.pathname === '/app/labs' ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}
@@ -348,7 +351,7 @@ export default function AppLayout() {
             end
           >
             <GraduationCap className={`w-5 h-5 shrink-0 ${sidebarOpen ? 'mr-3' : 'mx-auto'}`} />
-            {sidebarOpen && <span className="whitespace-nowrap text-sm font-medium">Syllabus Hub</span>}
+            {sidebarOpen && <span className="whitespace-nowrap text-sm font-medium">{t('nav_syllabus')}</span>}
           </NavLink>
 
           {/* Chemistry Section */}
@@ -435,6 +438,7 @@ export default function AppLayout() {
           </div>
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             <OfflineIndicator />
+            <LanguagePicker />
             <KeyboardShortcutsModal />
             <PWAStatsModal />
             <div className="hidden sm:block text-[9px] sm:text-[10px] lg:text-xs font-bold bg-green-100 text-green-700 px-1.5 sm:px-2 py-0.5 rounded-full border border-green-200 shrink-0 whitespace-nowrap">
