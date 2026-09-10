@@ -756,7 +756,7 @@ export default function SyllabusIntegrationLab() {
       <div className="lg:w-1/2 p-4 lg:p-6 bg-slate-50 border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col justify-between shrink-0 min-h-[420px] lg:min-h-0">
         
         {/* WIDGET CONTAINER */}
-        <div className="flex-1 flex flex-col items-center justify-center bg-white border border-slate-200 rounded-2xl p-4 shadow-inner relative overflow-hidden min-h-[250px]">
+        <div className="flex-1 flex flex-col items-center justify-center bg-white border border-slate-200 rounded-2xl p-4 shadow-inner relative overflow-hidden isolate min-h-[250px]">
           <div className="absolute top-2.5 right-3 flex items-center gap-1.5 z-10">
             <button
               onClick={() => {

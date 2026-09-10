@@ -107,7 +107,7 @@ export default function G10HeatingCurves({
   return (
     <div className="flex flex-col h-full">
       {/* WIDGET CONTAINER */}
-      <div className="flex-1 flex flex-col items-center justify-center bg-white border border-slate-200 rounded-2xl p-4 shadow-inner relative overflow-hidden min-h-[250px]">
+      <div className="flex-1 flex flex-col items-center justify-center bg-white border border-slate-200 rounded-2xl p-4 shadow-inner relative overflow-hidden isolate min-h-[250px]">
         <div className="absolute top-2.5 right-3 flex items-center gap-1.5 z-10">
           <button
             onClick={toggleFullscreen}
