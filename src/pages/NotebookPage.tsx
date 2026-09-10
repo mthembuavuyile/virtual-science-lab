@@ -65,7 +65,7 @@ export default function NotebookPage() {
   }, {});
 
   return (
-    <div className="max-w-5xl mx-auto h-full flex flex-col gap-5">
+    <div className="max-w-5xl mx-auto min-h-full flex flex-col gap-5">
       <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm flex-shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="bg-blue-100 p-3 rounded-xl shrink-0">
@@ -106,8 +106,8 @@ export default function NotebookPage() {
         </div>
       </div>
 
-      <div className="flex-1 min-h-0 overflow-y-auto pb-12">
-        <div className="flex flex-col sm:flex-row gap-3 mb-5">
+      <div className="pb-12">
+        <div className="sticky top-0 z-10 flex flex-col sm:flex-row gap-3 mb-5 py-1 bg-slate-50/95 backdrop-blur-sm">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
