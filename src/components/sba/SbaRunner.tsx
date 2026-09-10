@@ -14,17 +14,15 @@ import StepApparatus from './steps/StepApparatus';
 import StepDataTable from './steps/StepDataTable';
 import StepGraphPlotter from './steps/StepGraphPlotter';
 import StepAnalysis from './steps/StepAnalysis';
-import PricingModal from './PricingModal';
 import { evaluateSbaSubmission } from '../../lib/sba-evaluator';
 import { generateSbaPdf } from '../../lib/sba-pdf-generator';
-import { isPracticalUnlocked, saveSubmissionToLocal } from '../../lib/license-store';
+import { saveSubmissionToLocal } from '../../lib/license-store';
 import { 
   FileText, 
   ArrowLeft, 
   ArrowRight, 
   CheckCircle2, 
   Download, 
-  Lock, 
   Sparkles, 
   Clock, 
   Award,
@@ -52,8 +50,6 @@ export default function SbaRunner({ practical }: SbaRunnerProps) {
   const storageKey = `vylab_sba_progress_${practical.id}`;
 
   const [currentStep, setCurrentStep] = useState(1);
-  const [unlocked, setUnlocked] = useState(isPracticalUnlocked(practical.id));
-  const [pricingOpen, setPricingOpen] = useState(false);
 
   // Student info state
   const [studentInfo, setStudentInfo] = useState<StudentInfo>({
@@ -124,11 +120,6 @@ export default function SbaRunner({ practical }: SbaRunnerProps) {
       console.error('Failed to auto-save:', e);
     }
   }, [storageKey, studentInfo, theory, dataTable, graphCalc, analysis, evaluation]);
-
-  // Check paywall
-  useEffect(() => {
-    setUnlocked(isPracticalUnlocked(practical.id));
-  }, [practical.id]);
 
   const handleAddDataRow = (row: DataRow) => {
     setDataTable(prev => [...prev, row]);
@@ -209,16 +200,6 @@ export default function SbaRunner({ practical }: SbaRunnerProps) {
           </div>
 
           <div className="flex items-center gap-2 self-stretch sm:self-center shrink-0">
-            {!unlocked && (
-              <button
-                type="button"
-                onClick={() => setPricingOpen(true)}
-                className="flex-1 sm:flex-none px-3 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs transition cursor-pointer"
-              >
-                <Lock className="w-3.5 h-3.5" /> Unlock SBA Dossier
-              </button>
-            )}
-
             <button
               type="button"
               onClick={handleDownloadPdf}
@@ -361,14 +342,6 @@ export default function SbaRunner({ practical }: SbaRunnerProps) {
         </div>
       </main>
 
-      {/* Pricing Modal */}
-      <PricingModal
-        isOpen={pricingOpen}
-        onClose={() => setPricingOpen(false)}
-        practicalTitle={practical.title}
-        practicalId={practical.id}
-        onSuccessUnlock={() => setUnlocked(true)}
-      />
     </div>
   );
 }

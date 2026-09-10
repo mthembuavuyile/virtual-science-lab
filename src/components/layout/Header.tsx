@@ -15,7 +15,7 @@ export function Header() {
         <nav className="hidden md:flex gap-6 font-medium text-slate-600 text-sm">
           <a href="#features" className="hover:text-blue-600 transition-colors">Features</a>
           <a href="#curriculum" className="hover:text-blue-600 transition-colors">CAPS Curriculum</a>
-          <a href="#pricing" className="hover:text-blue-600 transition-colors">Schools</a>
+          <a href="#features" className="hover:text-blue-600 transition-colors">Access</a>
         </nav>
         <div className="flex gap-4 items-center">
           <Link to="/app" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-semibold shadow-sm transition-all flex items-center gap-1.5">

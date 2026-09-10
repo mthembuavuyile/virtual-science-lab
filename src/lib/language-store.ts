@@ -56,7 +56,6 @@ export interface UITranslations {
 
   // SBA Runner
   sba_launch: string;
-  sba_unlock: string;
   sba_export_pdf: string;
   sba_step_theory: string;
   sba_step_apparatus: string;
@@ -92,9 +91,7 @@ export interface UITranslations {
   hub_filter_subject: string;
   hub_all: string;
   hub_all_grades: string;
-  hub_free_trial: string;
   hub_unlocked: string;
-  hub_unlock_all: string;
   hub_try_free: string;
   hub_marks: string;
 
@@ -119,7 +116,6 @@ const translations: Record<SupportedLanguage, UITranslations> = {
     nav_syllabus: 'Syllabus Hub',
 
     sba_launch: 'Launch SBA Practical',
-    sba_unlock: 'Unlock SBA Dossier',
     sba_export_pdf: 'Export SBA PDF',
     sba_step_theory: 'Theory & Variables',
     sba_step_apparatus: 'Digital Apparatus',
@@ -153,9 +149,7 @@ const translations: Record<SupportedLanguage, UITranslations> = {
     hub_filter_subject: 'Filter by Subject:',
     hub_all: 'All',
     hub_all_grades: 'All Grades',
-    hub_free_trial: 'Free Trial Lab',
     hub_unlocked: 'Unlocked',
-    hub_unlock_all: 'Unlock All Practical Packs (R349)',
     hub_try_free: 'Try Free Practical Demo',
     hub_marks: 'Marks',
 
@@ -178,7 +172,6 @@ const translations: Record<SupportedLanguage, UITranslations> = {
     nav_syllabus: 'Inhloko Yesifundo',
 
     sba_launch: 'Qala Ukuvivinyo kwe-SBA',
-    sba_unlock: 'Vula Ikhasi le-SBA',
     sba_export_pdf: 'Thumela i-PDF ye-SBA',
     sba_step_theory: 'Ithiyori & Izinguquzo',
     sba_step_apparatus: 'Izinsiza Zedijithali',
@@ -212,9 +205,7 @@ const translations: Record<SupportedLanguage, UITranslations> = {
     hub_filter_subject: 'Hlunga Ngesifundo:',
     hub_all: 'Konke',
     hub_all_grades: 'Wonke Amakilasi',
-    hub_free_trial: 'Isivivinyo Samahhala',
     hub_unlocked: 'Sichazulukile',
-    hub_unlock_all: 'Vula Wonke Amaphakheji (R349)',
     hub_try_free: 'Zama Isividinyo Samahhala',
     hub_marks: 'Amaphoyinti',
 
@@ -237,7 +228,6 @@ const translations: Record<SupportedLanguage, UITranslations> = {
     nav_syllabus: 'Isigqibo Sekharikhulamu',
 
     sba_launch: 'Qala uHlolo lwe-SBA',
-    sba_unlock: 'Vula i-Dossier ye-SBA',
     sba_export_pdf: 'Thumela i-PDF ye-SBA',
     sba_step_theory: 'Ithiyori & Iinguqu',
     sba_step_apparatus: 'Izixhobo Zekhompyutha',
@@ -271,9 +261,7 @@ const translations: Record<SupportedLanguage, UITranslations> = {
     hub_filter_subject: 'Hlela Ngomzantsi:',
     hub_all: 'Konke',
     hub_all_grades: 'Wonke Amabakala',
-    hub_free_trial: 'Uvavanyo Lwasimahla',
     hub_unlocked: 'Ivulekile',
-    hub_unlock_all: 'Vula Onke Amaphakheji (R349)',
     hub_try_free: 'Zama Uvavanyo Lwasimahla',
     hub_marks: 'Iipoyinti',
 
@@ -296,7 +284,6 @@ const translations: Record<SupportedLanguage, UITranslations> = {
     nav_syllabus: 'Sillabusskuif',
 
     sba_launch: 'Begin SBA-Praktikum',
-    sba_unlock: 'Ontsluit SBA-Dossier',
     sba_export_pdf: 'Voer SBA-PDF Uit',
     sba_step_theory: 'Teorie & Veranderlikes',
     sba_step_apparatus: 'Digitale Apparaat',
@@ -330,9 +317,7 @@ const translations: Record<SupportedLanguage, UITranslations> = {
     hub_filter_subject: 'Filter op Vak:',
     hub_all: 'Alles',
     hub_all_grades: 'Alle Grade',
-    hub_free_trial: 'Gratis Proef-Laboratorium',
     hub_unlocked: 'Ontsluit',
-    hub_unlock_all: 'Ontsluit Alle Pakkette (R349)',
     hub_try_free: 'Probeer Gratis Demo',
     hub_marks: 'Punte',
 
@@ -355,7 +340,6 @@ const translations: Record<SupportedLanguage, UITranslations> = {
     nav_syllabus: 'Karolotlotlo ya Gape',
 
     sba_launch: 'Simolola Dikgetsi tsa SBA',
-    sba_unlock: 'Bula Diphephadikgang tsa SBA',
     sba_export_pdf: 'Romela PDF ya SBA',
     sba_step_theory: 'Tiori & Diphetogo',
     sba_step_apparatus: 'Didirisiwa tsa Dijithale',
@@ -389,9 +373,7 @@ const translations: Record<SupportedLanguage, UITranslations> = {
     hub_filter_subject: 'Sefa ka Setlhogo:',
     hub_all: 'Tsotlhe',
     hub_all_grades: 'Makalana Otlhe',
-    hub_free_trial: 'Thusolafelo ya Mahala',
     hub_unlocked: 'E Buwitswe',
-    hub_unlock_all: 'Bula Dipasetsheke Tsotlhe (R349)',
     hub_try_free: 'Leka Thusolafelo ya Mahala',
     hub_marks: 'Manqwe',
 
@@ -414,7 +396,6 @@ const translations: Record<SupportedLanguage, UITranslations> = {
     nav_syllabus: 'Hlongwa ya Thuto',
 
     sba_launch: 'Thoma Hlahlobo ya SBA',
-    sba_unlock: 'Bula Diphephadikgang tsha SBA',
     sba_export_pdf: 'Romela PDF ya SBA',
     sba_step_theory: 'Tiori & Diphetosho',
     sba_step_apparatus: 'Didirishwa tsha Dijitale',
@@ -448,9 +429,7 @@ const translations: Record<SupportedLanguage, UITranslations> = {
     hub_filter_subject: 'Hlompha ka Thuto:',
     hub_all: 'Tsotlhe',
     hub_all_grades: 'Makalana Otlhe',
-    hub_free_trial: 'Hlahlobo ya Mahala',
     hub_unlocked: 'E Buwilwe',
-    hub_unlock_all: 'Bula Diphatshete Tsotlhe (R349)',
     hub_try_free: 'Leka Hlahlobo ya Mahala',
     hub_marks: 'Manqwe',
 

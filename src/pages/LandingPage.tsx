@@ -4,8 +4,7 @@ import {
   HeroSection, 
   FeaturesSection, 
   FeaturedSimulatorsSection, 
-  CurriculumSection, 
-  PricingSection 
+  CurriculumSection
 } from '@/src/features/landing';
 
 export default function LandingPage() {
@@ -17,7 +16,6 @@ export default function LandingPage() {
         <FeaturesSection />
         <FeaturedSimulatorsSection />
         <CurriculumSection />
-        <PricingSection />
       </main>
       <Footer />
     </div>
