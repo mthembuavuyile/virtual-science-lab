@@ -103,10 +103,10 @@ export default function AppLayout() {
   }, [physicsLabs]);
 
   const otherNav = [
-    { name: t('nav_sba'), path: '/app/sba', icon: ClipboardCheck, badge: 'FAT Pass' },
     { name: t('nav_tutor'), path: '/app/tutor', icon: BrainCircuit },
     { name: t('nav_sandbox'), path: '/app/sandbox', icon: Terminal },
     { name: t('nav_sba_guide'), path: '/app/sba-guide', icon: FileText },
+    { name: t('nav_sba'), path: '/app/sba', icon: ClipboardCheck, badge: 'FAT Pass' },
     { name: t('nav_notebook'), path: '/app/notebook', icon: BookOpen },
   ];
 
